@@ -7,7 +7,8 @@
   // ── データ読み込み ────────────────────────────────────────────
   let allNames = [];
   try {
-    const res = await fetch('data/names.json');
+    const res = await fetch('./data/names.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     allNames = await res.json();
   } catch (e) {
     console.error('names.json の読み込みに失敗しました', e);
@@ -23,7 +24,6 @@
   };
 
   let isShuffled = false;
-  let shuffleSeed = Math.random(); // シャッフル時に更新
 
   // ── DOM 参照 ──────────────────────────────────────────────────
   const nameGrid     = document.getElementById('nameGrid');
