@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐾 ペットなまえ診断 — ぴったりの名前を見つけよう</title>
+  <meta name="description" content="ペットの種類・性別・雰囲気・毛色から、ぴったりの名前候補を診断できる無料サービスです。犬・猫・うさぎ・ハムスター・鳥に対応。" />
+
+  <!-- OGP -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="🐾 ペットなまえ診断" />
+  <meta property="og:description" content="ペットの種類・性別・雰囲気・毛色から、ぴったりの名前候補を診断できる無料サービスです。" />
+  <meta property="og:url" content="https://pet-namer.vercel.app/" />
+  <meta property="og:image" content="https://pet-namer.vercel.app/ogp.png" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="🐾 ペットなまえ診断" />
+  <meta name="twitter:description" content="ペットの種類・性別・雰囲気・毛色から、ぴったりの名前候補を診断できる無料サービスです。" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <p class="logo">🐾 ペットなまえ診断</p>
+      <p class="tagline">種類・性格・毛色から、ぴったりの名前を見つけよう</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="layout">
+
+      <!-- メインコンテンツ -->
+      <div class="main-content">
+
+        <!-- フィルターパネル -->
+        <section class="filter-panel" aria-label="絞り込み条件">
+          <h2 class="filter-heading">条件を選んでね</h2>
+
+          <!-- 動物の種類 -->
+          <div class="filter-group">
+            <h3 class="filter-label" id="label-species">動物の種類</h3>
+            <div class="chips" data-filter="species" role="group" aria-labelledby="label-species">
+              <button class="chip" data-value="犬">犬</button>
+              <button class="chip" data-value="猫">猫</button>
+              <button class="chip" data-value="うさぎ">うさぎ</button>
+              <button class="chip" data-value="ハムスター">ハムスター</button>
+              <button class="chip" data-value="鳥">鳥</button>
+            </div>
+          </div>
+
+          <!-- 性別 -->
+          <div class="filter-group">
+            <h3 class="filter-label" id="label-gender">性別</h3>
+            <div class="chips" data-filter="gender" role="group" aria-labelledby="label-gender">
+              <button class="chip" data-value="オス">オス</button>
+              <button class="chip" data-value="メス">メス</button>
+              <button class="chip" data-value="どちらでも">どちらでも</button>
+            </div>
+          </div>
+
+          <!-- 雰囲気 -->
+          <div class="filter-group">
+            <h3 class="filter-label" id="label-vibe">雰囲気</h3>
+            <div class="chips" data-filter="vibe" role="group" aria-labelledby="label-vibe">
+              <button class="chip" data-value="かわいい">かわいい</button>
+              <button class="chip" data-value="かっこいい">かっこいい</button>
+              <button class="chip" data-value="個性的">個性的</button>
+              <button class="chip" data-value="和風">和風</button>
+              <button class="chip" data-value="洋風">洋風</button>
+              <button class="chip" data-value="ふわふわ系">ふわふわ系</button>
+            </div>
+          </div>
+
+          <!-- 毛色 -->
+          <div class="filter-group">
+            <h3 class="filter-label" id="label-color">毛色</h3>
+            <div class="chips" data-filter="color" role="group" aria-labelledby="label-color">
+              <button class="chip" data-value="白">白</button>
+              <button class="chip" data-value="黒">黒</button>
+              <button class="chip" data-value="茶色">茶色</button>
+              <button class="chip" data-value="三毛">三毛</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 結果エリア -->
+        <section class="result-area" aria-label="名前の候補">
+          <div class="result-header">
+            <p class="result-count" id="resultCount">— 件</p>
+            <button class="btn-shuffle" id="btnShuffle" type="button">🔀 ランダムに並び替え</button>
+          </div>
+          <div class="name-grid" id="nameGrid"></div>
+        </section>
+
+      </div><!-- /.main-content -->
+
+      <!-- サイドバー -->
+      <aside class="sidebar" aria-label="サイドバー">
+
+        <!-- 広告スペース (上) -->
+        <div class="ad-space ad-space--rectangle" aria-hidden="true"></div>
+
+        <!-- 人気ランキングウィジェット -->
+        <section class="ranking-widget" aria-label="人気ランキング">
+          <h2 class="widget-heading">人気ランキング</h2>
+          <ol class="ranking-list" id="rankingList">
+            <!-- app.js が動的生成 -->
+          </ol>
+        </section>
+
+        <!-- 広告スペース (下) -->
+        <div class="ad-space ad-space--rectangle" aria-hidden="true"></div>
+
+      </aside><!-- /.sidebar -->
+
+    </div><!-- /.layout -->
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="copyright">&copy; 2026 ペットなまえ診断</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
