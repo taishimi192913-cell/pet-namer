@@ -1,0 +1,30 @@
+# pet-namer プロジェクトルール
+
+## 概要
+ペット（犬・猫・うさぎ等）の名前診断サービス。
+バニラ HTML / CSS / JS のみ。フレームワーク不使用。
+
+## 技術スタック
+- HTML / CSS / JavaScript（バニラ）
+- Vercel（ホスティング）
+- Supabase（Auth、オプション）
+
+## スタイル方針
+- CSS変数は `:root` で管理（`--primary`, `--radius-lg` 等）
+- グラスモーフィズム: `backdrop-filter: blur(14px)` + `rgba` 背景
+- アニメーション: `cubic-bezier(0.34, 1.56, 0.64, 1)` スプリング系
+- レスポンシブ: モバイルファースト、`720px` ブレークポイント
+
+## 命名規則
+- BEM 方式（`.block__element--modifier`）
+- JSのID: camelCase（`btnDiagnose`, `nameGrid`）
+
+## セキュリティ
+- XSS対策: テキストはすべて `textContent` または `encodeURIComponent` で処理
+- innerHTML使用箇所はすべて静的テンプレートのみ（ユーザー入力を直接挿入しない）
+
+## エージェント（AI）向けツールの優先
+- **UI 検証**: Cursor の組み込み Browser MCP または `.cursor/mcp.json` の Playwright / Chrome DevTools MCP が使えるときは、ローカル表示の確認にスナップショット・操作ツールを使う（可能な範囲で curl のみに頼らない）。
+- **並列調査**: 独立した探索・広いコードベースの当たり付けは、Cursor の **Task（サブエージェント）** を使う。
+- **スキル**: 利用可能なスキル一覧に該当があれば、**先にスキルファイルを Read** してから実装する（特にデバッグ・検証・フロント品質・Vercel 周り）。
+- **静的サーバー**: Live Server 等で `index.html` を開き、`python3 -m http.server` はフォールバックとして使う。

@@ -1,0 +1,234 @@
+@import './layout.css';
+@import './components.css';
+@import './pages.css';
+
+/* ======================================
+   GOOGLE FONTS
+====================================== */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Serif+JP:wght@400;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ======================================
+   DESIGN TOKENS — petmi.jp × pets-kojima.com 融合
+====================================== */
+:root {
+  /* ── Palette ── */
+  --bg:              #faf7f3;          /* ペットショップのあたたかいベージュ */
+  --bg-wave:         #f0ebe3;          /* 波形セクション用 */
+  --surface:         #ffffff;
+  --surface-sub:     #fdf9f5;
+  --surface-card:    #fffcf9;
+
+  /* ── Brand Colors (petmi.jp インスパイア) ── */
+  --sand:            #e8d5b7;          /* 砂色 */
+  --teal:            #6bc5b8;          /* テール/ミント */
+  --teal-light:      #e0f5f2;
+  --teal-dark:       #4aa899;
+  --peach:           #f5a68a;          /* ピーチ */
+  --peach-light:     #fdeee8;
+  --gold:            #e8b84b;          /* ゴールド/イエロー */
+  --gold-light:      #fef8e4;
+  --rose:            #ec8fa3;          /* ローズピンク */
+  --rose-light:      #fceef2;
+  --lilac:           #b89cdc;          /* ライラック */
+  --lilac-light:     #f2edf9;
+
+  /* ── Primary (Peach-Coral: ペットサイトらしい温かみ) ── */
+  --primary:         #f07d5a;
+  --primary-hover:   #e0643e;
+  --primary-light:   rgba(240, 125, 90, 0.12);
+  --primary-glow:    rgba(240, 125, 90, 0.28);
+
+  /* ── Secondary / Accent (Teal) ── */
+  --accent:          #4aa899;
+  --accent-light:    #e0f5f2;
+  --accent-hover:    #3d9188;
+
+  /* ── Text ── */
+  --text:            #2d2520;
+  --text-sub:        #8a7e74;
+  --text-muted:      #b8ada4;
+
+  /* ── Borders ── */
+  --border:          #ede5db;
+  --border-strong:   #ddd0c2;
+
+  /* ── Radius ── */
+  --radius-xs:   8px;
+  --radius-sm:   14px;
+  --radius-md:   20px;
+  --radius-lg:   28px;
+  --radius-xl:   36px;
+  --radius-pill: 999px;
+
+  /* ── Shadows ── */
+  --shadow-sm:  0 2px 10px rgba(45, 37, 32, 0.06);
+  --shadow-md:  0 6px 24px rgba(45, 37, 32, 0.09);
+  --shadow-lg:  0 16px 48px rgba(45, 37, 32, 0.13);
+  --shadow-xl:  0 24px 64px rgba(45, 37, 32, 0.16);
+  --shadow-glow: 0 8px 32px var(--primary-glow);
+
+  /* ── Typography ── */
+  --font-body:    "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+  --font-accent:  "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+  --font-display: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  --font-num:     "Nunito", sans-serif;
+
+  /* ── Motion ── */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+/* ======================================
+   BASE
+====================================== */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  /* 薄いドット背景 */
+  background-image: radial-gradient(circle, rgba(168, 147, 128, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  /* 肉球カーソル（MEDVi 風の遊び心） */
+  cursor: url('/cursors/paw-cursor.svg') 16 24, auto;
+}
+
+/* ペーパーグレインテクスチャ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+button,
+a[href],
+[role='button'],
+summary,
+label[for],
+.chip,
+.species-card,
+input[type='checkbox'],
+input[type='radio'] {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button {
+  font: inherit;
+}
+
+/* マウス軌跡の足跡（landing-effects.js） */
+.footprint-trail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9998;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--ft-rot, 0deg));
+  animation: footprintFade var(--footprint-fade, 0.85s) ease-out forwards;
+}
+
+@keyframes footprintFade {
+  from {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) rotate(var(--ft-rot, 0deg)) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--ft-rot, 0deg)) scale(0.55);
+  }
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ======================================
+   SCROLL BAR (Webkit)
+====================================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-wave);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--peach);
+  border-radius: var(--radius-pill);
+}
+
+/* ======================================
+   ANIMATIONS
+====================================== */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  25%       { opacity: 0.7; transform: scale(1.2) rotate(15deg); }
+  75%       { opacity: 0.8; transform: scale(0.9) rotate(-10deg); }
+}
+
+@keyframes pawPrint {
+  0%   { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+  60%  { opacity: 1; transform: scale(1.1) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

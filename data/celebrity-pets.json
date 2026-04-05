@@ -1,0 +1,111 @@
+[
+  {
+    "name": "デコピン",
+    "reading": "でこぴん",
+    "meaning": "MLB大谷翔平選手の愛犬（コーイケルホンディエ）。英語名はDecoy（ディコイ）。2024年に世界中で話題となった。",
+    "species": ["犬"],
+    "vibe": ["個性的", "話題"],
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Decoy_Ohtani_visa_photo.png",
+    "imageAlt": "大谷翔平選手の愛犬デコイ（コーイケルホンディエ）",
+    "imageCredit": "Wikimedia Commons / U.S. Embassy Tokyo"
+  },
+  {
+    "name": "まるお",
+    "reading": "まるお",
+    "meaning": "YouTuber HIKAKINの愛猫（スコティッシュフォールド）。もふこと兄妹。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "ふわふわ"]
+  },
+  {
+    "name": "もふこ",
+    "reading": "もふこ",
+    "meaning": "YouTuber HIKAKINの愛猫（スコティッシュフォールド）。まるおと兄妹。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "ふわふわ"]
+  },
+  {
+    "name": "キョロちゃん",
+    "reading": "きょろちゃん",
+    "meaning": "モデル・梨花の愛猫（ロシアンブルー）。長年SNS等で親しまれている。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "上品"]
+  },
+  {
+    "name": "メレディス",
+    "reading": "めれでぃす",
+    "meaning": "テイラー・スウィフトの愛猫。ドラマ『グレイズ・アナトミー』の主人公が由来。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "洋風"]
+  },
+  {
+    "name": "オリヴィア",
+    "reading": "おりヴぃあ",
+    "meaning": "テイラー・スウィフトの愛猫。世界で最もリッチなペットの一匹として知られる。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "洋風"]
+  },
+  {
+    "name": "ベンジャミン",
+    "reading": "べんじゃみん",
+    "meaning": "テイラー・スウィフトの愛猫。ミュージックビデオの撮影で出会い引き取られた。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "洋風"]
+  },
+  {
+    "name": "カリッポ",
+    "reading": "かりっぽ",
+    "meaning": "エド・シーランの愛猫。専用のInstagramアカウントを持つほどの人気猫。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "洋風"]
+  },
+  {
+    "name": "タマ",
+    "reading": "たま",
+    "meaning": "和歌山電鉄貴志川線・貴志駅の初代駅長猫。日本を代表する有名猫のひとり。",
+    "species": ["猫"],
+    "vibe": ["かわいい", "和風"],
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Station-Master_Tama.JPG/330px-Station-Master_Tama.JPG",
+    "imageAlt": "駅長タマ（和歌山電鉄 貴志駅）",
+    "imageCredit": "Wikimedia Commons / MTCY"
+  },
+  {
+    "name": "ハチ公",
+    "reading": "はちこう",
+    "meaning": "渋谷駅前の銅像でも知られる忠犬ハチ公。映画・ドラマでも語り継がれる。",
+    "species": ["犬"],
+    "vibe": ["かっこいい", "和風"],
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Hachiko.JPG/330px-Hachiko.JPG",
+    "imageAlt": "渋谷のハチ公像",
+    "imageCredit": "Wikimedia Commons / Copyrighted free use"
+  },
+  {
+    "name": "グランピー",
+    "reading": "ぐらんぴー",
+    "meaning": "本名ターダル・ソース。世界中に知られたネットの有名猫（2012–2019）。",
+    "species": ["猫"],
+    "vibe": ["個性的", "話題"],
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Grumpy_Cat_%2814556024763%29_%28cropped%29.jpg/330px-Grumpy_Cat_%2814556024763%29_%28cropped%29.jpg",
+    "imageAlt": "グランピーキャット（Tardar Sauce）",
+    "imageCredit": "Wikimedia Commons / Gage Skidmore"
+  },
+  {
+    "name": "ラッシー",
+    "reading": "らっしー",
+    "meaning": "映画・小説で知られる勇敢なコリー犬の名作キャラ。家族思いのシンボル。",
+    "species": ["犬"],
+    "vibe": ["かっこいい", "洋風"],
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Lassie.jpg/330px-Lassie.jpg",
+    "imageAlt": "映画『ラッシー』に登場するコリー犬",
+    "imageCredit": "Wikimedia Commons / MGM"
+  },
+  {
+    "name": "スヌーピー",
+    "reading": "すぬーぴー",
+    "meaning": "『ピーナッツ』のビーグル犬。名作コミックを代表するキャラクター。",
+    "species": ["犬"],
+    "vibe": ["かわいい", "洋風"],
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/5/53/Snoopy_Peanuts.png",
+    "imageAlt": "ピーナッツのキャラクター・スヌーピー",
+    "imageCredit": "Wikipedia / Peanuts"
+  }
+]

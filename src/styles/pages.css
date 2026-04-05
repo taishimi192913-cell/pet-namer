@@ -1,0 +1,246 @@
+/* ======================================
+   SEO ランディングページ（dog/cat/rabbit など）
+====================================== */
+.seo-hero {
+  padding: 36px 32px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(140deg,
+    var(--peach-light) 0%,
+    var(--surface) 50%,
+    var(--teal-light) 100%
+  );
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.seo-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240,125,90,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.seo-hero h1,
+.seo-hero .intro-panel__title {
+  margin: 0;
+  font-family: var(--font-accent);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.seo-hero p {
+  margin: 14px 0 0;
+  color: var(--text-sub);
+  line-height: 1.7;
+  font-size: 0.96rem;
+}
+
+/* ======================================
+   SEO COPY PANEL
+====================================== */
+.seo-copy-panel {
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+}
+
+.seo-copy-panel h2 {
+  margin: 0 0 14px;
+  font-family: var(--font-accent);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.seo-copy-panel p {
+  margin: 0 0 1rem;
+  line-height: 1.8;
+  color: var(--text-sub);
+  font-size: 0.93rem;
+}
+
+.seo-copy-panel p:last-child { margin-bottom: 0; }
+
+/* ======================================
+   SEO RANKING
+====================================== */
+.seo-ranking {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  list-style: decimal;
+  color: var(--text);
+  line-height: 1.75;
+}
+
+.seo-ranking li {
+  margin-top: 0.6rem;
+  padding-left: 0.4rem;
+  font-weight: 600;
+}
+
+.seo-ranking li::marker {
+  color: var(--primary);
+  font-weight: 800;
+  font-family: var(--font-num);
+}
+
+/* ======================================
+   SEO TIPS
+====================================== */
+.seo-tips {
+  margin: 0;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: var(--teal-light);
+  border: 1.5px solid var(--teal);
+}
+
+.seo-tips p {
+  margin: 0 0 0.9rem;
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 0.93rem;
+}
+
+.seo-tips p:last-child { margin-bottom: 0; }
+
+/* ======================================
+   SEO TOP10
+====================================== */
+.seo-page-lead {
+  margin: 0;
+  color: var(--text-sub);
+  line-height: 1.8;
+  font-size: 0.96rem;
+}
+
+.seo-page-lead + .seo-page-lead { margin-top: 12px; }
+
+.seo-top10 {
+  margin: 0;
+  padding: 26px;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.seo-top10__title {
+  margin: 0 0 18px;
+  font-family: var(--font-accent);
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seo-top10__title::before {
+  content: '🏆';
+  font-size: 1.3rem;
+}
+
+.seo-top10-list {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style: decimal;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.seo-top10-list > li {
+  margin-top: 16px;
+  padding-left: 0.3rem;
+}
+
+.seo-top10-list > li::marker {
+  color: var(--primary);
+  font-weight: 800;
+  font-family: var(--font-num);
+}
+
+.seo-top10-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.seo-top10-reading {
+  margin-left: 0.4rem;
+  color: var(--text-sub);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.seo-top10-meaning {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  line-height: 1.65;
+}
+
+/* ======================================
+   SEO CTA
+====================================== */
+.seo-cta {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.seo-cta .btn-primary {
+  display: inline-flex;
+  width: 100%;
+  max-width: 380px;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* ======================================
+   SEO CROSS LINKS
+====================================== */
+.seo-cross { text-align: center; }
+
+.seo-cross__title {
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+.seo-cross__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 16px;
+}
+
+.seo-cross__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-bounce);
+}
+
+.seo-cross__links a:hover {
+  border-color: var(--teal);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  color: var(--accent-hover);
+}
