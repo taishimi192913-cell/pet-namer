@@ -8,7 +8,6 @@ import {
   SPECIES_OPTIONS,
   VIBE_OPTIONS,
   VIBE_URL_ALIASES,
-  canonicalVibe,
 } from './constants.js';
 import { getResults } from './diagnosis.js';
 import {

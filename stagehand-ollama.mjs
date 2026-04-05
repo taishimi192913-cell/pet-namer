@@ -3,7 +3,6 @@
  * OpenAI互換APIをOllamaが提供するので接続可能
  */
 import { Stagehand } from "@browserbasehq/stagehand";
-import { z } from "zod";
 
 async function main() {
   console.log("🦙 Stagehand + Ollama（ローカルLLM）起動中...");
