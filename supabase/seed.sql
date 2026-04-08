@@ -1,0 +1,2 @@
+-- Seed data is intentionally empty for now.
+-- Add development-only inserts here when the app starts using relational data beyond favorites.

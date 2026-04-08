@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "packageManager": "npm@11.9.0",
   "scripts": {
     "prebuild": "node scripts/generate-sitemap.mjs",
     "dev": "vite",
@@ -10,9 +11,15 @@
     "test": "node --test",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "npm run lint && npm run test && npm run build"
+    "check": "npm run lint && npm run test && npm run build",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:reset": "npx supabase db reset",
+    "verify:deployment": "node scripts/verify-deployment.mjs"
   },
   "dependencies": {
+    "@sentry/browser": "^9.18.0",
+    "@supabase/supabase-js": "^2.50.0",
     "@browserbasehq/stagehand": "^3.2.0",
     "zod": "^4.3.6"
   },

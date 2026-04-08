@@ -96,6 +96,11 @@
             ぴったりの名前候補をご提案します。
           </p>
 
+          <div class="hero-actions" role="group" aria-label="診断へのショートカット">
+            <a href="#stepSpecies" class="btn-primary">名前診断をはじめる</a>
+            <a href="#trendingSection" class="btn-secondary">ランキング・名鑑はこちら</a>
+          </div>
+
           <div class="hero-stats" role="list">
             <div class="hero-stat" role="listitem">
               <span class="hero-stat__value">1,200<span style="font-size:1.2rem">+</span></span>
@@ -133,68 +138,7 @@
   <!-- ==============================
        MAIN CONTENT
   ============================== -->
-  <main class="page-main">
-
-    <!-- トレンドランキング -->
-    <section class="section trending-section" id="trendingSection" aria-labelledby="trendingHeading">
-      <div class="section-label">RANKING</div>
-      <h2 class="step-heading" id="trendingHeading">
-        <span class="step-num" style="background:var(--gold)">🏆</span>
-        今年の人気名前ランキング
-      </h2>
-      <p class="step-hint">アニコム損保・アイペット損保の最新データをもとにした人気ランキングです。</p>
-      <div class="trending-tabs" role="tablist" aria-label="ランキングのペット種類">
-        <button type="button" class="trending-tab" data-species="犬" role="tab" aria-selected="false">🐕 犬</button>
-        <button type="button" class="trending-tab" data-species="猫" role="tab" aria-selected="false">🐈 猫</button>
-        <button type="button" class="trending-tab" data-species="うさぎ" role="tab" aria-selected="false">🐇 うさぎ</button>
-      </div>
-      <div class="trending-hint-card" id="trendingHintCard">
-        <p class="trending-hint-card__title">どの子の名前が気になる？</p>
-        <p class="trending-hint-card__text">
-          下の <strong>犬・猫・うさぎ</strong> のタブから、見たいランキングを選んでください。
-          タップすると<strong>その子の人気TOP10</strong>がひらきます。
-        </p>
-        <p class="trending-hint-card__cta" aria-hidden="true">タップしてランキングを見る</p>
-      </div>
-      <div class="trending-list-panel" id="trendingListPanel">
-        <ol class="trending-list" id="trendingList" aria-label="人気ペット名ランキング"></ol>
-        <button type="button" class="trending-list-close" id="trendingListClose" aria-label="ランキング一覧を閉じる">
-          ランキングを閉じる
-        </button>
-      </div>
-    </section>
-
-    <!-- 有名人・有名キャラのペット名鑑 -->
-    <section class="section celeb-section" id="celebSection" aria-labelledby="celebHeading">
-      <div class="section-label">CELEBRITY PETS</div>
-      <h2 class="step-heading" id="celebHeading">
-        <span class="step-num" style="background:var(--rose)">⭐</span>
-        有名人・名作キャラのペット名鑑
-      </h2>
-      <p class="step-hint">世界の有名人やアニメキャラのペット名を参考に、あなたの子の名前のヒントにしよう。</p>
-      <div class="celeb-hint-card" id="celebHintCard">
-        <p class="celeb-hint-card__title">有名人・名作キャラのペット名が気になる？</p>
-        <p class="celeb-hint-card__text">
-          タップすると<strong>名鑑の一覧</strong>がひらきます。写真は、再利用可能な個体写真があるものだけ掲載しています。
-        </p>
-        <button
-          type="button"
-          class="celeb-hint-card__cta"
-          id="celebRevealBtn"
-          aria-expanded="false"
-          aria-controls="celebListPanel"
-        >
-          <span class="celeb-hint-card__paw" aria-hidden="true">🐾</span>
-          詳細はこちら
-        </button>
-      </div>
-      <div class="celeb-list-panel" id="celebListPanel" aria-hidden="true">
-        <div class="celeb-grid" id="celebGrid" aria-label="有名ペット一覧"></div>
-        <button type="button" class="celeb-list-close" id="celebListClose" aria-label="ペット名鑑を閉じる">
-          名鑑を閉じる
-        </button>
-      </div>
-    </section>
+  <main class="page-main" id="mainContent">
 
     <!-- STEP 1: 種類選択 -->
     <section class="section" id="stepSpecies" aria-labelledby="speciesHeading">
@@ -263,6 +207,130 @@
       </div>
     </section>
 
+    <!-- トレンドランキング -->
+    <section class="section trending-section" id="trendingSection" aria-labelledby="trendingHeading">
+      <div class="section-label">RANKING</div>
+      <h2 class="step-heading" id="trendingHeading">
+        <span class="step-num" style="background:var(--gold)">🏆</span>
+        今年の人気名前ランキング
+      </h2>
+      <p class="step-hint">アニコム損保・アイペット損保の最新データをもとにした人気ランキングです。</p>
+      <div class="trending-tabs" role="tablist" aria-label="ランキングのペット種類">
+        <button type="button" class="trending-tab" data-species="犬" role="tab" aria-selected="false">🐕 犬</button>
+        <button type="button" class="trending-tab" data-species="猫" role="tab" aria-selected="false">🐈 猫</button>
+        <button type="button" class="trending-tab" data-species="うさぎ" role="tab" aria-selected="false">🐇 うさぎ</button>
+      </div>
+      <div class="trending-hint-card" id="trendingHintCard">
+        <p class="trending-hint-card__title">どの子の名前が気になる？</p>
+        <p class="trending-hint-card__text">
+          まず <strong>犬・猫・うさぎ</strong> のタブで種類を選び、
+          <strong>詳細はこちら</strong> をタップすると<strong>その子の人気TOP10</strong>がひらきます。
+        </p>
+        <button
+          type="button"
+          class="trending-hint-card__cta-btn"
+          id="trendingRevealBtn"
+          aria-expanded="false"
+          aria-controls="trendingListPanel"
+        >
+          <span class="trending-hint-card__paw" aria-hidden="true">🐾</span>
+          詳細はこちら
+        </button>
+      </div>
+      <div class="trending-list-panel" id="trendingListPanel">
+        <ol class="trending-list" id="trendingList" aria-label="人気ペット名ランキング"></ol>
+        <button type="button" class="trending-list-close" id="trendingListClose" aria-label="ランキング一覧を閉じる">
+          ランキングを閉じる
+        </button>
+      </div>
+    </section>
+
+    <!-- 有名人・有名キャラのペット名鑑 -->
+    <section class="section celeb-section" id="celebSection" aria-labelledby="celebHeading">
+      <div class="section-label">CELEBRITY PETS</div>
+      <h2 class="step-heading" id="celebHeading">
+        <span class="step-num" style="background:var(--rose)">⭐</span>
+        有名人・名作キャラのペット名鑑
+      </h2>
+      <p class="step-hint">世界の有名人やアニメキャラのペット名を参考に、あなたの子の名前のヒントにしよう。</p>
+      <div class="celeb-hint-card" id="celebHintCard">
+        <p class="celeb-hint-card__title">有名人・名作キャラのペット名が気になる？</p>
+        <p class="celeb-hint-card__text">
+          タップすると<strong>名鑑の一覧</strong>がひらきます。フリー素材（Wikimedia・Unsplash・Pexels 等）の写真を使用しています。
+        </p>
+        <button
+          type="button"
+          class="celeb-hint-card__cta"
+          id="celebRevealBtn"
+          aria-expanded="false"
+          aria-controls="celebListPanel"
+        >
+          <span class="celeb-hint-card__paw" aria-hidden="true">🐾</span>
+          詳細はこちら
+        </button>
+      </div>
+      <div class="celeb-list-panel" id="celebListPanel" aria-hidden="true">
+        <div class="celeb-grid" id="celebGrid" aria-label="有名ペット一覧"></div>
+        <button type="button" class="celeb-list-close" id="celebListClose" aria-label="ペット名鑑を閉じる">
+          名鑑を閉じる
+        </button>
+      </div>
+    </section>
+
+    <section class="section auth-panel" id="authPanelSection" aria-labelledby="authHeading">
+      <div class="section-label">SAVE</div>
+      <button type="button" class="auth-panel__toggle" id="authPanelToggle" aria-expanded="false" aria-controls="authPanelBody">
+        <span>
+          <span class="auth-panel__toggle-title" id="authHeading">ログインしてお気に入りを保存</span>
+          <span class="auth-panel__toggle-hint" id="authPanelToggleHint">タップで開きます</span>
+        </span>
+        <span class="auth-panel__chevron" aria-hidden="true"></span>
+      </button>
+
+      <div class="auth-panel__body" id="authPanelBody" hidden>
+        <div class="auth-panel__summary">
+          <p class="auth-status" id="authStatus" data-state="muted">未ログインです</p>
+          <p id="authMeta">ログインすると、気になった名前をあとで見返せます。</p>
+          <p id="favoriteAuthSummary">ログインすると、お気に入りの名前をアカウントに保存できます。</p>
+        </div>
+
+        <form id="authForm">
+          <div class="auth-field">
+            <label for="authEmail">メールアドレス</label>
+            <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="auth-field">
+            <label for="authPassword">パスワード</label>
+            <input id="authPassword" type="password" autocomplete="current-password" placeholder="8文字以上を推奨">
+          </div>
+        </form>
+
+        <div class="turnstile-row" id="turnstileRow" hidden>
+          <div id="turnstileWidget"></div>
+          <p class="auth-message" id="turnstileHint" data-state="muted">保存前にロボット対策チェックを完了してください。</p>
+        </div>
+
+        <div class="auth-actions">
+          <button type="button" class="auth-button auth-button--soft" id="btnMagicLink">マジックリンク</button>
+          <button type="button" class="auth-button" id="btnSignIn">ログイン</button>
+          <button type="button" class="auth-button" id="btnSignUp">新規登録</button>
+          <button type="button" class="auth-button auth-button--ghost" id="btnSignOut" hidden>ログアウト</button>
+        </div>
+
+        <p class="auth-message" id="authMessage" data-state="muted">未設定のときは保存機能だけ無効になり、診断自体は通常どおり使えます。</p>
+      </div>
+    </section>
+
+    <section class="section" id="savedFavoritesSection" hidden aria-labelledby="savedFavoritesHeading">
+      <div class="section-label">FAVORITES</div>
+      <h2 class="step-heading" id="savedFavoritesHeading">
+        <span class="step-num" style="background:var(--teal)">★</span>
+        保存したお気に入り
+      </h2>
+      <p class="step-hint" id="savedFavoritesSummary">ログインすると保存した名前がここに表示されます。</p>
+      <div id="savedFavoritesContainer"></div>
+    </section>
+
     <!-- SEO リンク (petmi.jp カテゴリカード風) -->
     <section class="section section--subtle" aria-labelledby="seoLinksHeading">
       <h2 class="section-heading" id="seoLinksHeading">🐾 人気の探し方</h2>
@@ -300,7 +368,7 @@
         </details>
         <details class="faq-item">
           <summary>データはどこかに保存されますか？</summary>
-          <p>いいえ。すべてブラウザ内で処理され、サーバーには送信されません。安心してご利用ください。</p>
+          <p>診断だけならブラウザ内で完結します。ログイン後に「保存」を押した名前だけ、あなたのお気に入りとして Supabase に保存されます。</p>
         </details>
       </div>
     </section>

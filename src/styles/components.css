@@ -236,7 +236,8 @@ a.btn-primary:hover,
 }
 
 /* Secondary */
-.btn-secondary {
+.btn-secondary,
+a.btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -256,7 +257,13 @@ a.btn-primary:hover,
     box-shadow 0.2s;
 }
 
-.btn-secondary:hover {
+a.btn-secondary {
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-secondary:hover,
+a.btn-secondary:hover {
   border-color: var(--primary);
   color: var(--primary);
   transform: translateY(-2px);
@@ -517,6 +524,105 @@ a.seo-link-card:hover .seo-link-card__icon {
   backdrop-filter: blur(4px);
 }
 
+.top-result__tags,
+.spotlight__actions,
+.name-card__actions,
+.name-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.top-result__tags,
+.name-card__tags {
+  margin-top: 16px;
+}
+
+.spotlight__actions,
+.name-card__actions {
+  margin-top: 18px;
+}
+
+.spotlight-tag,
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.name-card {
+  margin-top: 16px;
+}
+
+.name-card__meta,
+.name-card__reading,
+.name-card__meaning {
+  margin: 0;
+}
+
+.name-card__meta,
+.name-card__reading {
+  color: var(--text-sub);
+  font-size: 0.85rem;
+}
+
+.name-card__name {
+  margin: 10px 0 6px;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.name-card__meaning {
+  margin-top: 10px;
+  line-height: 1.65;
+}
+
+.share-btn,
+.name-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-bounce), box-shadow 0.2s, border-color 0.2s;
+}
+
+.share-btn:hover,
+.name-card__btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.share-btn--favorite,
+.name-card__btn--favorite {
+  border-color: rgba(240, 125, 90, 0.35);
+  background: rgba(240, 125, 90, 0.1);
+  color: var(--primary-hover);
+}
+
+.result-empty {
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-sub);
+  border: 1px dashed var(--border-strong);
+  color: var(--text-sub);
+  line-height: 1.7;
+}
+
 /* ── Rank badge ── */
 .rank-badge {
   display: inline-flex;
@@ -741,6 +847,15 @@ a.seo-link-card:hover .seo-link-card__icon {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
+}
+
+.turnstile-row {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-sub);
 }
 
 @media (max-width: 900px) and (min-width: 641px) {
@@ -1065,19 +1180,11 @@ a.seo-link-card:hover .seo-link-card__icon {
 }
 
 .trending-hint-card__text {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-size: 0.9rem;
   line-height: 1.65;
   color: var(--text-sub);
   font-weight: 500;
-}
-
-.trending-hint-card__cta {
-  margin: 0;
-  font-size: 0.86rem;
-  font-weight: 800;
-  color: var(--primary);
-  letter-spacing: 0.04em;
 }
 
 @media (max-width: 900px) {
@@ -1275,7 +1382,8 @@ a.seo-link-card:hover .seo-link-card__icon {
   font-weight: 500;
 }
 
-.celeb-hint-card__cta {
+.celeb-hint-card__cta,
+.trending-hint-card__cta-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1297,16 +1405,19 @@ a.seo-link-card:hover .seo-link-card__icon {
     transform 0.2s var(--ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1));
 }
 
-.celeb-hint-card__cta:hover {
+.celeb-hint-card__cta:hover,
+.trending-hint-card__cta-btn:hover {
   background: var(--primary);
   color: #fff;
 }
 
-.celeb-hint-card__cta:active {
+.celeb-hint-card__cta:active,
+.trending-hint-card__cta-btn:active {
   transform: scale(0.97);
 }
 
-.celeb-hint-card__paw {
+.celeb-hint-card__paw,
+.trending-hint-card__paw {
   font-size: 1.25rem;
   line-height: 1;
 }

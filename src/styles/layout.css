@@ -95,6 +95,15 @@
   transform: translateY(-1px);
 }
 
+/* スティッキーヘッダー分のアンカーずれ調整 */
+#stepSpecies,
+#diagnosisPanel,
+#resultSection,
+#trendingSection,
+#celebSection {
+  scroll-margin-top: 80px;
+}
+
 /* ======================================
    HERO SECTION
 ====================================== */
@@ -254,13 +263,47 @@
 }
 
 .hero-lead {
-  margin: 0 auto 28px;
+  margin: 0 auto 18px;
   max-width: 440px;
   color: var(--text-sub);
   line-height: 1.75;
   font-size: 1rem;
   font-weight: 500;
   animation: fadeSlideUp 0.7s var(--ease-smooth) 0.2s both;
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  margin: 0 auto 22px;
+  max-width: 440px;
+  width: 100%;
+  animation: fadeSlideUp 0.7s var(--ease-smooth) 0.28s both;
+}
+
+.hero-actions .btn-primary,
+.hero-actions .btn-secondary {
+  text-align: center;
+  justify-content: center;
+}
+
+@media (min-width: 520px) {
+  .hero-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary {
+    width: auto;
+    flex: 1 1 auto;
+    min-width: min(100%, 200px);
+    max-width: 280px;
+  }
 }
 
 /* ── ヒーロー内の統計バー ── */

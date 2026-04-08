@@ -1,6 +1,33 @@
 import { copyNameToClipboard, getLINEShareURL, getXShareURL } from './share.js';
 import { secondaryReadingIfAny } from './reading-display.js';
 
+function createFavoriteButton(item, options = {}, variant = 'card') {
+  if (typeof options.onToggleFavorite !== 'function') return null;
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = variant === 'spotlight'
+    ? 'share-btn share-btn--favorite'
+    : 'name-card__btn name-card__btn--favorite';
+
+  const isFavorite = Boolean(options.isFavorite);
+  const label = isFavorite ? '★ 保存済み' : '☆ 保存';
+  button.textContent = label;
+  button.setAttribute('aria-label', `${item.name}を${isFavorite ? 'お気に入り解除' : 'お気に入り保存'}`);
+  button.title = isFavorite ? 'お気に入りから外す' : 'お気に入りに保存';
+
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    try {
+      await options.onToggleFavorite(item);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  return button;
+}
+
 export function createSpeciesCards(options, selectedSet, onSelect) {
   const wrap = document.createElement('div');
   wrap.className = 'species-grid';
@@ -44,9 +71,9 @@ export function createChips(items, activeSet, onToggle) {
   return wrap;
 }
 
-export function createSpotlight(item) {
+export function createSpotlight(item, options = {}) {
   const art = document.createElement('article');
-  art.className = 'spotlight';
+  art.className = 'top-result result-card';
 
   const eyebrow = document.createElement('p');
   eyebrow.className = 'top-result__label';
@@ -64,7 +91,7 @@ export function createSpotlight(item) {
 
   const score = document.createElement('p');
   score.className = 'spotlight__score';
-  if (item.match.score != null) {
+  if (item.match?.score != null) {
     score.textContent = `おすすめ度 ${item.match.score}%（${item.match.label}）`;
   } else {
     score.textContent = 'おすすめ度 —';
@@ -106,6 +133,10 @@ export function createSpotlight(item) {
     copyNameToClipboard(item.name).catch(() => {});
   });
 
+  const favoriteBtn = createFavoriteButton(item, options, 'spotlight');
+  if (favoriteBtn) {
+    actions.append(favoriteBtn);
+  }
   actions.append(btnX, btnLine, btnCopy);
 
   art.append(eyebrow, nameEl);
@@ -119,9 +150,9 @@ export function createSpotlight(item) {
   return art;
 }
 
-export function createNameCard(item) {
+export function createNameCard(item, options = {}) {
   const card = document.createElement('article');
-  card.className = 'name-card';
+  card.className = 'name-card result-card';
 
   const actions = document.createElement('div');
   actions.className = 'name-card__actions';
@@ -159,11 +190,15 @@ export function createNameCard(item) {
     window.open(getXShareURL(item.name, item.reading), '_blank', 'noopener,noreferrer');
   });
 
+  const favoriteBtn = createFavoriteButton(item, options, 'card');
+  if (favoriteBtn) {
+    actions.append(favoriteBtn);
+  }
   actions.append(copyBtn, shareBtn);
 
   const meta = document.createElement('p');
   meta.className = 'name-card__meta';
-  if (item.match.score != null) {
+  if (item.match?.score != null) {
     meta.textContent = `おすすめ度 ${item.match.score}%（${item.match.label}）`;
   } else {
     meta.textContent = 'おすすめ度 —';
@@ -200,7 +235,7 @@ export function createNameCard(item) {
   return card;
 }
 
-export function renderResults(container, results, visibleCount, onLoadMore) {
+export function renderResults(container, results, visibleCount, onLoadMore, options = {}) {
   container.replaceChildren();
 
   const { items, total } = results;
@@ -213,10 +248,16 @@ export function renderResults(container, results, visibleCount, onLoadMore) {
   }
 
   const showCount = Math.min(visibleCount, items.length);
-  container.appendChild(createSpotlight(items[0]));
+  container.appendChild(createSpotlight(items[0], {
+    ...options,
+    isFavorite: options.savedKeys?.has?.(options.favoriteKeyForItem?.(items[0]) || '') || false,
+  }));
 
   for (let i = 1; i < showCount; i += 1) {
-    container.appendChild(createNameCard(items[i]));
+    container.appendChild(createNameCard(items[i], {
+      ...options,
+      isFavorite: options.savedKeys?.has?.(options.favoriteKeyForItem?.(items[i]) || '') || false,
+    }));
   }
 
   const remaining = items.length - showCount;

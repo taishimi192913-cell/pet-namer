@@ -1,13 +1,58 @@
-/**
- * 元 app.js の Supabase 認証まわり（旧 187–341 行付近）。
- * main.js からは import しない。auth パネルを HTML に戻したときに
- * `<script type="module" src="/src/auth.js"></script>` で読み込む想定。
- */
-let supabaseClient = null;
-let publicConfig = null;
+import * as Sentry from '@sentry/browser';
+import { createClient } from '@supabase/supabase-js';
 
-function captureError(scope, error) {
+const DEFAULT_PUBLIC_CONFIG = {
+  siteUrl: '',
+  supabaseUrl: '',
+  supabaseAnonKey: '',
+  sentryDsn: '',
+  turnstileSiteKey: '',
+  hasSupabaseAuth: false,
+  hasSentry: false,
+};
+
+let supabaseClient = null;
+let publicConfig = { ...DEFAULT_PUBLIC_CONFIG };
+let currentSession = null;
+let favoriteRecords = [];
+let favoriteMap = new Map();
+let turnstileScriptPromise = null;
+let turnstileWidgetId = null;
+let turnstileToken = '';
+let authEventsBound = false;
+const listeners = new Set();
+
+function captureError(scope, error, extra = {}) {
   console.error(scope, error);
+  if (Sentry.getClient()) {
+    Sentry.withScope((scopeState) => {
+      scopeState.setTag('scope', scope);
+      Object.entries(extra).forEach(([key, value]) => scopeState.setExtra(key, value));
+      Sentry.captureException(error);
+    });
+  }
+}
+
+function emit() {
+  const snapshot = getPlatformSnapshot();
+  listeners.forEach((listener) => listener(snapshot));
+}
+
+export function subscribePlatform(listener) {
+  listeners.add(listener);
+  listener(getPlatformSnapshot());
+  return () => listeners.delete(listener);
+}
+
+function getTurnstileRow() {
+  return document.getElementById('turnstileRow');
+}
+
+function setTurnstileHint(message, state = 'muted') {
+  const element = document.getElementById('turnstileHint');
+  if (!element) return;
+  element.textContent = message;
+  element.dataset.state = state;
 }
 
 function setAuthMessage(message, state = 'muted') {
@@ -18,65 +63,370 @@ function setAuthMessage(message, state = 'muted') {
 }
 
 function setAuthControlsDisabled(disabled) {
-  const authEmail = document.getElementById('authEmail');
-  const authPassword = document.getElementById('authPassword');
-  const btnMagicLink = document.getElementById('btnMagicLink');
-  const btnSignIn = document.getElementById('btnSignIn');
-  const btnSignUp = document.getElementById('btnSignUp');
-  const btnSignOut = document.getElementById('btnSignOut');
-  [authEmail, authPassword, btnMagicLink, btnSignIn, btnSignUp, btnSignOut].forEach((element) => {
+  const ids = ['authEmail', 'authPassword', 'btnMagicLink', 'btnSignIn', 'btnSignUp', 'btnSignOut'];
+  ids.forEach((id) => {
+    const element = document.getElementById(id);
     if (element) element.disabled = disabled;
   });
 }
 
-function updateAuthUI(session) {
-  const authStatus = document.getElementById('authStatus');
-  const authMeta = document.getElementById('authMeta');
-  if (!authStatus || !authMeta) return;
+function setOpen(open) {
+  const toggle = document.getElementById('authPanelToggle');
+  const body = document.getElementById('authPanelBody');
+  const hint = document.getElementById('authPanelToggleHint');
+  if (!toggle || !body) return;
 
-  const email = session?.user?.email || '';
-  const isLoggedIn = Boolean(session?.user);
+  toggle.setAttribute('aria-expanded', String(open));
+  body.hidden = !open;
 
-  authStatus.textContent = isLoggedIn ? `${email} でログイン中` : '未ログインです';
-  authStatus.dataset.state = isLoggedIn ? 'success' : (publicConfig?.hasSupabaseAuth ? 'muted' : 'warning');
-  authMeta.textContent = publicConfig?.hasSupabaseAuth
-    ? (isLoggedIn
-      ? 'この状態で保存機能やお気に入り機能を追加できます。'
-      : 'マジックリンクまたはメールとパスワードでログインできます。')
-    : 'Supabase の URL と anon key を入れると、このフォームがそのまま使えます。';
-
-  const btnSignOut = document.getElementById('btnSignOut');
-  if (btnSignOut) btnSignOut.hidden = !isLoggedIn;
-
-  const authToggle = document.getElementById('authPanelToggle');
-  const authHint = document.getElementById('authPanelToggleHint');
-  if (authToggle && authHint && authToggle.getAttribute('aria-expanded') === 'true') {
-    if (!publicConfig?.hasSupabaseAuth) {
-      authHint.textContent = 'Supabase 連携後にログインできます';
-    } else if (isLoggedIn) {
-      authHint.textContent = 'ログイン済みです';
-    } else {
-      authHint.textContent = 'メールアドレスでログインできます';
-    }
+  if (!hint) return;
+  if (!open) {
+    hint.textContent = 'タップで開きます';
+    return;
   }
+  if (!publicConfig.hasSupabaseAuth) {
+    hint.textContent = 'Supabase 設定後にログインできます';
+    return;
+  }
+  hint.textContent = currentSession?.user
+    ? 'ログイン済みです'
+    : 'ログインしてお気に入りを保存できます';
 }
 
-function getAuthRedirectURL() {
-  return publicConfig?.siteUrl || window.location.origin;
+export function openAuthPanel() {
+  setOpen(true);
+  document.getElementById('authPanelSection')?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+  });
+}
+
+function updateAuthUI() {
+  const authStatus = document.getElementById('authStatus');
+  const authMeta = document.getElementById('authMeta');
+  const authEmail = currentSession?.user?.email || '';
+  const loggedIn = Boolean(currentSession?.user);
+
+  if (authStatus) {
+    authStatus.textContent = loggedIn ? `${authEmail} でログイン中` : '未ログインです';
+    authStatus.dataset.state = loggedIn
+      ? 'success'
+      : (publicConfig.hasSupabaseAuth ? 'muted' : 'warning');
+  }
+
+  if (authMeta) {
+    if (!publicConfig.hasSupabaseAuth) {
+      authMeta.textContent = 'Supabase の URL / anon key を設定すると、ここからログインと保存機能が有効になります。';
+    } else if (loggedIn) {
+      authMeta.textContent = '気に入った名前を保存すると、あとで一覧から見返せます。';
+    } else {
+      authMeta.textContent = 'メールアドレスでログインすると、お気に入り名を Supabase に保存できます。';
+    }
+  }
+
+  const signOutButton = document.getElementById('btnSignOut');
+  if (signOutButton) signOutButton.hidden = !loggedIn;
+
+  const favoriteSummary = document.getElementById('favoriteAuthSummary');
+  if (favoriteSummary) {
+    if (!publicConfig.hasSupabaseAuth) {
+      favoriteSummary.textContent = '保存機能はまだ未接続です。環境変数を入れるとそのまま有効化されます。';
+    } else if (loggedIn) {
+      favoriteSummary.textContent = `${authEmail} でログイン中です。結果カードの「保存」からお気に入りを追加できます。`;
+    } else {
+      favoriteSummary.textContent = 'ログインすると、お気に入りの名前をアカウントに保存できます。';
+    }
+  }
+
+  setOpen(document.getElementById('authPanelToggle')?.getAttribute('aria-expanded') === 'true');
 }
 
 function getAuthFields() {
-  const authEmail = document.getElementById('authEmail');
-  const authPassword = document.getElementById('authPassword');
   return {
-    email: authEmail?.value.trim() || '',
-    password: authPassword?.value || '',
+    email: document.getElementById('authEmail')?.value.trim() || '',
+    password: document.getElementById('authPassword')?.value || '',
   };
+}
+
+function getAuthRedirectURL() {
+  return publicConfig.siteUrl || window.location.origin;
+}
+
+function normalizeArray(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value) return [];
+  return [value];
+}
+
+export function favoriteKeyForItem(item) {
+  const species = normalizeArray(item.species).slice().sort().join('|');
+  return `${item.name}::${item.reading || ''}::${species}`;
+}
+
+function setFavoriteRecords(records) {
+  favoriteRecords = records.map((record) => ({
+    ...record,
+    species: normalizeArray(record.species),
+    vibe: normalizeArray(record.vibe),
+    color: normalizeArray(record.color),
+  }));
+
+  favoriteMap = new Map(
+    favoriteRecords.map((record) => [favoriteKeyForItem(record), record]),
+  );
+}
+
+export function getFavoriteRecords() {
+  return favoriteRecords.slice();
+}
+
+export function getPlatformSnapshot() {
+  return {
+    config: publicConfig,
+    isLoggedIn: Boolean(currentSession?.user),
+    userEmail: currentSession?.user?.email || '',
+    hasSupabaseAuth: publicConfig.hasSupabaseAuth,
+    canSaveFavorites: Boolean(currentSession?.access_token),
+    savedKeys: new Set(favoriteMap.keys()),
+    favoriteCount: favoriteRecords.length,
+    turnstileEnabled: Boolean(publicConfig.turnstileSiteKey),
+  };
+}
+
+async function loadPublicConfig() {
+  try {
+    const response = await fetch('/api/public-config', {
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return {
+      ...DEFAULT_PUBLIC_CONFIG,
+      ...(await response.json()),
+    };
+  } catch (error) {
+    captureError('public-config', error);
+    return {
+      ...DEFAULT_PUBLIC_CONFIG,
+      siteUrl: window.location.origin,
+    };
+  }
+}
+
+function initSentry() {
+  if (!publicConfig.sentryDsn || Sentry.getClient()) return;
+
+  Sentry.init({
+    dsn: publicConfig.sentryDsn,
+    environment: window.location.hostname.includes('localhost') ? 'development' : 'production',
+    integrations: [],
+    tracesSampleRate: 0,
+    sendDefaultPii: false,
+  });
+}
+
+function loadTurnstileScript() {
+  if (window.turnstile) {
+    return Promise.resolve();
+  }
+  if (turnstileScriptPromise) {
+    return turnstileScriptPromise;
+  }
+
+  turnstileScriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Turnstile script failed to load'));
+    document.head.appendChild(script);
+  });
+
+  return turnstileScriptPromise;
+}
+
+async function initTurnstile() {
+  const row = getTurnstileRow();
+  if (!row) return;
+
+  if (!publicConfig.turnstileSiteKey) {
+    row.hidden = true;
+    return;
+  }
+
+  row.hidden = false;
+  setTurnstileHint('保存前にロボット対策チェックを完了してください。', 'muted');
+
+  try {
+    await loadTurnstileScript();
+    if (!window.turnstile || turnstileWidgetId != null) return;
+
+    const mountPoint = document.getElementById('turnstileWidget');
+    if (!mountPoint) return;
+
+    turnstileWidgetId = window.turnstile.render(mountPoint, {
+      sitekey: publicConfig.turnstileSiteKey,
+      theme: 'light',
+      language: 'ja',
+      callback(token) {
+        turnstileToken = token;
+        setTurnstileHint('ロボット対策チェックが完了しました。', 'success');
+      },
+      'expired-callback'() {
+        turnstileToken = '';
+        setTurnstileHint('チェックの有効期限が切れました。もう一度確認してください。', 'warning');
+      },
+      'error-callback'() {
+        turnstileToken = '';
+        setTurnstileHint('Turnstile の読み込みに失敗しました。時間をおいて再試行してください。', 'error');
+      },
+    });
+  } catch (error) {
+    captureError('turnstile-init', error);
+    setTurnstileHint('Turnstile の初期化に失敗しました。環境変数を確認してください。', 'error');
+  }
+}
+
+function resetTurnstile() {
+  if (turnstileWidgetId != null && window.turnstile) {
+    window.turnstile.reset(turnstileWidgetId);
+  }
+  turnstileToken = '';
+}
+
+async function ensureTurnstileToken() {
+  if (!publicConfig.turnstileSiteKey) return null;
+  if (turnstileToken) return turnstileToken;
+  openAuthPanel();
+  setAuthMessage('保存前にロボット対策チェックを完了してください。', 'warning');
+  return null;
+}
+
+async function fetchFavorites() {
+  if (!currentSession?.access_token) {
+    setFavoriteRecords([]);
+    emit();
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/favorites', {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${currentSession.access_token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || `HTTP ${response.status}`);
+    }
+
+    setFavoriteRecords(data.favorites || []);
+    emit();
+  } catch (error) {
+    captureError('favorites-fetch', error);
+    setAuthMessage('お気に入りの読み込みに失敗しました。', 'error');
+    emit();
+  }
+}
+
+async function submitFavorite(method, payload) {
+  if (!currentSession?.access_token) {
+    openAuthPanel();
+    setAuthMessage('お気に入り保存にはログインが必要です。', 'warning');
+    return { ok: false, reason: 'login_required' };
+  }
+
+  const response = await fetch('/api/favorites', {
+    method,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${currentSession.access_token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || `HTTP ${response.status}`);
+  }
+  return data;
+}
+
+export async function saveFavorite(item) {
+  const safeItem = {
+    name: item.name,
+    reading: item.reading || '',
+    meaning: item.meaning || '',
+    species: normalizeArray(item.species),
+    gender: item.gender || '',
+    vibe: normalizeArray(item.vibe),
+    color: normalizeArray(item.color),
+    matchScore: item.match?.score ?? null,
+    matchLabel: item.match?.label ?? null,
+    savedFromPath: window.location.pathname,
+  };
+
+  try {
+    const turnstileResponse = await ensureTurnstileToken();
+    if (publicConfig.turnstileSiteKey && !turnstileResponse) {
+      return { ok: false, reason: 'turnstile_required' };
+    }
+
+    const data = await submitFavorite('POST', {
+      favorite: safeItem,
+      turnstileToken: turnstileResponse,
+    });
+
+    const key = favoriteKeyForItem(data.favorite);
+    favoriteMap.set(key, data.favorite);
+    setFavoriteRecords([data.favorite, ...favoriteRecords.filter((record) => record.id !== data.favorite.id)]);
+    setAuthMessage('お気に入りに保存しました。', 'success');
+    resetTurnstile();
+    emit();
+    return { ok: true };
+  } catch (error) {
+    captureError('favorite-save', error);
+    setAuthMessage(error.message || '保存に失敗しました。', 'error');
+    return { ok: false, reason: 'error' };
+  }
+}
+
+export async function removeFavorite(itemOrRecord) {
+  const record = itemOrRecord.id
+    ? itemOrRecord
+    : favoriteMap.get(favoriteKeyForItem(itemOrRecord));
+
+  if (!record?.id) {
+    return { ok: false, reason: 'missing_record' };
+  }
+
+  try {
+    await submitFavorite('DELETE', { id: record.id });
+    setFavoriteRecords(favoriteRecords.filter((entry) => entry.id !== record.id));
+    setAuthMessage('お気に入りから外しました。', 'success');
+    emit();
+    return { ok: true };
+  } catch (error) {
+    captureError('favorite-remove', error);
+    setAuthMessage(error.message || '削除に失敗しました。', 'error');
+    return { ok: false, reason: 'error' };
+  }
+}
+
+export async function toggleFavorite(item) {
+  if (favoriteMap.has(favoriteKeyForItem(item))) {
+    return removeFavorite(item);
+  }
+  return saveFavorite(item);
 }
 
 async function handleMagicLink() {
   if (!supabaseClient) return;
-
   const { email } = getAuthFields();
   if (!email) {
     setAuthMessage('マジックリンク送信にはメールアドレスが必要です。', 'warning');
@@ -93,9 +443,8 @@ async function handleMagicLink() {
         emailRedirectTo: getAuthRedirectURL(),
       },
     });
-
     if (error) throw error;
-    setAuthMessage('メールを送信しました。受信ボックスからログインを完了してください。', 'success');
+    setAuthMessage('メールを送信しました。リンクからログインを完了してください。', 'success');
   } catch (error) {
     captureError('supabase-magic-link', error);
     setAuthMessage(error.message || 'マジックリンクの送信に失敗しました。', 'error');
@@ -106,7 +455,6 @@ async function handleMagicLink() {
 
 async function handleSignUp() {
   if (!supabaseClient) return;
-
   const { email, password } = getAuthFields();
   if (!email || !password) {
     setAuthMessage('新規登録にはメールアドレスとパスワードの両方が必要です。', 'warning');
@@ -124,9 +472,8 @@ async function handleSignUp() {
         emailRedirectTo: getAuthRedirectURL(),
       },
     });
-
     if (error) throw error;
-    setAuthMessage('登録処理を受け付けました。必要なら確認メールを開いてください。', 'success');
+    setAuthMessage('登録を受け付けました。必要に応じて確認メールを開いてください。', 'success');
   } catch (error) {
     captureError('supabase-sign-up', error);
     setAuthMessage(error.message || '新規登録に失敗しました。', 'error');
@@ -137,7 +484,6 @@ async function handleSignUp() {
 
 async function handleSignIn() {
   if (!supabaseClient) return;
-
   const { email, password } = getAuthFields();
   if (!email || !password) {
     setAuthMessage('ログインにはメールアドレスとパスワードの両方が必要です。', 'warning');
@@ -148,11 +494,7 @@ async function handleSignIn() {
   setAuthMessage('ログインしています...', 'muted');
 
   try {
-    const { error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
     setAuthMessage('ログインできました。', 'success');
   } catch (error) {
@@ -165,7 +507,6 @@ async function handleSignIn() {
 
 async function handleSignOut() {
   if (!supabaseClient) return;
-
   setAuthControlsDisabled(true);
   setAuthMessage('ログアウトしています...', 'muted');
 
@@ -181,23 +522,36 @@ async function handleSignOut() {
   }
 }
 
-async function initSupabaseAuth(config) {
-  const authStatus = document.getElementById('authStatus');
-  const authMeta = document.getElementById('authMeta');
-  if (!authStatus || !authMeta) return;
+function bindAuthEvents() {
+  if (authEventsBound) return;
+  authEventsBound = true;
 
-  if (!config?.supabaseUrl || !config?.supabaseAnonKey) {
-    authStatus.textContent = 'Supabase 未設定です';
-    authStatus.dataset.state = 'warning';
-    authMeta.textContent = 'Vercel の環境変数に SUPABASE_URL と SUPABASE_ANON_KEY を追加すると有効になります。';
-    setAuthMessage('設定後はこの画面からそのままログイン確認ができます。', 'muted');
+  document.getElementById('authForm')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+
+  document.getElementById('btnMagicLink')?.addEventListener('click', handleMagicLink);
+  document.getElementById('btnSignIn')?.addEventListener('click', handleSignIn);
+  document.getElementById('btnSignUp')?.addEventListener('click', handleSignUp);
+  document.getElementById('btnSignOut')?.addEventListener('click', handleSignOut);
+  document.getElementById('authPanelToggle')?.addEventListener('click', () => {
+    const isOpen = document.getElementById('authPanelToggle')?.getAttribute('aria-expanded') === 'true';
+    setOpen(!isOpen);
+  });
+}
+
+async function initSupabaseAuth() {
+  bindAuthEvents();
+
+  if (!publicConfig.supabaseUrl || !publicConfig.supabaseAnonKey) {
+    updateAuthUI();
+    setAuthMessage('Supabase 設定後にログイン機能が有効になります。', 'muted');
+    emit();
     return;
   }
 
   try {
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
-
-    supabaseClient = createClient(config.supabaseUrl, config.supabaseAnonKey, {
+    supabaseClient = createClient(publicConfig.supabaseUrl, publicConfig.supabaseAnonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -207,89 +561,38 @@ async function initSupabaseAuth(config) {
 
     const { data, error } = await supabaseClient.auth.getSession();
     if (error) throw error;
-
-    updateAuthUI(data.session);
-    setAuthMessage('Supabase Auth の接続準備ができています。', 'success');
-
-    supabaseClient.auth.onAuthStateChange((_event, session) => {
-      updateAuthUI(session);
-    });
-
-    const authForm = document.getElementById('authForm');
-    if (authForm) {
-      authForm.addEventListener('submit', (event) => event.preventDefault());
+    currentSession = data.session;
+    updateAuthUI();
+    if (currentSession) {
+      setAuthMessage('お気に入り保存の準備ができました。', 'success');
+      await fetchFavorites();
+    } else {
+      emit();
     }
 
-    document.getElementById('btnMagicLink')?.addEventListener('click', handleMagicLink);
-    document.getElementById('btnSignUp')?.addEventListener('click', handleSignUp);
-    document.getElementById('btnSignIn')?.addEventListener('click', handleSignIn);
-    document.getElementById('btnSignOut')?.addEventListener('click', handleSignOut);
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      currentSession = session;
+      updateAuthUI();
+      if (session) {
+        await fetchFavorites();
+      } else {
+        setFavoriteRecords([]);
+        emit();
+      }
+    });
   } catch (error) {
     captureError('supabase-init', error);
-    authStatus.textContent = 'Supabase 初期化エラー';
-    authStatus.dataset.state = 'error';
-    authMeta.textContent = 'URL や anon key、またはブラウザからの読み込み方法を確認してください。';
     setAuthMessage(error.message || 'Supabase Auth の初期化に失敗しました。', 'error');
+    emit();
   }
 }
 
-async function loadPublicConfig() {
-  try {
-    const response = await fetch('/api/public-config', {
-      headers: { Accept: 'application/json' },
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    return {
-      ...data,
-      authPanelInitiallyOpen: Boolean(data.hasSupabaseAuth),
-    };
-  } catch (error) {
-    captureError('public-config', error);
-    return {
-      siteUrl: window.location.origin,
-      supabaseUrl: '',
-      supabaseAnonKey: '',
-      hasSupabaseAuth: false,
-      authPanelInitiallyOpen: true,
-    };
-  }
-}
-
-function initAuthPanelToggle() {
-  const toggle = document.getElementById('authPanelToggle');
-  const body = document.getElementById('authPanelBody');
-  const hint = document.getElementById('authPanelToggleHint');
-  if (!toggle || !body) return;
-
-  function updateHint(isOpen) {
-    if (!hint) return;
-    if (!isOpen) {
-      hint.textContent = 'タップで開きます';
-      return;
-    }
-    hint.textContent = publicConfig?.hasSupabaseAuth
-      ? 'メールアドレスでログインできます'
-      : 'Supabase 連携後にログインできます';
-  }
-
-  function setOpen(open) {
-    toggle.setAttribute('aria-expanded', String(open));
-    body.hidden = !open;
-    updateHint(open);
-  }
-
-  setOpen(Boolean(publicConfig?.authPanelInitiallyOpen));
-
-  toggle.addEventListener('click', () => {
-    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-  });
-}
-
-if (typeof document !== 'undefined' && document.getElementById('authForm')) {
-  (async () => {
-    publicConfig = await loadPublicConfig();
-    initAuthPanelToggle();
-    await initSupabaseAuth(publicConfig);
-  })();
+export async function initPlatform() {
+  publicConfig = await loadPublicConfig();
+  initSentry();
+  updateAuthUI();
+  bindAuthEvents();
+  await initTurnstile();
+  await initSupabaseAuth();
+  emit();
 }

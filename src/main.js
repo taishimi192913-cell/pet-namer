@@ -12,10 +12,20 @@ import {
 import { getResults } from './diagnosis.js';
 import {
   createChips,
+  createNameCard,
   createSpeciesCards,
   renderResults,
 } from './render.js';
 import { secondaryReadingIfAny } from './reading-display.js';
+import {
+  favoriteKeyForItem,
+  getFavoriteRecords,
+  getPlatformSnapshot,
+  initPlatform,
+  openAuthPanel,
+  subscribePlatform,
+  toggleFavorite,
+} from './auth.js';
 
 const state = {
   species: new Set(),
@@ -27,6 +37,7 @@ const state = {
 };
 
 let allNames = [];
+let platformSnapshot = getPlatformSnapshot();
 
 /** 名鑑 JSON の名前 → 画像（ランキング行のサムネ用） */
 const celebThumbByName = new Map();
@@ -40,13 +51,19 @@ const celebSection = document.getElementById('celebSection');
 /** ペット名鑑は初期は畳み、足跡ボタンで展開 */
 let celebPanelRevealed = false;
 
-/** Wikimedia の https 画像のみ許可（静的 JSON 用） */
-function safeWikimediaImageUrl(url) {
+/** 名鑑画像：Wikimedia / Unsplash / Pexels の https のみ（静的 JSON・改ざん防止用） */
+const CELEB_IMAGE_HOSTS = new Set([
+  'upload.wikimedia.org',
+  'images.unsplash.com',
+  'images.pexels.com',
+]);
+
+function safeCelebImageUrl(url) {
   if (typeof url !== 'string' || !url.trim()) return null;
   try {
     const u = new URL(url.trim());
     if (u.protocol !== 'https:') return null;
-    if (u.hostname.toLowerCase() !== 'upload.wikimedia.org') return null;
+    if (!CELEB_IMAGE_HOSTS.has(u.hostname.toLowerCase())) return null;
     return u.href;
   } catch {
     return null;
@@ -77,37 +94,41 @@ function revealCelebPanel() {
   });
 }
 
-/** 狭いビューポートではランキング一覧を畳み、タブタップで全表示 */
-const MOBILE_TRENDING_MQ = window.matchMedia('(max-width: 900px)');
+/** ランキング一覧は初期は畳み、🐾詳細ボタンで展開（全画面幅共通） */
 let trendingRankingRevealed = false;
 
 function syncTrendingListVisibility() {
   if (!trendingSection) return;
   const panel = document.getElementById('trendingListPanel');
-  if (!MOBILE_TRENDING_MQ.matches) {
-    trendingSection.classList.add('trending-section--list-revealed');
-    panel?.removeAttribute('aria-hidden');
-    ensureDesktopTrendingHasContent();
-    return;
-  }
+  const revealBtn = document.getElementById('trendingRevealBtn');
   if (trendingRankingRevealed) {
     trendingSection.classList.add('trending-section--list-revealed');
     panel?.removeAttribute('aria-hidden');
+    revealBtn?.setAttribute('aria-expanded', 'true');
   } else {
     trendingSection.classList.remove('trending-section--list-revealed');
     panel?.setAttribute('aria-hidden', 'true');
+    revealBtn?.setAttribute('aria-expanded', 'false');
   }
 }
 
 function revealTrendingRanking() {
+  let tab = document.querySelector('.trending-tab.is-active');
+  if (!tab) {
+    tab = document.querySelector('.trending-tab[data-species="犬"]');
+    if (tab) {
+      setTrendingTabActive(tab);
+      renderTrending('犬');
+    }
+  } else {
+    renderTrending(tab.dataset.species);
+  }
   trendingRankingRevealed = true;
   syncTrendingListVisibility();
-  if (MOBILE_TRENDING_MQ.matches) {
-    document.getElementById('trendingListPanel')?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-    });
-  }
+  document.getElementById('trendingListPanel')?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+  });
 }
 
 function clearTrendingTabSelection() {
@@ -126,15 +147,6 @@ function setTrendingTabActive(tab) {
   tab.setAttribute('aria-selected', 'true');
 }
 
-/** デスクトップ幅で一覧が空のときは犬ランキングを表示（スマホ初期は空のまま） */
-function ensureDesktopTrendingHasContent() {
-  if (MOBILE_TRENDING_MQ.matches || !trendingList) return;
-  if (trendingList.children.length > 0) return;
-  renderTrending('犬');
-  const dogTab = document.querySelector('.trending-tab[data-species="犬"]');
-  if (dogTab) setTrendingTabActive(dogTab);
-}
-
 const selectionSummary = document.getElementById('selectionSummary');
 const btnDiagnose = document.getElementById('btnDiagnose');
 const resultSection = document.getElementById('resultSection');
@@ -142,6 +154,9 @@ const resultCount = document.getElementById('resultCount');
 const resultContainer = document.getElementById('resultContainer');
 const btnRetry = document.getElementById('btnRetry');
 const faqToggle = document.getElementById('faqToggle');
+const savedFavoritesSection = document.getElementById('savedFavoritesSection');
+const savedFavoritesSummary = document.getElementById('savedFavoritesSummary');
+const savedFavoritesContainer = document.getElementById('savedFavoritesContainer');
 
 const speciesGrid = document.getElementById('speciesGrid');
 const vibeChips = document.getElementById('vibeChips');
@@ -259,7 +274,11 @@ function runDiagnosis({ smoothScroll = true } = {}) {
     resultCount.textContent = `${state.results.total}件の候補`;
   }
 
-  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore);
+  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
+    onToggleFavorite: handleFavoriteToggle,
+    savedKeys: platformSnapshot.savedKeys,
+    favoriteKeyForItem,
+  });
 
   if (resultSection) {
     resultSection.hidden = false;
@@ -273,7 +292,62 @@ function runDiagnosis({ smoothScroll = true } = {}) {
 function handleLoadMore() {
   if (!state.results || !resultContainer) return;
   state.visibleCount += LOAD_MORE_COUNT;
-  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore);
+  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
+    onToggleFavorite: handleFavoriteToggle,
+    savedKeys: platformSnapshot.savedKeys,
+    favoriteKeyForItem,
+  });
+}
+
+async function handleFavoriteToggle(item) {
+  const result = await toggleFavorite(item);
+  if (result.reason === 'login_required' || result.reason === 'turnstile_required') {
+    openAuthPanel();
+  }
+
+  if (state.results && resultContainer) {
+    renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
+      onToggleFavorite: handleFavoriteToggle,
+      savedKeys: platformSnapshot.savedKeys,
+      favoriteKeyForItem,
+    });
+  }
+  renderSavedFavorites();
+}
+
+function renderSavedFavorites() {
+  if (!savedFavoritesContainer || !savedFavoritesSection || !savedFavoritesSummary) return;
+
+  const favorites = getFavoriteRecords();
+  if (!platformSnapshot.hasSupabaseAuth) {
+    savedFavoritesSection.hidden = true;
+    return;
+  }
+
+  if (!platformSnapshot.isLoggedIn) {
+    savedFavoritesSection.hidden = false;
+    savedFavoritesSummary.textContent = 'ログインすると、保存した名前をここに一覧表示できます。';
+    savedFavoritesContainer.replaceChildren();
+    return;
+  }
+
+  savedFavoritesSection.hidden = false;
+  if (favorites.length === 0) {
+    savedFavoritesSummary.textContent = 'まだ保存された名前はありません。結果カードの「保存」から追加できます。';
+    const empty = document.createElement('p');
+    empty.className = 'result-empty';
+    empty.textContent = 'お気に入りに保存した名前がまだありません。';
+    savedFavoritesContainer.replaceChildren(empty);
+    return;
+  }
+
+  savedFavoritesSummary.textContent = `${favorites.length}件のお気に入りを保存しています。`;
+  savedFavoritesContainer.replaceChildren(
+    ...favorites.map((item) => createNameCard(item, {
+      onToggleFavorite: handleFavoriteToggle,
+      isFavorite: true,
+    })),
+  );
 }
 
 function extractRankNum(meaning) {
@@ -353,7 +427,7 @@ async function loadCelebPets() {
     const celebs = await res.json();
     celebThumbByName.clear();
     celebs.forEach((c) => {
-      const u = safeWikimediaImageUrl(c.imageUrl);
+      const u = safeCelebImageUrl(c.imageUrl);
       if (u && typeof c.name === 'string') {
         celebThumbByName.set(c.name, {
           url: u,
@@ -367,7 +441,7 @@ async function loadCelebPets() {
       const primarySpecies = speciesArr[0] ?? '';
       const speciesIcon = SPECIES_ICON_MAP[primarySpecies] ?? '✨';
       const owner = extractOwnerFromMeaning(c.meaning);
-      const imgUrl = safeWikimediaImageUrl(c.imageUrl);
+      const imgUrl = safeCelebImageUrl(c.imageUrl);
       const summaryMeta = formatCelebSummaryMeta(c, primarySpecies, owner);
 
       const details = document.createElement('details');
@@ -493,6 +567,20 @@ async function loadCelebPets() {
 }
 
 async function bootstrap() {
+  subscribePlatform((snapshot) => {
+    platformSnapshot = snapshot;
+    renderSavedFavorites();
+    if (state.results && resultContainer) {
+      renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
+        onToggleFavorite: handleFavoriteToggle,
+        savedKeys: platformSnapshot.savedKeys,
+        favoriteKeyForItem,
+      });
+    }
+  });
+
+  await initPlatform();
+
   try {
     const response = await fetch(new URL('../data/names.json', import.meta.url).href);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -515,25 +603,20 @@ async function bootstrap() {
     });
   });
 
-  // トレンドランキング：スマホは未選択・一覧なしから開始（犬が選ばれているように見えない）
-  if (MOBILE_TRENDING_MQ.matches) {
+  // トレンドランキング：一覧は畳み。犬タブを初期選択してリストだけ先に描画（開く操作は別）
+  trendingRankingRevealed = false;
+  const dogTabInit = document.querySelector('.trending-tab[data-species="犬"]');
+  if (dogTabInit) {
+    setTrendingTabActive(dogTabInit);
+    renderTrending('犬');
+  } else {
     trendingList?.replaceChildren();
     clearTrendingTabSelection();
-  } else {
-    renderTrending('犬');
-    const dogTab = document.querySelector('.trending-tab[data-species="犬"]');
-    if (dogTab) setTrendingTabActive(dogTab);
   }
   syncTrendingListVisibility();
-  MOBILE_TRENDING_MQ.addEventListener('change', syncTrendingListVisibility);
-  let trendingResizeTimer;
-  window.addEventListener('resize', () => {
-    window.clearTimeout(trendingResizeTimer);
-    trendingResizeTimer = window.setTimeout(syncTrendingListVisibility, 120);
-  });
+  document.getElementById('trendingRevealBtn')?.addEventListener('click', revealTrendingRanking);
   trendingTabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      revealTrendingRanking();
       setTrendingTabActive(tab);
       renderTrending(tab.dataset.species);
     });
@@ -573,6 +656,8 @@ async function bootstrap() {
   if (hasPreset) {
     runDiagnosis({ smoothScroll: false });
   }
+
+  renderSavedFavorites();
 }
 
 bootstrap();

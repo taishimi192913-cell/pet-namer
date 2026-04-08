@@ -14,49 +14,70 @@
     "reading": "まるお",
     "meaning": "YouTuber HIKAKINの愛猫（スコティッシュフォールド）。もふこと兄妹。",
     "species": ["猫"],
-    "vibe": ["かわいい", "ふわふわ"]
+    "vibe": ["かわいい", "ふわふわ"],
+    "imageUrl": "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&w=800&q=80",
+    "imageAlt": "猫のイメージ（HIKAKINの愛猫まるおの参考。別個体の写真です）",
+    "imageCredit": "Unsplash License"
   },
   {
     "name": "もふこ",
     "reading": "もふこ",
     "meaning": "YouTuber HIKAKINの愛猫（スコティッシュフォールド）。まるおと兄妹。",
     "species": ["猫"],
-    "vibe": ["かわいい", "ふわふわ"]
+    "vibe": ["かわいい", "ふわふわ"],
+    "imageUrl": "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=800&q=80",
+    "imageAlt": "猫のイメージ（HIKAKINの愛猫もふこの参考。別個体の写真です）",
+    "imageCredit": "Unsplash License"
   },
   {
     "name": "キョロちゃん",
     "reading": "きょろちゃん",
     "meaning": "モデル・梨花の愛猫（ロシアンブルー）。長年SNS等で親しまれている。",
     "species": ["猫"],
-    "vibe": ["かわいい", "上品"]
+    "vibe": ["かわいい", "上品"],
+    "imageUrl": "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80",
+    "imageAlt": "グレー色の猫のイメージ（キョロちゃんの参考。別個体の写真です）",
+    "imageCredit": "Unsplash License"
   },
   {
     "name": "メレディス",
     "reading": "めれでぃす",
     "meaning": "テイラー・スウィフトの愛猫。ドラマ『グレイズ・アナトミー』の主人公が由来。",
     "species": ["猫"],
-    "vibe": ["かわいい", "洋風"]
+    "vibe": ["かわいい", "洋風"],
+    "imageUrl": "https://images.unsplash.com/photo-1548681528-6a5c45b66b42?auto=format&fit=crop&w=800&q=80",
+    "imageAlt": "猫のイメージ（メレディスの参考。別個体の写真です）",
+    "imageCredit": "Unsplash License"
   },
   {
     "name": "オリヴィア",
     "reading": "おりヴぃあ",
     "meaning": "テイラー・スウィフトの愛猫。世界で最もリッチなペットの一匹として知られる。",
     "species": ["猫"],
-    "vibe": ["かわいい", "洋風"]
+    "vibe": ["かわいい", "洋風"],
+    "imageUrl": "https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "imageAlt": "猫のイメージ（オリヴィアの参考。別個体の写真です）",
+    "imageCredit": "Pexels License"
   },
   {
     "name": "ベンジャミン",
     "reading": "べんじゃみん",
     "meaning": "テイラー・スウィフトの愛猫。ミュージックビデオの撮影で出会い引き取られた。",
     "species": ["猫"],
-    "vibe": ["かわいい", "洋風"]
+    "vibe": ["かわいい", "洋風"],
+    "imageUrl": "https://images.pexels.com/photos/208984/pexels-photo-208984.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "imageAlt": "猫のイメージ（ベンジャミンの参考。別個体の写真です）",
+    "imageCredit": "Pexels License"
   },
   {
     "name": "カリッポ",
     "reading": "かりっぽ",
     "meaning": "エド・シーランの愛猫。専用のInstagramアカウントを持つほどの人気猫。",
     "species": ["猫"],
-    "vibe": ["かわいい", "洋風"]
+    "vibe": ["かわいい", "洋風"],
+    "imageUrl": "https://images.pexels.com/photos/416195/pexels-photo-416195.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "imageAlt": "猫のイメージ（カリッポの参考。別個体の写真です）",
+    "imageCredit": "Pexels License"
   },
   {
     "name": "タマ",
