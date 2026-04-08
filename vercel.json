@@ -1,9 +1,24 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
   "installCommand": "npm install",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api/public-config",
+      "destination": "/api/public-config"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health"
+    },
+    {
+      "source": "/api/favorites",
+      "destination": "/api/favorites"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
