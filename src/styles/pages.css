@@ -446,6 +446,34 @@
   margin-bottom: 0;
 }
 
+.affiliate-item {
+  margin: 24px 0;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-sub, #fdf6ee);
+  border: 1.5px solid var(--border);
+}
+
+.affiliate-item__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin: 0 0 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.affiliate-item table {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 540px) {
+  .affiliate-item div[style*="width:504px"] {
+    width: 100% !important;
+  }
+}
+
 .journal-callout {
   margin: 18px 0;
   padding: 18px 20px;

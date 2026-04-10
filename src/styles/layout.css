@@ -98,6 +98,68 @@
   transform: translateY(-1px);
 }
 
+/* ドロップダウンナビ */
+.page-header__nav-group {
+  position: relative;
+}
+
+.page-header__nav-link--parent::after {
+  content: " ▾";
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+
+.page-header__dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 8px;
+  min-width: 210px;
+  z-index: 200;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.page-header__nav-group:hover .page-header__dropdown,
+.page-header__nav-group:focus-within .page-header__dropdown {
+  display: flex;
+}
+
+.page-header__dropdown-link {
+  display: block;
+  padding: 9px 14px;
+  border-radius: 9px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.page-header__dropdown-link:hover {
+  background: var(--peach-light, #fff4ee);
+  color: var(--primary, #e8703a);
+}
+
+.page-header__dropdown-link--sub {
+  padding-left: 22px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  border-top: 1px solid #f3f3f3;
+  margin-top: 4px;
+}
+
+.page-header__dropdown-link--sub:first-of-type {
+  border-top: none;
+  margin-top: 0;
+}
+
 .page-header__faq-link {
   display: inline-flex;
   align-items: center;

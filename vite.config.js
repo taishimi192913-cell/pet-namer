@@ -40,6 +40,11 @@ export default defineConfig(({ mode }) => {
   Object.assign(process.env, env);
 
   return {
+    server: {
+      headers: {
+        'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:;"
+      }
+    },
     plugins: [
       {
         name: 'sippomi-dev-api-routes',
