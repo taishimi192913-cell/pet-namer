@@ -22,7 +22,9 @@ Set these in Vercel for both Preview and Production.
 5. Add these redirect URLs
    - `http://localhost:5173`
    - `http://127.0.0.1:5173`
-   - `https://pet-namer.vercel.app`
+   - `https://sippomi.com`
+   - `https://www.sippomi.com`
+   - `https://pet-namer.vercel.app` (旧 Preview / 旧プロジェクトを残す場合のみ)
 
 ## 3. Vercel
 
@@ -45,6 +47,7 @@ After deploy, verify the pages and API routes:
 
 ```bash
 npm run verify:deployment -- https://pet-namer.vercel.app
+npm run verify:deployment -- https://sippomi.com
 ```
 
 The script checks:

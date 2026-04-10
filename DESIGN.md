@@ -1,4 +1,4 @@
-# pet-namer Design System
+# Sippomi Design System
 
 ## コンセプト
 「温かい日本の文具・エディトリアル」  

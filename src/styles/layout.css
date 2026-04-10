@@ -49,6 +49,13 @@
   flex-shrink: 0;
 }
 
+.page-header__logo-mark,
+.footer-logo-mark {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .page-header__logo-text {
   font-family: var(--font-accent);
   font-size: 1.3rem;
@@ -70,6 +77,25 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.page-header__nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  color: var(--text-sub);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 700;
+  transition: background 0.2s, color 0.2s, transform 0.2s var(--ease-bounce);
+}
+
+.page-header__nav-link:hover {
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text);
+  transform: translateY(-1px);
 }
 
 .page-header__faq-link {
@@ -110,19 +136,29 @@
 .hero-section {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(160deg,
-    #fff5f1 0%,
-    #fdf9f3 30%,
-    #f0faf9 70%,
-    #f5f0eb 100%
-  );
+  /* メイングラデは .hero-background-decor 側で重層表示 */
+  background: transparent;
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
   padding: 56px 24px 72px;
 }
 
+/* ヒーロー背景に動物イラストを直接重ねる（1画面目で見えるように） */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url('/hero-pets.png');
+  background-repeat: no-repeat;
+  background-position: center bottom 6px;
+  background-size: min(44vw, 440px) auto;
+  opacity: 0.24;
+}
+
 .hero-inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 1100px;
   margin: 0 auto;
 }
@@ -136,6 +172,8 @@
 }
 
 .hero-copy {
+  position: relative;
+  z-index: 0;
   flex: 1 1 300px;
   max-width: 520px;
   text-align: center;
@@ -193,29 +231,7 @@
   }
 }
 
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(240, 125, 90, 0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-section::after {
-  content: '';
-  position: absolute;
-  bottom: -40px;
-  left: -40px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(75, 168, 153, 0.10) 0%, transparent 70%);
-  pointer-events: none;
-}
+/* 旧ヒーロー装飾は .hero-background-decor に集約 */
 
 .hero-badge {
   display: inline-flex;
@@ -234,6 +250,8 @@
 }
 
 .hero-title {
+  position: relative;
+  z-index: 0;
   margin: 0 0 14px;
   font-family: var(--font-display);
   font-size: clamp(2rem, 6vw, 3.2rem);
@@ -242,6 +260,27 @@
   letter-spacing: 0.01em;
   color: var(--text);
   animation: fadeSlideUp 0.7s var(--ease-smooth) 0.1s both;
+}
+
+.hero-title::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: min(112%, 560px);
+  height: 140%;
+  transform: translate(-50%, -48%);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 65% at 50% 45%,
+      rgba(255, 248, 252, 0.98) 0%,
+      rgba(255, 240, 245, 0.65) 35%,
+      rgba(255, 250, 240, 0.25) 58%,
+      transparent 72%);
+  filter: blur(22px);
+  opacity: 0.88;
+  animation: heroTitleGlow 6s ease-in-out infinite alternate;
 }
 
 .hero-title em {
@@ -270,6 +309,21 @@
   font-size: 1rem;
   font-weight: 500;
   animation: fadeSlideUp 0.7s var(--ease-smooth) 0.2s both;
+}
+
+.hero-lead__kicker {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 4px 12px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--primary-hover);
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.82), rgba(255, 240, 245, 0.55));
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(240, 125, 90, 0.22);
+  box-shadow: 0 4px 18px rgba(240, 125, 90, 0.1);
+  animation: heroKickerRise 0.95s var(--ease-smooth) 0.35s both;
 }
 
 .hero-actions {
@@ -313,7 +367,18 @@
   justify-content: center;
   gap: 12px;
   margin-top: 8px;
-  animation: fadeSlideUp 0.7s var(--ease-smooth) 0.35s both;
+}
+
+.hero-stat:nth-child(1) {
+  animation: fadeSlideUp 0.85s var(--ease-smooth) 0.48s both;
+}
+
+.hero-stat:nth-child(2) {
+  animation: fadeSlideUp 0.85s var(--ease-smooth) 0.62s both;
+}
+
+.hero-stat:nth-child(3) {
+  animation: fadeSlideUp 0.85s var(--ease-smooth) 0.76s both;
 }
 
 .hero-stat {
@@ -353,6 +418,7 @@
 /* ── デコレーション: 浮遊する足跡（大きめ SVG） ── */
 .hero-paws {
   position: absolute;
+  z-index: 1;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
@@ -454,6 +520,23 @@
   color: var(--text);
 }
 
+.section-heading--left {
+  text-align: left;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+.section-lead {
+  margin: 0 0 18px;
+  color: var(--text-sub);
+  line-height: 1.8;
+  font-size: 0.96rem;
+}
+
+.section-lead--left {
+  text-align: left;
+}
+
 .step-heading {
   margin: 0 0 12px;
   font-family: var(--font-display);
@@ -489,6 +572,202 @@
 
 .filter-group + .filter-group {
   margin-top: 32px;
+}
+
+/* ======================================
+   BRAND LANDING SECTIONS
+====================================== */
+.brand-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0;
+}
+
+.brand-strip__item {
+  padding: 16px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.74);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.story-grid,
+.capability-grid,
+.popular-grid,
+.reassurance-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.story-card,
+.capability-card,
+.popular-card,
+.starter-card,
+.reassurance-card {
+  padding: 22px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.story-card__eyebrow,
+.popular-card__tag,
+.starter-card__status {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 10px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(240, 125, 90, 0.1);
+  color: var(--primary-hover);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.story-card h3,
+.capability-card h3,
+.popular-card h3,
+.reassurance-card h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-accent);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.story-card p,
+.capability-card p,
+.popular-card p,
+.starter-card p,
+.reassurance-card p {
+  margin: 0;
+  color: var(--text-sub);
+  line-height: 1.8;
+  font-size: 0.93rem;
+}
+
+.capability-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 247, 244, 0.94));
+}
+
+.capability-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: var(--peach-light);
+  color: var(--primary-hover);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.popular-card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.22s var(--ease-bounce), box-shadow 0.2s, border-color 0.2s;
+}
+
+.popular-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--peach);
+}
+
+.popular-card__tag {
+  background: rgba(74, 168, 153, 0.12);
+  color: var(--accent-hover);
+}
+
+.starter-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(249, 243, 239, 0.95));
+}
+
+.starter-card--link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.22s var(--ease-bounce), box-shadow 0.2s, border-color 0.2s;
+}
+
+.starter-card--link:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--peach);
+}
+
+.starter-card__lead {
+  margin-bottom: 16px;
+}
+
+.starter-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.starter-pill-list span {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.section-cta-block {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-cta-block .btn-primary {
+  max-width: 340px;
+}
+
+.section-cta-block .btn-secondary {
+  max-width: 340px;
+}
+
+.section-cta-inline {
+  margin-top: 18px;
+}
+
+.section-cta-inline .btn-secondary {
+  max-width: 320px;
+}
+
+.reassurance-grid {
+  margin-top: 10px;
+}
+
+.journal-preview-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.starter-card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  color: var(--accent-hover);
+  font-size: 0.9rem;
+  font-weight: 800;
 }
 
 /* ======================================
@@ -635,9 +914,44 @@
     height: 60px;
   }
 
+  .page-header__nav {
+    gap: 6px;
+  }
+
+  .page-header__nav-link {
+    display: none;
+  }
+
   .hero-section {
-    padding: 40px 16px 56px;
+    /* 下部に画像専用スペースを確保して文字と分離 */
+    padding: 34px 16px 132px;
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  .hero-section::before {
+    /* 下部の専用エリアだけで表示（テキスト/CTAへの重なり回避） */
+    background-position: center calc(100% - 10px);
+    background-size: min(74vw, 290px) auto;
+    opacity: 0.68;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 68%,
+      rgba(0, 0, 0, 0.82) 82%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 68%,
+      rgba(0, 0, 0, 0.82) 82%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  }
+
+  /* スマホは背景化したため、重複表示の画像ブロックを畳んでスクロール量を削減 */
+  .hero-media {
+    display: none;
   }
 
   .hero-title {
@@ -646,18 +960,46 @@
 
   .hero-stats {
     gap: 8px;
+    margin-top: 6px;
   }
 
   .hero-stat {
-    padding: 12px 16px;
-    min-width: 90px;
+    padding: 14px 16px;
+    min-width: 96px;
   }
 
   .hero-stat__value {
     font-size: 1.4rem;
   }
 
+  /* 「登録不要・無料」などの補助文はスマホヒーローでは省略 */
+  .hero-stat__label {
+    display: none;
+  }
+
   .page-main {
     padding: 28px 16px 48px;
+  }
+}
+
+@media (min-width: 700px) {
+  .brand-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .story-grid,
+  .capability-grid,
+  .popular-grid,
+  .reassurance-grid,
+  .journal-preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .capability-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .journal-preview-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

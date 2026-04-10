@@ -18,6 +18,7 @@ const favoritePayloadSchema = z.object({
 
 function withNoStore(response) {
   response.setHeader('Cache-Control', 'no-store');
+  response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
 }
 
 function mapFavoriteRow(row) {
@@ -142,6 +143,10 @@ export default async function handler(request, response) {
 
     return sendJson(response, 200, { ok: true, id: favoriteId });
   } catch (error) {
-    return sendJson(response, 500, { ok: false, error: error.message || 'Unknown server error' });
+    const statusCode = Number.isInteger(error?.statusCode) ? error.statusCode : 500;
+    return sendJson(response, statusCode, {
+      ok: false,
+      error: error.message || 'Unknown server error',
+    });
   }
 }

@@ -18,11 +18,11 @@
 ====================================== */
 :root {
   /* ── Palette ── */
-  --bg:              #faf7f3;          /* ペットショップのあたたかいベージュ */
-  --bg-wave:         #f0ebe3;          /* 波形セクション用 */
+  --bg:              #fff9f5;          /* ふんわりベージュ（やさしい印象） */
+  --bg-wave:         #f6eee6;          /* 波形セクション用 */
   --surface:         #ffffff;
-  --surface-sub:     #fdf9f5;
-  --surface-card:    #fffcf9;
+  --surface-sub:     #fffdfb;
+  --surface-card:    #ffffff;
 
   /* ── Brand Colors (petmi.jp インスパイア) ── */
   --sand:            #e8d5b7;          /* 砂色 */
@@ -67,10 +67,10 @@
   --radius-pill: 999px;
 
   /* ── Shadows ── */
-  --shadow-sm:  0 2px 10px rgba(45, 37, 32, 0.06);
-  --shadow-md:  0 6px 24px rgba(45, 37, 32, 0.09);
-  --shadow-lg:  0 16px 48px rgba(45, 37, 32, 0.13);
-  --shadow-xl:  0 24px 64px rgba(45, 37, 32, 0.16);
+  --shadow-sm:  0 2px 10px rgba(45, 37, 32, 0.045);
+  --shadow-md:  0 6px 20px rgba(45, 37, 32, 0.07);
+  --shadow-lg:  0 14px 44px rgba(45, 37, 32, 0.10);
+  --shadow-xl:  0 20px 56px rgba(45, 37, 32, 0.12);
   --shadow-glow: 0 8px 32px var(--primary-glow);
 
   /* ── Typography ── */
@@ -107,6 +107,12 @@ body {
   cursor: url('/cursors/paw-cursor.svg') 16 24, auto;
 }
 
+@media (max-width: 640px) {
+  body {
+    line-height: 1.8;
+  }
+}
+
 /* ペーパーグレインテクスチャ */
 body::before {
   content: '';
@@ -136,7 +142,12 @@ button:disabled {
 }
 
 button {
-  font: inherit;
+  /* `font: inherit` のショートハンドだと、コンポーネント側の font-family 指定と相性が崩れる環境がある */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
 }
 
 /* マウス軌跡の足跡（landing-effects.js） */
@@ -174,6 +185,159 @@ a {
 img {
   max-width: 100%;
   display: block;
+}
+
+/* ======================================
+   MOBILE: THUMB-FRIENDLY CTA + TAPS
+====================================== */
+@media (max-width: 640px) {
+  #diagnosisPanel {
+    padding-bottom: 28px;
+  }
+
+  .cta-area--floating {
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 1000;
+    padding: 10px;
+    margin-top: 18px;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.86);
+    border: 1.5px solid rgba(237, 229, 219, 0.92);
+    box-shadow: 0 8px 24px rgba(45, 37, 32, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .cta-area--floating .selection-summary {
+    margin: 0 0 8px;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .cta-area--floating .btn-primary {
+    padding: 18px 22px;
+    border-radius: 24px;
+    font-size: 1.02rem;
+  }
+
+  .chips {
+    gap: 12px;
+  }
+
+  .chip {
+    min-height: 44px;
+    padding: 12px 16px;
+    border-radius: 18px;
+  }
+}
+
+/* ======================================
+   HERO BACKGROUND — 「物語のはじまり」
+   (index.html: .hero-background-decor)
+====================================== */
+.hero-background-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(
+    168deg,
+    #fffaf0 0%,
+    #fff7f2 32%,
+    #fff2f7 70%,
+    #fff0f5 100%
+  );
+}
+
+/* 水彩・和紙っぽい粒状＋にじみ */
+.hero-background-decor::before {
+  content: '';
+  position: absolute;
+  inset: -4%;
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 85% 55% at 15% 95%, rgba(255, 182, 193, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 92% 18%, rgba(186, 230, 253, 0.22) 0%, transparent 52%),
+    radial-gradient(ellipse 55% 45% at 48% 8%, rgba(254, 243, 199, 0.28) 0%, transparent 48%);
+  background-size:
+    220px 220px,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-blend-mode: soft-light, normal, normal, normal;
+  animation: heroWashiDrift 26s ease-in-out infinite alternate;
+}
+
+/* アイディアの泡・キラキラ・淡い足跡風ドット */
+.hero-background-decor::after {
+  content: '';
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  bottom: -25%;
+  height: 150%;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(circle at 10% 92%, rgba(255, 205, 210, 0.55) 0%, transparent 38%),
+    radial-gradient(circle at 82% 88%, rgba(199, 233, 255, 0.5) 0%, transparent 36%),
+    radial-gradient(circle at 38% 98%, rgba(230, 213, 255, 0.45) 0%, transparent 32%),
+    radial-gradient(circle at 70% 72%, rgba(255, 255, 255, 0.65) 0%, transparent 30%),
+    radial-gradient(circle at 24% 68%, rgba(255, 255, 255, 0.5) 0%, transparent 26%),
+    radial-gradient(circle at 58% 58%, rgba(255, 250, 240, 0.55) 0%, transparent 28%),
+    radial-gradient(circle at 88% 48%, rgba(253, 224, 231, 0.45) 0%, transparent 22%),
+    radial-gradient(circle at 16% 42%, rgba(209, 250, 229, 0.35) 0%, transparent 20%),
+    radial-gradient(circle at 48% 38%, rgba(255, 183, 178, 0.25) 0%, transparent 18%),
+    radial-gradient(circle 3px at 22% 56%, rgba(255, 255, 255, 0.95) 50%, transparent 52%),
+    radial-gradient(circle 2px at 61% 44%, rgba(255, 255, 255, 0.9) 50%, transparent 52%),
+    radial-gradient(circle 2px at 74% 63%, rgba(255, 248, 220, 0.95) 50%, transparent 52%),
+    radial-gradient(circle 2px at 33% 71%, rgba(255, 255, 255, 0.85) 50%, transparent 52%),
+    radial-gradient(circle 2px at 91% 36%, rgba(255, 236, 209, 0.9) 50%, transparent 52%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  animation: heroBubbleField 20s linear infinite;
+}
+
+@keyframes heroWashiDrift {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    opacity: 0.38;
+  }
+  100% {
+    background-position: 36px 28px, 0 0, 0 0, 0 0;
+    opacity: 0.48;
+  }
+}
+
+@keyframes heroBubbleField {
+  0% {
+    transform: translate3d(0, 6%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -14%, 0) scale(1.03);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .hero-background-decor {
+    animation: heroParallaxHero linear forwards;
+    animation-timeline: scroll(root);
+    animation-range: 0 42vh;
+  }
+}
+
+@keyframes heroParallaxHero {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -6vh, 0);
+  }
 }
 
 /* ======================================
@@ -223,6 +387,28 @@ img {
 @keyframes pulse-ring {
   0%   { transform: scale(1); opacity: 0.5; }
   100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes heroTitleGlow {
+  0% {
+    opacity: 0.82;
+    filter: blur(20px);
+  }
+  100% {
+    opacity: 0.96;
+    filter: blur(28px);
+  }
+}
+
+@keyframes heroKickerRise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'output/**'],
+    ignores: ['dist/**', 'node_modules/**', 'output/**', '.vercel/**'],
   },
   {
     files: ['**/*.js', '**/*.mjs'],

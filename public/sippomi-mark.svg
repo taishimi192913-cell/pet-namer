@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sippomi-bg" x1="16" y1="14" x2="112" y2="114" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF4ED"/>
+      <stop offset="1" stop-color="#FDE7DC"/>
+    </linearGradient>
+    <linearGradient id="sippomi-line" x1="36" y1="34" x2="91" y2="96" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F07D5A"/>
+      <stop offset="1" stop-color="#D96B47"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="104" height="104" rx="32" fill="url(#sippomi-bg)"/>
+  <rect x="12.75" y="12.75" width="102.5" height="102.5" rx="31.25" stroke="#F2D9CA" stroke-width="1.5"/>
+  <path d="M41 47.5C41 34.52 51.52 24 64.5 24C77.48 24 88 34.52 88 47.5V82C88 85.866 84.866 89 81 89H48C44.134 89 41 85.866 41 82V47.5Z" fill="#FFFDFB"/>
+  <path d="M49 44.5C49 35.387 56.387 28 65.5 28C74.613 28 82 35.387 82 44.5V78.5C82 81.538 79.538 84 76.5 84H54.5C51.462 84 49 81.538 49 78.5V44.5Z" stroke="url(#sippomi-line)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M55.5 53H75.5" stroke="url(#sippomi-line)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M65.5 53V78" stroke="url(#sippomi-line)" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="52" cy="98" r="6" fill="#F5A68A" fill-opacity="0.9"/>
+  <circle cx="66" cy="95" r="6" fill="#F5A68A" fill-opacity="0.78"/>
+  <circle cx="80" cy="98" r="6" fill="#F5A68A" fill-opacity="0.9"/>
+  <path d="M66 108C74.8366 108 82 102.851 82 96.5C82 90.1487 74.8366 85 66 85C57.1634 85 50 90.1487 50 96.5C50 102.851 57.1634 108 66 108Z" fill="#F07D5A" fill-opacity="0.18"/>
+</svg>

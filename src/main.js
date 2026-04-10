@@ -1,17 +1,29 @@
 import './styles/global.css';
 import './landing-effects.js';
 import {
+  CALL_STYLE_OPTIONS,
   COLOR_OPTIONS,
+  FILTER_SUMMARY_LABELS,
   GENDER_OPTIONS,
   INITIAL_RESULT_COUNT,
   LOAD_MORE_COUNT,
+  LENGTH_OPTIONS,
+  OWNER_LIFESTYLE_OPTIONS,
+  OVERFLOW_LIST_PAGE_SIZE,
+  SCENE_OPTIONS,
   SPECIES_OPTIONS,
+  THEME_OPTIONS,
+  UNIQUENESS_OPTIONS,
   VIBE_OPTIONS,
   VIBE_URL_ALIASES,
+  WISH_OPTIONS,
 } from './constants.js';
 import { getResults } from './diagnosis.js';
+import { enrichNamesDatabase } from './name-enrichment.js';
+import { diagnoseSurnameFit } from './surname-diagnosis.js';
 import {
   createChips,
+  createNameStoryPanel,
   createNameCard,
   createSpeciesCards,
   renderResults,
@@ -26,14 +38,27 @@ import {
   subscribePlatform,
   toggleFavorite,
 } from './auth.js';
+import { initCommunity } from './community.js';
 
 const state = {
   species: new Set(),
   gender: new Set(),
   vibe: new Set(),
   color: new Set(),
+  length: new Set(),
+  theme: new Set(),
+  callStyle: new Set(),
+  ownerLifestyle: new Set(),
+  wish: new Set(),
+  uniqueness: new Set(),
+  scene: new Set(),
   visibleCount: INITIAL_RESULT_COUNT,
   results: null,
+  overflowListPage: 0,
+  diagnosisSeed: 0,
+  selectedResultKey: null,
+  surname: '',
+  surnameReading: '',
 };
 
 let allNames = [];
@@ -43,13 +68,28 @@ let platformSnapshot = getPlatformSnapshot();
 const celebThumbByName = new Map();
 
 const trendingList = document.getElementById('trendingList');
+const trendingStoryHost = document.getElementById('trendingStoryHost');
 const trendingSection = document.getElementById('trendingSection');
 const trendingTabs = document.querySelectorAll('.trending-tab');
 const celebGrid = document.getElementById('celebGrid');
 const celebSection = document.getElementById('celebSection');
+const celebSearchInput = document.getElementById('celebSearchInput');
+const celebEntityTypeSelect = document.getElementById('celebEntityTypeSelect');
+const celebOwnerCategorySelect = document.getElementById('celebOwnerCategorySelect');
+const celebSpeciesSelect = document.getElementById('celebSpeciesSelect');
+const celebBreedSelect = document.getElementById('celebBreedSelect');
+const celebResultCount = document.getElementById('celebResultCount');
 
 /** ペット名鑑は初期は畳み、足跡ボタンで展開 */
 let celebPanelRevealed = false;
+let celebEntries = [];
+const celebFilters = {
+  search: '',
+  entityType: '',
+  ownerCategory: '',
+  species: '',
+  breed: '',
+};
 
 /** 名鑑画像：Wikimedia / Unsplash / Pexels の https のみ（静的 JSON・改ざん防止用） */
 const CELEB_IMAGE_HOSTS = new Set([
@@ -57,6 +97,12 @@ const CELEB_IMAGE_HOSTS = new Set([
   'images.unsplash.com',
   'images.pexels.com',
 ]);
+
+const CELEB_ENTITY_TYPE_LABELS = {
+  celebrity: '有名人のペット',
+  'famous-pet': '話題の有名ペット',
+  character: '映画・物語で愛された子',
+};
 
 function safeCelebImageUrl(url) {
   if (typeof url !== 'string' || !url.trim()) return null;
@@ -153,6 +199,18 @@ const resultSection = document.getElementById('resultSection');
 const resultCount = document.getElementById('resultCount');
 const resultContainer = document.getElementById('resultContainer');
 const btnRetry = document.getElementById('btnRetry');
+const surnameCheckerSection = document.getElementById('surnameCheckerSection');
+const surnameInput = document.getElementById('surnameInput');
+const surnameReadingInput = document.getElementById('surnameReadingInput');
+const surnameCheckerSelectedName = document.getElementById('surnameCheckerSelectedName');
+const surnameCheckerSelectedReading = document.getElementById('surnameCheckerSelectedReading');
+const surnameCheckerPreview = document.getElementById('surnameCheckerPreview');
+const surnameCheckerPreviewReading = document.getElementById('surnameCheckerPreviewReading');
+const surnameCheckerSummary = document.getElementById('surnameCheckerSummary');
+const surnameCheckerBadgeScore = document.getElementById('surnameCheckerBadgeScore');
+const surnameCheckerBadgeLabel = document.getElementById('surnameCheckerBadgeLabel');
+const surnameCheckerInsights = document.getElementById('surnameCheckerInsights');
+const surnameCheckerNote = document.getElementById('surnameCheckerNote');
 const faqToggle = document.getElementById('faqToggle');
 const savedFavoritesSection = document.getElementById('savedFavoritesSection');
 const savedFavoritesSummary = document.getElementById('savedFavoritesSummary');
@@ -162,6 +220,29 @@ const speciesGrid = document.getElementById('speciesGrid');
 const vibeChips = document.getElementById('vibeChips');
 const genderChips = document.getElementById('genderChips');
 const colorChips = document.getElementById('colorChips');
+const lengthChips = document.getElementById('lengthChips');
+const themeChips = document.getElementById('themeChips');
+const callStyleChips = document.getElementById('callStyleChips');
+const ownerLifestyleChips = document.getElementById('ownerLifestyleChips');
+const wishChips = document.getElementById('wishChips');
+const uniquenessChips = document.getElementById('uniquenessChips');
+const sceneChips = document.getElementById('sceneChips');
+
+const SURNAME_STORAGE_KEY = 'sippomi.ownerSurname';
+const SURNAME_READING_STORAGE_KEY = 'sippomi.ownerSurnameReading';
+
+const FILTER_CHIP_GROUPS = [
+  { key: 'vibe', element: vibeChips, options: VIBE_OPTIONS },
+  { key: 'gender', element: genderChips, options: GENDER_OPTIONS },
+  { key: 'color', element: colorChips, options: COLOR_OPTIONS },
+  { key: 'length', element: lengthChips, options: LENGTH_OPTIONS },
+  { key: 'theme', element: themeChips, options: THEME_OPTIONS },
+  { key: 'callStyle', element: callStyleChips, options: CALL_STYLE_OPTIONS },
+  { key: 'ownerLifestyle', element: ownerLifestyleChips, options: OWNER_LIFESTYLE_OPTIONS },
+  { key: 'wish', element: wishChips, options: WISH_OPTIONS },
+  { key: 'uniqueness', element: uniquenessChips, options: UNIQUENESS_OPTIONS },
+  { key: 'scene', element: sceneChips, options: SCENE_OPTIONS },
+];
 
 function getActiveFilters() {
   return {
@@ -169,18 +250,23 @@ function getActiveFilters() {
     gender: state.gender,
     vibe: state.vibe,
     color: state.color,
+    length: state.length,
+    theme: state.theme,
+    callStyle: state.callStyle,
+    ownerLifestyle: state.ownerLifestyle,
+    wish: state.wish,
+    uniqueness: state.uniqueness,
+    scene: state.scene,
   };
 }
 
 function getSelectionSummary() {
-  const labels = [];
-  if (state.species.size) labels.push(`種類: ${[...state.species].join('・')}`);
-  if (state.gender.size) labels.push(`性別: ${[...state.gender].join('・')}`);
-  if (state.vibe.size) labels.push(`雰囲気: ${[...state.vibe].join('・')}`);
-  if (state.color.size) labels.push(`毛色: ${[...state.color].join('・')}`);
+  const labels = Object.entries(FILTER_SUMMARY_LABELS)
+    .filter(([key]) => state[key]?.size)
+    .map(([key, label]) => `${label}: ${[...state[key]].join('・')}`);
 
   if (labels.length === 0) {
-    return 'まだ何も決定していません。気になる条件を選んでから診断してください。';
+    return 'まだ質問に答えていません。シッポミの10問で、この子らしさと飼い主さんの好みを少しずつ深めていきましょう。';
   }
 
   return `現在の入力: ${labels.join(' / ')}`;
@@ -198,6 +284,8 @@ function applyPresetFromURL() {
   const gender = params.getAll('gender');
   const vibeRaw = params.getAll('vibe');
   const color = params.getAll('color');
+  const length = params.getAll('length');
+  const theme = params.getAll('theme');
 
   species.forEach((v) => {
     if (v) state.species.add(v);
@@ -212,12 +300,20 @@ function applyPresetFromURL() {
   color.forEach((v) => {
     if (v) state.color.add(v);
   });
+  length.forEach((v) => {
+    if (v) state.length.add(v);
+  });
+  theme.forEach((v) => {
+    if (v) state.theme.add(v);
+  });
 
   return (
     species.some(Boolean) ||
     gender.some(Boolean) ||
     vibeRaw.some(Boolean) ||
-    color.some(Boolean)
+    color.some(Boolean) ||
+    length.some(Boolean) ||
+    theme.some(Boolean)
   );
 }
 
@@ -232,53 +328,216 @@ function renderDiagnosisForm() {
     speciesGrid.replaceChildren(...grid.children);
   }
 
-  if (vibeChips) {
-    const chips = createChips(VIBE_OPTIONS, state.vibe, (value) => {
-      if (state.vibe.has(value)) state.vibe.delete(value);
-      else state.vibe.add(value);
+  FILTER_CHIP_GROUPS.forEach(({ key, element, options }) => {
+    if (!element) return;
+    const chips = createChips(options, state[key], (value) => {
+      if (state[key].has(value)) state[key].delete(value);
+      else state[key].add(value);
       renderDiagnosisForm();
       if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
     });
-    vibeChips.replaceChildren(...chips.children);
+    element.replaceChildren(...chips.children);
+  });
+}
+
+function getItemByKey(key) {
+  if (!key) return null;
+  const favoriteRecords = getFavoriteRecords();
+  return favoriteRecords.find((item) => favoriteKeyForItem(item) === key)
+    || state.results?.items?.find((item) => favoriteKeyForItem(item) === key)
+    || null;
+}
+
+function createSurnameInsightCard({ title, score, body }) {
+  const card = document.createElement('article');
+  card.className = 'surname-checker__insight';
+
+  const heading = document.createElement('div');
+  heading.className = 'surname-checker__insight-head';
+
+  const titleEl = document.createElement('h3');
+  titleEl.className = 'surname-checker__insight-title';
+  titleEl.textContent = title;
+
+  const scoreEl = document.createElement('p');
+  scoreEl.className = 'surname-checker__insight-score';
+  scoreEl.textContent = typeof score === 'number' ? `${score}%` : String(score);
+
+  const bodyEl = document.createElement('p');
+  bodyEl.className = 'surname-checker__insight-body';
+  bodyEl.textContent = body;
+
+  heading.append(titleEl, scoreEl);
+  card.append(heading, bodyEl);
+  return card;
+}
+
+function persistSurnameInputs() {
+  try {
+    window.localStorage.setItem(SURNAME_STORAGE_KEY, state.surname);
+    window.localStorage.setItem(SURNAME_READING_STORAGE_KEY, state.surnameReading);
+  } catch {
+    // ignore storage failures
+  }
+}
+
+function renderSurnameChecker({ scroll = false } = {}) {
+  if (!surnameCheckerSection) return;
+
+  const selectedItem = getItemByKey(state.selectedResultKey);
+  if (!selectedItem) {
+    surnameCheckerSection.hidden = true;
+    return;
   }
 
-  if (genderChips) {
-    const chips = createChips(GENDER_OPTIONS, state.gender, (value) => {
-      if (state.gender.has(value)) state.gender.delete(value);
-      else state.gender.add(value);
-      renderDiagnosisForm();
-      if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
-    });
-    genderChips.replaceChildren(...chips.children);
+  const diagnosis = diagnoseSurnameFit({
+    surname: state.surname,
+    surnameReading: state.surnameReading,
+    petName: selectedItem.name,
+    petReading: selectedItem.reading,
+  });
+
+  surnameCheckerSection.hidden = false;
+  if (surnameCheckerSelectedName) surnameCheckerSelectedName.textContent = selectedItem.name;
+  if (surnameCheckerSelectedReading) {
+    const reading = secondaryReadingIfAny(selectedItem.name, selectedItem.reading);
+    surnameCheckerSelectedReading.textContent = reading ? `読み: ${reading}` : '';
   }
 
-  if (colorChips) {
-    const chips = createChips(COLOR_OPTIONS, state.color, (value) => {
-      if (state.color.has(value)) state.color.delete(value);
-      else state.color.add(value);
-      renderDiagnosisForm();
-      if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
-    });
-    colorChips.replaceChildren(...chips.children);
+  const hasSurname = Boolean(state.surname);
+  if (!hasSurname) {
+    if (surnameCheckerPreview) surnameCheckerPreview.textContent = selectedItem.name;
+    if (surnameCheckerPreviewReading) {
+      const reading = secondaryReadingIfAny(selectedItem.name, selectedItem.reading);
+      surnameCheckerPreviewReading.textContent = reading ? `よみ: ${reading}` : '';
+    }
+    if (surnameCheckerSummary) {
+      surnameCheckerSummary.textContent = '飼い主さんの苗字を入れると、呼びやすさ・長さのバランス・見た目のまとまりをまとめて見られます。';
+    }
+    if (surnameCheckerBadgeScore) surnameCheckerBadgeScore.textContent = '--';
+    if (surnameCheckerBadgeLabel) surnameCheckerBadgeLabel.textContent = '苗字を入れて開始';
+    if (surnameCheckerNote) {
+      surnameCheckerNote.textContent = '苗字のふりがなも入れると、呼んだときの音のつながりまで診断できます。';
+    }
+    surnameCheckerInsights?.replaceChildren(
+      ...[
+        {
+          title: '呼びやすさ',
+          score: '--',
+          body: '呼びかけたときの音の切れ目や、やさしく伸びる響きを見ます。',
+        },
+        {
+          title: '長さのバランス',
+          score: '--',
+          body: '苗字と名前の長さ差が大きすぎないかを確かめます。',
+        },
+        {
+          title: '見た目のまとまり',
+          score: '--',
+          body: '名札やSNSで並んだときに、文字の収まりが自然かを見ます。',
+        },
+        {
+          title: '診断の信頼度',
+          score: '--',
+          body: '一般的な苗字データや入力されたふりがなと照らし合わせて、診断の確からしさを表示します。',
+        },
+      ].map((hint) => createSurnameInsightCard(hint)),
+    );
+    if (scroll) {
+      surnameCheckerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    return;
   }
+
+  if (!diagnosis) {
+    if (surnameCheckerPreview) surnameCheckerPreview.textContent = 'まずは気になる名前を選んでください';
+    if (surnameCheckerPreviewReading) surnameCheckerPreviewReading.textContent = '';
+    if (surnameCheckerSummary) surnameCheckerSummary.textContent = '診断結果から名前をひとつ選ぶと、苗字との相性をここで確認できます。';
+    if (surnameCheckerBadgeScore) surnameCheckerBadgeScore.textContent = '--';
+    if (surnameCheckerBadgeLabel) surnameCheckerBadgeLabel.textContent = '準備中';
+    surnameCheckerInsights?.replaceChildren();
+    return;
+  }
+
+  if (surnameCheckerPreview) surnameCheckerPreview.textContent = diagnosis.preview;
+  if (surnameCheckerPreviewReading) {
+    surnameCheckerPreviewReading.textContent = diagnosis.previewReading ? `よみ: ${diagnosis.previewReading}` : '';
+  }
+  if (surnameCheckerSummary) surnameCheckerSummary.textContent = diagnosis.summary;
+  if (surnameCheckerBadgeScore) surnameCheckerBadgeScore.textContent = `${diagnosis.totalScore}`;
+  if (surnameCheckerBadgeLabel) surnameCheckerBadgeLabel.textContent = diagnosis.label;
+  if (surnameCheckerNote) {
+    surnameCheckerNote.textContent = diagnosis.note || '苗字のふりがながあると、呼びやすさの診断がより正確になります。';
+  }
+  surnameCheckerInsights?.replaceChildren(
+    ...diagnosis.hints.map((hint) => createSurnameInsightCard(hint)),
+  );
+
+  if (scroll) {
+    surnameCheckerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function handleSurnameInputChange() {
+  state.surname = surnameInput?.value.trim() || '';
+  state.surnameReading = surnameReadingInput?.value.trim() || '';
+  persistSurnameInputs();
+  renderSurnameChecker();
+}
+
+function setSelectedNameForSurname(item, { scroll = false } = {}) {
+  if (!item) return;
+  state.selectedResultKey = favoriteKeyForItem(item);
+  renderSurnameChecker({ scroll });
+}
+
+function getResultRenderOptions() {
+  return {
+    onToggleFavorite: handleFavoriteToggle,
+    onSelectionChange: (item) => {
+      setSelectedNameForSurname(item);
+    },
+    onCheckSurname: (item) => {
+      setSelectedNameForSurname(item, { scroll: true });
+    },
+    savedKeys: platformSnapshot.savedKeys,
+    favoriteKeyForItem,
+    selectedKey: state.selectedResultKey,
+    onShowAll: handleShowAll,
+    overflowListPage: state.overflowListPage,
+    overflowListPageSize: OVERFLOW_LIST_PAGE_SIZE,
+    onOverflowListPageChange: (nextPage) => {
+      state.overflowListPage = Math.max(0, nextPage);
+      if (state.results && resultContainer) {
+        renderResults(
+          resultContainer,
+          state.results,
+          state.visibleCount,
+          handleLoadMore,
+          getResultRenderOptions(),
+        );
+      }
+    },
+  };
 }
 
 function runDiagnosis({ smoothScroll = true } = {}) {
   if (!resultContainer) return;
 
+  document.body.classList.remove('results-showall');
+  state.overflowListPage = 0;
+  state.diagnosisSeed += 1;
+  state.selectedResultKey = null;
+
   const activeFilters = getActiveFilters();
-  state.results = getResults(allNames, activeFilters);
+  state.results = getResults(allNames, activeFilters, { seed: state.diagnosisSeed });
   state.visibleCount = INITIAL_RESULT_COUNT;
 
   if (resultCount) {
     resultCount.textContent = `${state.results.total}件の候補`;
   }
 
-  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
-    onToggleFavorite: handleFavoriteToggle,
-    savedKeys: platformSnapshot.savedKeys,
-    favoriteKeyForItem,
-  });
+  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, getResultRenderOptions());
 
   if (resultSection) {
     resultSection.hidden = false;
@@ -291,12 +550,24 @@ function runDiagnosis({ smoothScroll = true } = {}) {
 
 function handleLoadMore() {
   if (!state.results || !resultContainer) return;
+  document.body.classList.remove('results-showall');
   state.visibleCount += LOAD_MORE_COUNT;
-  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
-    onToggleFavorite: handleFavoriteToggle,
-    savedKeys: platformSnapshot.savedKeys,
-    favoriteKeyForItem,
-  });
+  state.overflowListPage = 0;
+  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, getResultRenderOptions());
+}
+
+function handleShowAll() {
+  if (!state.results || !resultContainer) return;
+  document.body.classList.add('results-showall');
+  state.visibleCount = state.results.items.length;
+  state.overflowListPage = 0;
+  renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, getResultRenderOptions());
+
+  // モバイルで「全画面っぽく」見せるため、折りたたみ一覧は最初から開く
+  const overflow = resultContainer.querySelector('.result-wordcloud-overflow');
+  if (overflow && overflow.tagName === 'DETAILS') {
+    overflow.open = true;
+  }
 }
 
 async function handleFavoriteToggle(item) {
@@ -306,13 +577,10 @@ async function handleFavoriteToggle(item) {
   }
 
   if (state.results && resultContainer) {
-    renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
-      onToggleFavorite: handleFavoriteToggle,
-      savedKeys: platformSnapshot.savedKeys,
-      favoriteKeyForItem,
-    });
+    renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, getResultRenderOptions());
   }
   renderSavedFavorites();
+  renderSurnameChecker();
 }
 
 function renderSavedFavorites() {
@@ -345,6 +613,9 @@ function renderSavedFavorites() {
   savedFavoritesContainer.replaceChildren(
     ...favorites.map((item) => createNameCard(item, {
       onToggleFavorite: handleFavoriteToggle,
+      onCheckSurname: (target) => {
+        setSelectedNameForSurname(target, { scroll: true });
+      },
       isFavorite: true,
     })),
   );
@@ -380,211 +651,404 @@ function renderTrending(species) {
       <span class="trending-item__name">${item.name}</span>
       ${readingHtml}
       <span class="trending-item__meaning">${item.meaning.replace(/\s*\d{4}年[^。\n]*?(\d+位)[^。\n]*/g, '').trim()}</span>
-      <button type="button" class="trending-item__btn" data-species="${species}" data-name="${item.name}">この名前で絞る →</button>
+      <button type="button" class="trending-item__btn" data-species="${species}" data-name="${item.name}">由来を詳しく見る →</button>
     `;
     const thumbImg = li.querySelector('.trending-item__thumb');
     if (thumbImg && thumb) thumbImg.alt = thumb.alt;
     li.querySelector('.trending-item__btn').addEventListener('click', () => {
-      state.species.add(species);
-      renderDiagnosisForm();
-      if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
-      document.getElementById('diagnosisPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const storyPanel = createNameStoryPanel(item, {
+        onToggleFavorite: handleFavoriteToggle,
+        onCheckSurname: (target) => {
+          setSelectedNameForSurname(target, { scroll: true });
+        },
+        savedKeys: platformSnapshot.savedKeys,
+        favoriteKeyForItem,
+        isFavorite: platformSnapshot.savedKeys?.has?.(favoriteKeyForItem(item) || '') || false,
+      });
+      trendingStoryHost?.replaceChildren(storyPanel);
+      trendingStoryHost?.removeAttribute('hidden');
+      trendingStoryHost?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
     trendingList.appendChild(li);
   });
 }
 
-/** meaning の冒頭「○○の愛犬／愛猫」から飼い主（有名人）側を抽出 */
-function extractOwnerFromMeaning(meaning) {
-  if (!meaning) return '';
-  const m = meaning.match(/^([^。\n]+?)の愛[犬猫]/);
-  return m ? m[1].trim() : '';
-}
-
-/** 折りたたみ1行目：種類 · 有名人／作品などの文脈 */
-function formatCelebSummaryMeta(c, primarySpecies, owner) {
-  const sp = primarySpecies || 'ペット';
-  if (owner) {
-    const petType = primarySpecies === '犬' ? '愛犬' : primarySpecies === '猫' ? '愛猫' : 'ペット';
-    return `${sp} · ${owner}の${petType}`;
-  }
-  const raw = (c.meaning || '').split(/[。．]/)[0]?.trim() || '';
-  const short = raw.length > 42 ? `${raw.slice(0, 42)}…` : raw;
-  return `${sp} · ${short}`;
-}
-
 const SPECIES_ICON_MAP = { 犬: '🐕', 猫: '🐈', うさぎ: '🐇', ハムスター: '🐹', 鳥: '🐦' };
+function normalizeCelebRecord(raw) {
+  const speciesArr = Array.isArray(raw.species) ? raw.species.filter(Boolean) : [raw.species].filter(Boolean);
+  return {
+    ...raw,
+    species: speciesArr,
+    petSpecies: raw.petSpecies || speciesArr[0] || '',
+    imageUrl: safeCelebImageUrl(raw.imageUrl),
+    ownerImageUrl: safeCelebImageUrl(raw.ownerImageUrl),
+    ownerName: raw.ownerName || '',
+    ownerCategory: raw.ownerCategory || '',
+    ownerWork: raw.ownerWork || '',
+    breed: raw.breed || '',
+    entityType: raw.entityType || 'celebrity',
+    summary: raw.summary || raw.meaning || '',
+    story: raw.story || '',
+    namingHint: raw.namingHint || '',
+    tags: Array.isArray(raw.tags) ? raw.tags.filter(Boolean) : [],
+    vibe: Array.isArray(raw.vibe) ? raw.vibe.filter(Boolean) : [],
+  };
+}
 
-/** フリー素材で「その個体」と特定できる写真がないときの説明（代用品種写真は掲載しない） */
-const CELEB_PHOTO_MISSING_NOTE =
-  'Wikimedia Commons などで、当該ペットそのものを示す再利用可能な写真が見つかりませんでした。別の個体の写真を載せると誤解を招くため掲載していません。実際の様子は公式の発信や報道でご確認ください。';
+function optionValues(entries, key, mapFn = (value) => value) {
+  return [...new Set(entries.map((entry) => mapFn(entry[key])).flat().filter(Boolean))];
+}
+
+function fillSelect(selectEl, values, labelMap = null) {
+  if (!selectEl) return;
+  const current = selectEl.value;
+  selectEl.innerHTML = '<option value="">すべて</option>';
+  values.forEach((value) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = labelMap?.[value] || value;
+    selectEl.appendChild(option);
+  });
+  if (values.includes(current)) {
+    selectEl.value = current;
+  }
+}
+
+function syncCelebFilterOptions(entries) {
+  fillSelect(
+    celebEntityTypeSelect,
+    optionValues(entries, 'entityType'),
+    CELEB_ENTITY_TYPE_LABELS,
+  );
+  fillSelect(celebOwnerCategorySelect, optionValues(entries, 'ownerCategory'));
+  fillSelect(celebSpeciesSelect, optionValues(entries, 'petSpecies'));
+
+  const breedSource = celebFilters.species
+    ? entries.filter((entry) => entry.petSpecies === celebFilters.species)
+    : entries;
+  fillSelect(celebBreedSelect, optionValues(breedSource, 'breed'));
+}
+
+function normalizeSearch(value = '') {
+  return String(value).trim().toLowerCase();
+}
+
+function matchesCelebFilters(entry) {
+  if (celebFilters.entityType && entry.entityType !== celebFilters.entityType) return false;
+  if (celebFilters.ownerCategory && entry.ownerCategory !== celebFilters.ownerCategory) return false;
+  if (celebFilters.species && entry.petSpecies !== celebFilters.species) return false;
+  if (celebFilters.breed && entry.breed !== celebFilters.breed) return false;
+
+  const q = normalizeSearch(celebFilters.search);
+  if (!q) return true;
+
+  const haystack = [
+    entry.name,
+    entry.reading,
+    entry.ownerName,
+    entry.ownerCategory,
+    entry.ownerWork,
+    entry.breed,
+    entry.summary,
+    entry.story,
+    ...(entry.tags || []),
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  return haystack.includes(q);
+}
+
+function formatCelebSummaryMeta(entry) {
+  const bits = [
+    entry.petSpecies || 'ペット',
+    CELEB_ENTITY_TYPE_LABELS[entry.entityType] || entry.entityType,
+    entry.ownerCategory || null,
+  ].filter(Boolean);
+  return bits.join(' · ');
+}
+
+function createCelebMedia(entry, speciesIcon) {
+  const media = document.createElement('div');
+  media.className = 'celeb-card__media';
+
+  const petFigure = document.createElement('figure');
+  petFigure.className = 'celeb-card__figure';
+  const petImg = document.createElement('img');
+  petImg.className = 'celeb-card__img';
+  petImg.src = entry.imageUrl;
+  petImg.alt = typeof entry.imageAlt === 'string' ? entry.imageAlt : `${entry.name}の写真`;
+  petImg.loading = 'lazy';
+  petImg.decoding = 'async';
+  petFigure.appendChild(petImg);
+  if (typeof entry.imageCredit === 'string' && entry.imageCredit.trim()) {
+    const cap = document.createElement('figcaption');
+    cap.className = 'celeb-card__credit';
+    cap.textContent = entry.imageCredit;
+    petFigure.appendChild(cap);
+  }
+  media.appendChild(petFigure);
+
+  const ownerCard = document.createElement('div');
+  ownerCard.className = 'celeb-card__owner-card';
+  if (entry.ownerImageUrl) {
+    const ownerImg = document.createElement('img');
+    ownerImg.className = 'celeb-card__owner-avatar';
+    ownerImg.src = entry.ownerImageUrl;
+    ownerImg.alt = entry.ownerImageAlt || `${entry.ownerName}の写真`;
+    ownerImg.loading = 'lazy';
+    ownerImg.decoding = 'async';
+    ownerCard.appendChild(ownerImg);
+  } else {
+    const ownerFallback = document.createElement('div');
+    ownerFallback.className = 'celeb-card__owner-fallback';
+    ownerFallback.textContent = speciesIcon;
+    ownerCard.appendChild(ownerFallback);
+  }
+
+  const ownerLabel = document.createElement('p');
+  ownerLabel.className = 'celeb-card__owner-card-label';
+  ownerLabel.textContent = 'Owner';
+  const ownerName = document.createElement('p');
+  ownerName.className = 'celeb-card__owner-card-name';
+  ownerName.textContent = entry.ownerName;
+  const ownerWork = document.createElement('p');
+  ownerWork.className = 'celeb-card__owner-card-work';
+  ownerWork.textContent = entry.ownerWork;
+  ownerCard.append(ownerLabel, ownerName, ownerWork);
+  media.appendChild(ownerCard);
+
+  return media;
+}
+
+function renderCelebGrid(entries) {
+  if (!celebGrid) return;
+  celebGrid.replaceChildren();
+
+  if (celebResultCount) {
+    celebResultCount.textContent = `${entries.length}件の名鑑を表示中`;
+  }
+
+  if (entries.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'celeb-empty';
+    empty.textContent = '条件に合う子がまだ見つかりませんでした。検索語や犬種・飼い主の属性を少し広げてみてください。';
+    celebGrid.appendChild(empty);
+    return;
+  }
+
+  entries.forEach((entry) => {
+    const speciesIcon = SPECIES_ICON_MAP[entry.petSpecies] ?? '✨';
+    const details = document.createElement('details');
+    details.className = 'celeb-card';
+    details.dataset.celebName = entry.name;
+
+    const summary = document.createElement('summary');
+    summary.className = 'celeb-card__summary';
+
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'celeb-card__species-icon';
+    iconSpan.setAttribute('aria-hidden', 'true');
+    iconSpan.textContent = speciesIcon;
+
+    const summaryText = document.createElement('div');
+    summaryText.className = 'celeb-card__summary-text';
+
+    const h3 = document.createElement('h3');
+    h3.className = 'celeb-card__name celeb-card__name--summary';
+    h3.textContent = entry.name;
+
+    const meta = document.createElement('p');
+    meta.className = 'celeb-card__summary-meta';
+    meta.textContent = formatCelebSummaryMeta(entry);
+
+    summaryText.append(h3, meta);
+
+    const chevron = document.createElement('span');
+    chevron.className = 'celeb-card__chevron';
+    chevron.setAttribute('aria-hidden', 'true');
+
+    summary.append(iconSpan, summaryText, chevron);
+    details.appendChild(summary);
+
+    const body = document.createElement('div');
+    body.className = 'celeb-card__body';
+    body.appendChild(createCelebMedia(entry, speciesIcon));
+
+    const readSub = secondaryReadingIfAny(entry.name, entry.reading);
+    if (readSub != null) {
+      const readingEl = document.createElement('p');
+      readingEl.className = 'celeb-card__reading celeb-card__reading--body';
+      readingEl.textContent = `読み：${readSub}`;
+      body.appendChild(readingEl);
+    }
+
+    const ownerP = document.createElement('p');
+    ownerP.className = 'celeb-card__owner';
+    ownerP.textContent = `${entry.ownerName} · ${entry.ownerCategory}`;
+    body.appendChild(ownerP);
+
+    const breedMeta = document.createElement('p');
+    breedMeta.className = 'celeb-card__breed';
+    breedMeta.textContent = `${entry.petSpecies} / ${entry.breed}`;
+    body.appendChild(breedMeta);
+
+    const summaryP = document.createElement('p');
+    summaryP.className = 'celeb-card__note';
+    summaryP.textContent = entry.summary;
+    body.appendChild(summaryP);
+
+    const storyP = document.createElement('p');
+    storyP.className = 'celeb-card__story';
+    storyP.textContent = entry.story;
+    body.appendChild(storyP);
+
+    const hintP = document.createElement('p');
+    hintP.className = 'celeb-card__hint';
+    hintP.textContent = `名づけのヒント: ${entry.namingHint}`;
+    body.appendChild(hintP);
+
+    const vibes = document.createElement('div');
+    vibes.className = 'celeb-card__vibes';
+    [...(entry.tags || []), ...(entry.vibe || [])].slice(0, 5).forEach((value) => {
+      const span = document.createElement('span');
+      span.className = 'celeb-card__vibe';
+      span.textContent = value;
+      vibes.appendChild(span);
+    });
+    body.appendChild(vibes);
+
+    const actions = document.createElement('div');
+    actions.className = 'celeb-card__actions';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'celeb-card__btn';
+    btn.textContent = '似た名前を診断する →';
+    const validSpecies = ['犬', '猫', 'うさぎ', 'ハムスター', '鳥'];
+    const targetSpecies = validSpecies.find((value) => entry.species.includes(value));
+    if (targetSpecies) {
+      btn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        state.species.add(targetSpecies);
+        (entry.vibe ?? []).forEach((value) => state.vibe.add(value));
+        renderDiagnosisForm();
+        if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
+        document.getElementById('stepSpecies')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    } else {
+      btn.disabled = true;
+    }
+    actions.appendChild(btn);
+
+    if (entry.sourceUrl) {
+      const sourceLink = document.createElement('a');
+      sourceLink.className = 'celeb-card__source';
+      sourceLink.href = entry.sourceUrl;
+      sourceLink.target = '_blank';
+      sourceLink.rel = 'noopener noreferrer';
+      sourceLink.textContent = '出典を見る';
+      actions.appendChild(sourceLink);
+    }
+
+    body.appendChild(actions);
+    details.appendChild(body);
+    celebGrid.appendChild(details);
+  });
+}
+
+function renderCelebDirectory() {
+  syncCelebFilterOptions(celebEntries);
+  renderCelebGrid(celebEntries.filter(matchesCelebFilters));
+}
+
+function bindCelebFilters() {
+  celebSearchInput?.addEventListener('input', () => {
+    celebFilters.search = celebSearchInput.value;
+    renderCelebDirectory();
+  });
+  celebEntityTypeSelect?.addEventListener('change', () => {
+    celebFilters.entityType = celebEntityTypeSelect.value;
+    renderCelebDirectory();
+  });
+  celebOwnerCategorySelect?.addEventListener('change', () => {
+    celebFilters.ownerCategory = celebOwnerCategorySelect.value;
+    renderCelebDirectory();
+  });
+  celebSpeciesSelect?.addEventListener('change', () => {
+    celebFilters.species = celebSpeciesSelect.value;
+    if (celebFilters.breed) {
+      const breedStillVisible = celebEntries.some((entry) => matchesCelebFilters({
+        ...entry,
+        breed: celebFilters.breed,
+      }));
+      if (!breedStillVisible) {
+        celebFilters.breed = '';
+        if (celebBreedSelect) celebBreedSelect.value = '';
+      }
+    }
+    renderCelebDirectory();
+  });
+  celebBreedSelect?.addEventListener('change', () => {
+    celebFilters.breed = celebBreedSelect.value;
+    renderCelebDirectory();
+  });
+}
 
 async function loadCelebPets() {
   if (!celebGrid) return;
   try {
     const res = await fetch(new URL('../data/celebrity-pets.json', import.meta.url).href);
     if (!res.ok) return;
-    const celebs = await res.json();
+    const celebs = (await res.json()).map(normalizeCelebRecord);
+    celebEntries = celebs;
     celebThumbByName.clear();
-    celebs.forEach((c) => {
-      const u = safeCelebImageUrl(c.imageUrl);
-      if (u && typeof c.name === 'string') {
-        celebThumbByName.set(c.name, {
-          url: u,
-          alt: typeof c.imageAlt === 'string' ? c.imageAlt : c.name,
+    celebs.forEach((entry) => {
+      if (entry.imageUrl && typeof entry.name === 'string') {
+        celebThumbByName.set(entry.name, {
+          url: entry.imageUrl,
+          alt: typeof entry.imageAlt === 'string' ? entry.imageAlt : entry.name,
         });
       }
     });
-    celebGrid.replaceChildren();
-    celebs.forEach((c) => {
-      const speciesArr = Array.isArray(c.species) ? c.species : [c.species];
-      const primarySpecies = speciesArr[0] ?? '';
-      const speciesIcon = SPECIES_ICON_MAP[primarySpecies] ?? '✨';
-      const owner = extractOwnerFromMeaning(c.meaning);
-      const imgUrl = safeCelebImageUrl(c.imageUrl);
-      const summaryMeta = formatCelebSummaryMeta(c, primarySpecies, owner);
-
-      const details = document.createElement('details');
-      details.className = 'celeb-card';
-      details.dataset.celebName = c.name;
-
-      const summary = document.createElement('summary');
-      summary.className = 'celeb-card__summary';
-
-      const iconSpan = document.createElement('span');
-      iconSpan.className = 'celeb-card__species-icon';
-      iconSpan.setAttribute('aria-hidden', 'true');
-      iconSpan.textContent = speciesIcon;
-
-      const summaryText = document.createElement('div');
-      summaryText.className = 'celeb-card__summary-text';
-
-      const h3 = document.createElement('h3');
-      h3.className = 'celeb-card__name celeb-card__name--summary';
-      h3.textContent = c.name;
-
-      const meta = document.createElement('p');
-      meta.className = 'celeb-card__summary-meta';
-      meta.textContent = summaryMeta;
-
-      summaryText.append(h3, meta);
-
-      const chevron = document.createElement('span');
-      chevron.className = 'celeb-card__chevron';
-      chevron.setAttribute('aria-hidden', 'true');
-
-      summary.append(iconSpan, summaryText, chevron);
-      details.appendChild(summary);
-
-      const body = document.createElement('div');
-      body.className = 'celeb-card__body';
-
-      if (imgUrl) {
-        const figure = document.createElement('figure');
-        figure.className = 'celeb-card__figure';
-        const img = document.createElement('img');
-        img.className = 'celeb-card__img';
-        img.src = imgUrl;
-        img.alt = typeof c.imageAlt === 'string' ? c.imageAlt : '';
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        figure.appendChild(img);
-        if (typeof c.imageCredit === 'string' && c.imageCredit.trim()) {
-          const cap = document.createElement('figcaption');
-          cap.className = 'celeb-card__credit';
-          cap.textContent = c.imageCredit;
-          figure.appendChild(cap);
-        }
-        body.appendChild(figure);
-      } else {
-        const missing = document.createElement('div');
-        missing.className = 'celeb-card__photo-missing';
-        const bigIcon = document.createElement('div');
-        bigIcon.className = 'celeb-card__photo-missing-icon';
-        bigIcon.textContent = speciesIcon;
-        const note = document.createElement('p');
-        note.className = 'celeb-card__photo-missing-text';
-        note.textContent = CELEB_PHOTO_MISSING_NOTE;
-        missing.append(bigIcon, note);
-        body.appendChild(missing);
-      }
-
-      const readSub = secondaryReadingIfAny(c.name, c.reading);
-      if (readSub != null) {
-        const readingEl = document.createElement('p');
-        readingEl.className = 'celeb-card__reading celeb-card__reading--body';
-        readingEl.textContent = `読み：${readSub}`;
-        body.appendChild(readingEl);
-      }
-
-      if (owner) {
-        const ownerP = document.createElement('p');
-        ownerP.className = 'celeb-card__owner';
-        ownerP.textContent = `${owner}のペット`;
-        body.appendChild(ownerP);
-      }
-
-      const note = document.createElement('p');
-      note.className = 'celeb-card__note';
-      note.textContent = c.meaning;
-      body.appendChild(note);
-
-      const vibes = document.createElement('div');
-      vibes.className = 'celeb-card__vibes';
-      (c.vibe ?? []).forEach((v) => {
-        const span = document.createElement('span');
-        span.className = 'celeb-card__vibe';
-        span.textContent = v;
-        vibes.appendChild(span);
-      });
-      body.appendChild(vibes);
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'celeb-card__btn';
-      btn.textContent = '似た名前を探す →';
-      const validSpecies = ['犬', '猫', 'うさぎ', 'ハムスター', '鳥'];
-      const targetSpecies = validSpecies.find((s) => speciesArr.includes(s));
-      if (targetSpecies) {
-        btn.addEventListener('click', (ev) => {
-          ev.stopPropagation();
-          state.species.add(targetSpecies);
-          (c.vibe ?? []).forEach((v) => state.vibe.add(v));
-          renderDiagnosisForm();
-          if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
-          document.getElementById('stepSpecies')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      } else {
-        btn.style.display = 'none';
-      }
-      body.appendChild(btn);
-      details.appendChild(body);
-      celebGrid.appendChild(details);
-    });
+    renderCelebDirectory();
   } catch (e) {
     console.error('celebrity-pets', e);
   }
 }
 
 async function bootstrap() {
+  initCommunity();
+
+  try {
+    state.surname = window.localStorage.getItem(SURNAME_STORAGE_KEY) || '';
+    state.surnameReading = window.localStorage.getItem(SURNAME_READING_STORAGE_KEY) || '';
+  } catch {
+    state.surname = '';
+    state.surnameReading = '';
+  }
+
+  if (surnameInput) surnameInput.value = state.surname;
+  if (surnameReadingInput) surnameReadingInput.value = state.surnameReading;
+  surnameInput?.addEventListener('input', handleSurnameInputChange);
+  surnameReadingInput?.addEventListener('input', handleSurnameInputChange);
+
   subscribePlatform((snapshot) => {
     platformSnapshot = snapshot;
     renderSavedFavorites();
     if (state.results && resultContainer) {
-      renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, {
-        onToggleFavorite: handleFavoriteToggle,
-        savedKeys: platformSnapshot.savedKeys,
-        favoriteKeyForItem,
-      });
+      renderResults(resultContainer, state.results, state.visibleCount, handleLoadMore, getResultRenderOptions());
     }
+    renderSurnameChecker();
   });
 
   await initPlatform();
+  bindCelebFilters();
 
   try {
     const response = await fetch(new URL('../data/names.json', import.meta.url).href);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    allNames = await response.json();
+    allNames = enrichNamesDatabase(await response.json());
   } catch (e) {
     console.error('names-json', e);
     allNames = [];
@@ -640,6 +1104,8 @@ async function bootstrap() {
   });
 
   btnRetry?.addEventListener('click', () => {
+    document.body.classList.remove('results-showall');
+    state.overflowListPage = 0;
     document.getElementById('diagnosisPanel')?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
@@ -658,6 +1124,7 @@ async function bootstrap() {
   }
 
   renderSavedFavorites();
+  renderSurnameChecker();
 }
 
 bootstrap();

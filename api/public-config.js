@@ -2,6 +2,7 @@ import { sendJson } from './_lib/request.js';
 
 export default function handler(_request, response) {
   response.setHeader('Cache-Control', 'no-store');
+  response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
 
   sendJson(response, 200, {
     siteUrl: process.env.SITE_URL || '',

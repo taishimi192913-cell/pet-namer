@@ -149,7 +149,11 @@ function getAuthFields() {
 }
 
 function getAuthRedirectURL() {
-  return publicConfig.siteUrl || window.location.origin;
+  const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  if (isLocalHost || import.meta.env.DEV) {
+    return window.location.origin;
+  }
+  return publicConfig.publicSiteUrl || publicConfig.siteUrl || window.location.origin;
 }
 
 function normalizeArray(value) {
@@ -193,6 +197,10 @@ export function getPlatformSnapshot() {
   };
 }
 
+export function getAccessToken() {
+  return currentSession?.access_token || '';
+}
+
 async function loadPublicConfig() {
   try {
     const response = await fetch('/api/public-config', {
@@ -201,12 +209,21 @@ async function loadPublicConfig() {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      return {
+        ...DEFAULT_PUBLIC_CONFIG,
+        siteUrl: window.location.origin,
+      };
+    }
     return {
       ...DEFAULT_PUBLIC_CONFIG,
       ...(await response.json()),
     };
   } catch (error) {
-    captureError('public-config', error);
+    if (!import.meta.env.DEV) {
+      captureError('public-config', error);
+    }
     return {
       ...DEFAULT_PUBLIC_CONFIG,
       siteUrl: window.location.origin,
