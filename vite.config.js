@@ -79,6 +79,8 @@ export default defineConfig(({ mode }) => {
           'dog-names': path.resolve(__dirname, 'dog-names.html'),
           'cat-names': path.resolve(__dirname, 'cat-names.html'),
           'rabbit-names': path.resolve(__dirname, 'rabbit-names.html'),
+          'privacy': path.resolve(__dirname, 'privacy.html'),
+          'about': path.resolve(__dirname, 'about.html'),
         },
       },
     },
