@@ -1,5 +1,10 @@
 export async function verifyTurnstileToken(token, remoteip) {
+  // Fail-close in production: if the secret is missing on a production deploy
+  // we must NOT silently bypass bot protection.
   if (!process.env.TURNSTILE_SECRET_KEY) {
+    if (process.env.VERCEL_ENV === 'production') {
+      return { success: false, skipped: false, code: 'missing-secret' };
+    }
     return { success: true, skipped: true };
   }
 

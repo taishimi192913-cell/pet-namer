@@ -1,9 +1,9 @@
 export const SPECIES_OPTIONS = [
-  { value: '犬', label: '犬', icon: '🐕' },
-  { value: '猫', label: '猫', icon: '🐈' },
-  { value: 'うさぎ', label: 'うさぎ', icon: '🐇' },
-  { value: 'ハムスター', label: 'ハムスター', icon: '🐹' },
-  { value: '鳥', label: '鳥', icon: '🐦' },
+  { value: '犬', label: '犬', icon: '犬' },
+  { value: '猫', label: '猫', icon: '猫' },
+  { value: 'うさぎ', label: 'うさぎ', icon: '兎' },
+  { value: 'ハムスター', label: 'ハムスター', icon: '小' },
+  { value: '鳥', label: '鳥', icon: '鳥' },
 ];
 
 /** UI・フィルタ用の正規ラベル（データ側の旧表記は canonicalVibe で寄せる） */

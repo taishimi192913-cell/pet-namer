@@ -145,8 +145,9 @@
 }
 
 .seo-top10__title::before {
-  content: '🏆';
-  font-size: 1.3rem;
+  content: 'TOP10';
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
 }
 
 .seo-top10-list {
@@ -446,6 +447,44 @@
   margin-bottom: 0;
 }
 
+/* ======================================
+   GUIDE ARTICLE GROUPS (welcome-prep)
+====================================== */
+.guide-article-group {
+  margin-bottom: 32px;
+}
+
+.guide-article-group:last-child {
+  margin-bottom: 0;
+}
+
+.guide-group-label {
+  margin: 0 0 14px;
+  padding: 7px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sub);
+  border: 1.5px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-sub);
+  letter-spacing: 0.03em;
+}
+
+.guide-group-label--dog {
+  background: rgba(214, 158, 46, 0.1);
+  border-color: rgba(214, 158, 46, 0.3);
+  color: #a57c1e;
+}
+
+.guide-group-label--cat {
+  background: rgba(140, 92, 180, 0.1);
+  border-color: rgba(140, 92, 180, 0.3);
+  color: #6b3e99;
+}
+
 .affiliate-item {
   margin: 24px 0;
   padding: 16px;
@@ -465,13 +504,52 @@
 
 .affiliate-item table {
   max-width: 100%;
-  overflow: hidden;
+}
+
+/* Rakuten picttext カードを常時レスポンシブ表示（記事本文幅は常に480px以下） */
+.affiliate-item div[style*="width:504px"] {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.affiliate-item td[style*="width:240px"],
+.affiliate-item td[style*="width:248px"] {
+  display: block !important;
+  width: 100% !important;
+}
+
+.affiliate-item td[style*="width:248px"] {
+  padding-top: 10px;
+}
+
+.affiliate-item a[href*="hb.afl.rakuten.co.jp"] img {
+  max-width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.affiliate-item div[style*="float:right"] {
+  width: 100% !important;
+  float: none !important;
+  margin-left: 0 !important;
+  margin-top: 8px;
+}
+
+.affiliate-item img[src*="static.affiliate.rakuten.co.jp/makelink/rl.svg"] {
+  float: none !important;
+  display: block;
+  margin: 0 auto 8px !important;
+}
+
+.affiliate-item div[style*="margin:10px;"]::after {
+  content: '';
+  display: block;
+  clear: both;
 }
 
 @media (max-width: 540px) {
-  .affiliate-item div[style*="width:504px"] {
-    width: 100% !important;
-  }
+  /* 540px以下でも同様のスタイルが適用済みのため追加記述不要 */
 }
 
 .journal-callout {

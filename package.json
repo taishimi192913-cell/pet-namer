@@ -6,6 +6,7 @@
   "packageManager": "npm@11.9.0",
   "scripts": {
     "prebuild": "node scripts/generate-sitemap.mjs",
+    "postbuild": "node scripts/prepare-clean-routes.mjs",
     "build:surnames": "node scripts/build-surnames.mjs",
     "dev": "vite",
     "lint": "eslint .",
@@ -27,6 +28,7 @@
     "@sentry/browser": "^9.18.0",
     "@supabase/supabase-js": "^2.50.0",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/functions": "^3.4.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {

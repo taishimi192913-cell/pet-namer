@@ -14,6 +14,7 @@ const DEFAULT_PUBLIC_CONFIG = {
 let supabaseClient = null;
 let publicConfig = { ...DEFAULT_PUBLIC_CONFIG };
 let currentSession = null;
+let currentProfile = null;
 let favoriteRecords = [];
 let favoriteMap = new Map();
 let turnstileScriptPromise = null;
@@ -189,8 +190,10 @@ export function getPlatformSnapshot() {
     config: publicConfig,
     isLoggedIn: Boolean(currentSession?.user),
     userEmail: currentSession?.user?.email || '',
+    profile: currentProfile,
     hasSupabaseAuth: publicConfig.hasSupabaseAuth,
     canSaveFavorites: Boolean(currentSession?.access_token),
+    canJoinCommunity: Boolean(currentProfile?.isComplete),
     savedKeys: new Set(favoriteMap.keys()),
     favoriteCount: favoriteRecords.length,
     turnstileEnabled: Boolean(publicConfig.turnstileSiteKey),
@@ -199,6 +202,10 @@ export function getPlatformSnapshot() {
 
 export function getAccessToken() {
   return currentSession?.access_token || '';
+}
+
+export function getCurrentProfile() {
+  return currentProfile;
 }
 
 async function loadPublicConfig() {
@@ -347,6 +354,76 @@ async function fetchFavorites() {
     captureError('favorites-fetch', error);
     setAuthMessage('お気に入りの読み込みに失敗しました。', 'error');
     emit();
+  }
+}
+
+async function fetchProfile() {
+  if (!currentSession?.access_token) {
+    currentProfile = null;
+    emit();
+    return null;
+  }
+
+  try {
+    const response = await fetch('/api/profile', {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${currentSession.access_token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || `HTTP ${response.status}`);
+    }
+
+    currentProfile = data.profile || null;
+    emit();
+    return currentProfile;
+  } catch (error) {
+    captureError('profile-fetch', error);
+    currentProfile = null;
+    setAuthMessage('プロフィールの読み込みに失敗しました。', 'error');
+    emit();
+    return null;
+  }
+}
+
+async function refreshAuthenticatedData() {
+  await Promise.all([fetchFavorites(), fetchProfile()]);
+}
+
+export async function saveOwnerProfile(profile) {
+  if (!currentSession?.access_token) {
+    openAuthPanel();
+    setAuthMessage('プロフィール保存にはログインが必要です。', 'warning');
+    return { ok: false, reason: 'login_required' };
+  }
+
+  try {
+    const response = await fetch('/api/profile', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${currentSession.access_token}`,
+      },
+      body: JSON.stringify({ profile }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || `HTTP ${response.status}`);
+    }
+
+    currentProfile = data.profile || null;
+    setAuthMessage('飼い主プロフィールを保存しました。', 'success');
+    emit();
+    return { ok: true, profile: currentProfile };
+  } catch (error) {
+    captureError('profile-save', error);
+    setAuthMessage(error.message || 'プロフィール保存に失敗しました。', 'error');
+    return { ok: false, reason: 'error' };
   }
 }
 
@@ -581,9 +658,10 @@ async function initSupabaseAuth() {
     currentSession = data.session;
     updateAuthUI();
     if (currentSession) {
-      setAuthMessage('お気に入り保存の準備ができました。', 'success');
-      await fetchFavorites();
+      setAuthMessage('ログインできました。お気に入り保存と飼い主SNSの準備ができています。', 'success');
+      await refreshAuthenticatedData();
     } else {
+      currentProfile = null;
       emit();
     }
 
@@ -591,8 +669,9 @@ async function initSupabaseAuth() {
       currentSession = session;
       updateAuthUI();
       if (session) {
-        await fetchFavorites();
+        await refreshAuthenticatedData();
       } else {
+        currentProfile = null;
         setFavoriteRecords([]);
         emit();
       }

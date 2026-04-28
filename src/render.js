@@ -12,7 +12,7 @@ function createFavoriteButton(item, options = {}, variant = 'card') {
     : 'name-card__btn name-card__btn--favorite';
 
   const isFavorite = Boolean(options.isFavorite);
-  const label = isFavorite ? '★ 保存済み' : '☆ 保存';
+  const label = isFavorite ? '保存済み' : '保存';
   button.textContent = label;
   button.setAttribute('aria-label', `${item.name}を${isFavorite ? 'お気に入り解除' : 'お気に入り保存'}`);
   button.title = isFavorite ? 'お気に入りから外す' : 'お気に入りに保存';
@@ -130,7 +130,7 @@ export function createSpotlight(item, options = {}) {
   const btnX = document.createElement('button');
   btnX.type = 'button';
   btnX.className = 'share-btn share-btn--x';
-  btnX.textContent = '𝕏 シェア';
+  btnX.textContent = 'Xで共有';
   btnX.addEventListener('click', () => {
     window.open(getXShareURL(item.name, item.reading), '_blank', 'noopener,noreferrer');
   });
@@ -138,7 +138,7 @@ export function createSpotlight(item, options = {}) {
   const btnLine = document.createElement('button');
   btnLine.type = 'button';
   btnLine.className = 'share-btn share-btn--line';
-  btnLine.textContent = 'LINE シェア';
+  btnLine.textContent = 'LINEで送る';
   btnLine.addEventListener('click', () => {
     window.open(getLINEShareURL(item.name, item.reading), '_blank', 'noopener,noreferrer');
   });
@@ -180,20 +180,20 @@ export function createNameCard(item, options = {}) {
   copyBtn.className = 'name-card__btn name-card__btn--copy';
   copyBtn.setAttribute('aria-label', `${item.name}をコピー`);
   copyBtn.title = '名前をコピー';
-  copyBtn.textContent = '📋';
+  copyBtn.textContent = 'コピー';
   copyBtn.addEventListener('click', async () => {
     try {
       await copyNameToClipboard(item.name);
-      copyBtn.textContent = '✓';
+      copyBtn.textContent = '完了';
       copyBtn.classList.add('copied');
       window.setTimeout(() => {
-        copyBtn.textContent = '📋';
+        copyBtn.textContent = 'コピー';
         copyBtn.classList.remove('copied');
       }, 1600);
     } catch {
-      copyBtn.textContent = '✓';
+      copyBtn.textContent = '完了';
       window.setTimeout(() => {
-        copyBtn.textContent = '📋';
+        copyBtn.textContent = 'コピー';
       }, 1600);
     }
   });
@@ -203,7 +203,7 @@ export function createNameCard(item, options = {}) {
   shareBtn.className = 'name-card__btn name-card__btn--share';
   shareBtn.setAttribute('aria-label', `${item.name}をXでシェア`);
   shareBtn.title = 'Xでシェア';
-  shareBtn.textContent = '↗';
+  shareBtn.textContent = '共有';
   shareBtn.addEventListener('click', () => {
     window.open(getXShareURL(item.name, item.reading), '_blank', 'noopener,noreferrer');
   });

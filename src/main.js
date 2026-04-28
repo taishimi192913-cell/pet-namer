@@ -38,7 +38,6 @@ import {
   subscribePlatform,
   toggleFavorite,
 } from './auth.js';
-import { initCommunity } from './community.js';
 
 const state = {
   species: new Set(),
@@ -104,6 +103,15 @@ const CELEB_ENTITY_TYPE_LABELS = {
   character: '映画・物語で愛された子',
 };
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 function safeCelebImageUrl(url) {
   if (typeof url !== 'string' || !url.trim()) return null;
   try {
@@ -140,7 +148,7 @@ function revealCelebPanel() {
   });
 }
 
-/** ランキング一覧は初期は畳み、🐾詳細ボタンで展開（全画面幅共通） */
+/** ランキング一覧は初期は畳み、詳細ボタンで展開（全画面幅共通） */
 let trendingRankingRevealed = false;
 
 function syncTrendingListVisibility() {
@@ -640,18 +648,21 @@ function renderTrending(species) {
     li.className = 'trending-item';
     const thumb = celebThumbByName.get(item.name);
     const thumbHtml = thumb
-      ? `<span class="trending-item__thumb-wrap"><img class="trending-item__thumb" src="${thumb.url}" alt="" width="40" height="40" loading="lazy" decoding="async" /></span>`
+      ? `<span class="trending-item__thumb-wrap"><img class="trending-item__thumb" src="${escapeHtml(thumb.url)}" alt="" width="40" height="40" loading="lazy" decoding="async" /></span>`
       : '';
     const readingSub = secondaryReadingIfAny(item.name, item.reading);
     const readingHtml =
-      readingSub != null ? `<span class="trending-item__reading">（${readingSub}）</span>` : '';
+      readingSub != null ? `<span class="trending-item__reading">（${escapeHtml(readingSub)}）</span>` : '';
+    const meaningCleaned = String(item.meaning ?? '')
+      .replace(/\s*\d{4}年[^。\n]*?(\d+位)[^。\n]*/g, '')
+      .trim();
     li.innerHTML = `
       <span class="trending-item__rank">${i + 1}</span>
       ${thumbHtml}
-      <span class="trending-item__name">${item.name}</span>
+      <span class="trending-item__name">${escapeHtml(item.name)}</span>
       ${readingHtml}
-      <span class="trending-item__meaning">${item.meaning.replace(/\s*\d{4}年[^。\n]*?(\d+位)[^。\n]*/g, '').trim()}</span>
-      <button type="button" class="trending-item__btn" data-species="${species}" data-name="${item.name}">由来を詳しく見る →</button>
+      <span class="trending-item__meaning">${escapeHtml(meaningCleaned)}</span>
+      <button type="button" class="trending-item__btn" data-species="${escapeHtml(species)}" data-name="${escapeHtml(item.name)}">由来を詳しく見る →</button>
     `;
     const thumbImg = li.querySelector('.trending-item__thumb');
     if (thumbImg && thumb) thumbImg.alt = thumb.alt;
@@ -673,7 +684,7 @@ function renderTrending(species) {
   });
 }
 
-const SPECIES_ICON_MAP = { 犬: '🐕', 猫: '🐈', うさぎ: '🐇', ハムスター: '🐹', 鳥: '🐦' };
+const SPECIES_ICON_MAP = { 犬: '犬', 猫: '猫', うさぎ: '兎', ハムスター: '小', 鳥: '鳥' };
 function normalizeCelebRecord(raw) {
   const speciesArr = Array.isArray(raw.species) ? raw.species.filter(Boolean) : [raw.species].filter(Boolean);
   return {
@@ -838,7 +849,7 @@ function renderCelebGrid(entries) {
   }
 
   entries.forEach((entry) => {
-    const speciesIcon = SPECIES_ICON_MAP[entry.petSpecies] ?? '✨';
+    const speciesIcon = SPECIES_ICON_MAP[entry.petSpecies] ?? '名';
     const details = document.createElement('details');
     details.className = 'celeb-card';
     details.dataset.celebName = entry.name;
@@ -1018,8 +1029,6 @@ async function loadCelebPets() {
 }
 
 async function bootstrap() {
-  initCommunity();
-
   try {
     state.surname = window.localStorage.getItem(SURNAME_STORAGE_KEY) || '';
     state.surnameReading = window.localStorage.getItem(SURNAME_READING_STORAGE_KEY) || '';
