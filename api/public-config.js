@@ -1,18 +1,29 @@
 import { sendJson } from './_lib/request.js';
 
+function env(name) {
+  return (process.env[name] || '').trim();
+}
+
 export default function handler(_request, response) {
   response.setHeader('Cache-Control', 'no-store');
   response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
 
+  const siteUrl = env('SITE_URL');
+  const publicSiteUrl = env('PUBLIC_SITE_URL');
+  const supabaseUrl = env('SUPABASE_URL');
+  const supabaseAnonKey = env('SUPABASE_ANON_KEY');
+  const sentryDsn = env('SENTRY_DSN');
+  const turnstileSiteKey = env('TURNSTILE_SITE_KEY');
+
   sendJson(response, 200, {
-    siteUrl: process.env.SITE_URL || '',
-    publicSiteUrl: process.env.PUBLIC_SITE_URL || '',
-    supabaseUrl: process.env.SUPABASE_URL || '',
-    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
-    sentryDsn: process.env.SENTRY_DSN || '',
-    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '',
-    hasSupabaseAuth: Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY),
-    hasSentry: Boolean(process.env.SENTRY_DSN),
-    hasTurnstile: Boolean(process.env.TURNSTILE_SITE_KEY),
+    siteUrl,
+    publicSiteUrl,
+    supabaseUrl,
+    supabaseAnonKey,
+    sentryDsn,
+    turnstileSiteKey,
+    hasSupabaseAuth: Boolean(supabaseUrl && supabaseAnonKey),
+    hasSentry: Boolean(sentryDsn),
+    hasTurnstile: Boolean(turnstileSiteKey),
   });
 }
