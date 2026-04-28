@@ -2,6 +2,7 @@ node_modules
 dist
 output
 .playwright-cli
+.claude
 
 .vercel
 .DS_Store

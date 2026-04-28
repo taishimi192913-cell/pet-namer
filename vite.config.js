@@ -2,8 +2,11 @@ import { defineConfig, loadEnv } from 'vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import communityHandler from './api/community.js';
+import communityCommentHandler from './api/community-comment.js';
+import communityLikeHandler from './api/community-like.js';
 import favoritesHandler from './api/favorites.js';
 import healthHandler from './api/health.js';
+import profileHandler from './api/profile.js';
 import publicConfigHandler from './api/public-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -12,6 +15,9 @@ const devApiHandlers = new Map([
   ['/api/health', healthHandler],
   ['/api/favorites', favoritesHandler],
   ['/api/community', communityHandler],
+  ['/api/community-like', communityLikeHandler],
+  ['/api/community-comment', communityCommentHandler],
+  ['/api/profile', profileHandler],
 ]);
 
 function enhanceNodeResponse(response) {
@@ -77,10 +83,23 @@ export default defineConfig(({ mode }) => {
         input: {
           index: path.resolve(__dirname, 'index.html'),
           'welcome-prep': path.resolve(__dirname, 'welcome-prep.html'),
+          'first-dog-guide': path.resolve(__dirname, 'first-dog-guide.html'),
+          'first-cat-guide': path.resolve(__dirname, 'first-cat-guide.html'),
           'starter-set': path.resolve(__dirname, 'starter-set.html'),
+          'journal-first-pet-checklist': path.resolve(__dirname, 'journal-first-pet-checklist.html'),
+          'journal-first-pet-cost': path.resolve(__dirname, 'journal-first-pet-cost.html'),
+          'journal-pet-vaccine-schedule': path.resolve(__dirname, 'journal-pet-vaccine-schedule.html'),
+          'journal-dog-walk-when': path.resolve(__dirname, 'journal-dog-walk-when.html'),
+          'journal-cat-cage-necessary': path.resolve(__dirname, 'journal-cat-cage-necessary.html'),
           'journal-first-days': path.resolve(__dirname, 'journal-first-days.html'),
           'journal-home-safety': path.resolve(__dirname, 'journal-home-safety.html'),
           'journal-first-shopping': path.resolve(__dirname, 'journal-first-shopping.html'),
+          'journal-dog-alone-training': path.resolve(__dirname, 'journal-dog-alone-training.html'),
+          'journal-cat-toilet-fixes': path.resolve(__dirname, 'journal-cat-toilet-fixes.html'),
+          'journal-pet-fast-eating': path.resolve(__dirname, 'journal-pet-fast-eating.html'),
+          'journal-first-summer': path.resolve(__dirname, 'journal-first-summer.html'),
+          'journal-pet-bousai': path.resolve(__dirname, 'journal-pet-bousai.html'),
+          'journal-kanto-pet-outings': path.resolve(__dirname, 'journal-kanto-pet-outings.html'),
           'dog-names': path.resolve(__dirname, 'dog-names.html'),
           'cat-names': path.resolve(__dirname, 'cat-names.html'),
           'rabbit-names': path.resolve(__dirname, 'rabbit-names.html'),

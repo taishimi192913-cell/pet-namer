@@ -3,9 +3,33 @@
   "framework": null,
   "installCommand": "npm install",
   "buildCommand": "npm run build",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "host",
+          "value": "www.sippomi.com"
+        }
+      ],
+      "destination": "https://sippomi.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "host",
+          "value": "pet-namer.vercel.app"
+        }
+      ],
+      "destination": "https://sippomi.com/:path*",
+      "permanent": true
+    },
     {
       "source": "/:path*",
       "has": [
@@ -26,6 +50,126 @@
         }
       ],
       "destination": "https://sippomi.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/cat-names.html",
+      "destination": "/cat-names",
+      "permanent": true
+    },
+    {
+      "source": "/dog-names.html",
+      "destination": "/dog-names",
+      "permanent": true
+    },
+    {
+      "source": "/first-cat-guide.html",
+      "destination": "/first-cat-guide",
+      "permanent": true
+    },
+    {
+      "source": "/first-dog-guide.html",
+      "destination": "/first-dog-guide",
+      "permanent": true
+    },
+    {
+      "source": "/journal-cat-cage-necessary.html",
+      "destination": "/journal-cat-cage-necessary",
+      "permanent": true
+    },
+    {
+      "source": "/journal-cat-toilet-fixes.html",
+      "destination": "/journal-cat-toilet-fixes",
+      "permanent": true
+    },
+    {
+      "source": "/journal-dog-alone-training.html",
+      "destination": "/journal-dog-alone-training",
+      "permanent": true
+    },
+    {
+      "source": "/journal-dog-walk-when.html",
+      "destination": "/journal-dog-walk-when",
+      "permanent": true
+    },
+    {
+      "source": "/journal-first-days.html",
+      "destination": "/journal-first-days",
+      "permanent": true
+    },
+    {
+      "source": "/journal-first-pet-checklist.html",
+      "destination": "/journal-first-pet-checklist",
+      "permanent": true
+    },
+    {
+      "source": "/journal-first-pet-cost.html",
+      "destination": "/journal-first-pet-cost",
+      "permanent": true
+    },
+    {
+      "source": "/journal-first-shopping.html",
+      "destination": "/journal-first-shopping",
+      "permanent": true
+    },
+    {
+      "source": "/journal-first-summer.html",
+      "destination": "/journal-first-summer",
+      "permanent": true
+    },
+    {
+      "source": "/journal-home-safety.html",
+      "destination": "/journal-home-safety",
+      "permanent": true
+    },
+    {
+      "source": "/journal-kanto-pet-outings.html",
+      "destination": "/journal-kanto-pet-outings",
+      "permanent": true
+    },
+    {
+      "source": "/journal-pet-bousai.html",
+      "destination": "/journal-pet-bousai",
+      "permanent": true
+    },
+    {
+      "source": "/journal-pet-fast-eating.html",
+      "destination": "/journal-pet-fast-eating",
+      "permanent": true
+    },
+    {
+      "source": "/journal-pet-vaccine-schedule.html",
+      "destination": "/journal-pet-vaccine-schedule",
+      "permanent": true
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/rabbit-names.html",
+      "destination": "/rabbit-names",
+      "permanent": true
+    },
+    {
+      "source": "/starter-set.html",
+      "destination": "/starter-set",
+      "permanent": true
+    },
+    {
+      "source": "/welcome-prep.html",
+      "destination": "/welcome-prep",
       "permanent": true
     }
   ],
@@ -77,7 +221,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://sippomi.com https://pet-namer.vercel.app https://images.unsplash.com https://images.pexels.com https://upload.wikimedia.org https://hbb.afl.rakuten.co.jp https://thumbnail.image.rakuten.co.jp; connect-src 'self' https: wss:; frame-src https://challenges.cloudflare.com; upgrade-insecure-requests"
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://sippomi.com https://pet-namer.vercel.app https://*.supabase.co https://images.unsplash.com https://images.pexels.com https://upload.wikimedia.org https://hbb.afl.rakuten.co.jp https://thumbnail.image.rakuten.co.jp https://static.affiliate.rakuten.co.jp https://image.rakuten.co.jp; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.ingest.sentry.io https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; upgrade-insecure-requests"
         }
       ]
     }
