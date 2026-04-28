@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { createHttpError } from './request.js';
 
 export const COMMUNITY_BUCKET = 'community-media';
+export const MAX_COMMUNITY_IMAGE_BYTES = 2.5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Map([
   ['image/jpeg', 'jpg'],
   ['image/png', 'png'],
@@ -72,11 +73,40 @@ export async function requireCommunityMember(supabase, user) {
   const profile = await getOrCreateProfile(supabase, user);
   const clientProfile = profileToClient(profile);
 
-  if (!clientProfile.isPetOwner) {
+  if (!clientProfile.isComplete) {
     throw createHttpError(403, 'ペットを飼っている飼い主プロフィールの設定が必要です');
   }
 
   return { profile, clientProfile };
+}
+
+function hasValidImageSignature(mimeType, buffer) {
+  if (mimeType === 'image/jpeg') {
+    return buffer.length >= 3
+      && buffer[0] === 0xff
+      && buffer[1] === 0xd8
+      && buffer[2] === 0xff;
+  }
+
+  if (mimeType === 'image/png') {
+    return buffer.length >= 8
+      && buffer[0] === 0x89
+      && buffer[1] === 0x50
+      && buffer[2] === 0x4e
+      && buffer[3] === 0x47
+      && buffer[4] === 0x0d
+      && buffer[5] === 0x0a
+      && buffer[6] === 0x1a
+      && buffer[7] === 0x0a;
+  }
+
+  if (mimeType === 'image/webp') {
+    return buffer.length >= 12
+      && buffer.subarray(0, 4).toString('ascii') === 'RIFF'
+      && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
+  }
+
+  return false;
 }
 
 export function parseImageDataUrl(dataUrl) {
@@ -101,8 +131,12 @@ export function parseImageDataUrl(dataUrl) {
     throw createHttpError(400, '画像が空です');
   }
 
-  if (buffer.byteLength > 6 * 1024 * 1024) {
-    throw createHttpError(413, '画像は6MB以下で投稿してください');
+  if (buffer.byteLength > MAX_COMMUNITY_IMAGE_BYTES) {
+    throw createHttpError(413, '画像は2.5MB以下で投稿してください');
+  }
+
+  if (!hasValidImageSignature(mimeType, buffer)) {
+    throw createHttpError(400, '画像データの種類が一致しません');
   }
 
   return { mimeType, extension, buffer };
@@ -114,7 +148,7 @@ export async function ensureCommunityBucket(supabase) {
 
   const { error: createError } = await supabase.storage.createBucket(COMMUNITY_BUCKET, {
     public: false,
-    fileSizeLimit: 6 * 1024 * 1024,
+    fileSizeLimit: MAX_COMMUNITY_IMAGE_BYTES,
     allowedMimeTypes: [...ALLOWED_IMAGE_TYPES.keys()],
   });
 

@@ -834,44 +834,133 @@
     </section>
 
     <section class="section community-section" id="communitySection" aria-labelledby="communityHeading">
-      <div class="section-label">COMING SOON</div>
+      <div class="section-label">OWNERS LOUNGE</div>
       <div class="community-section__head">
         <div>
           <h2 class="step-heading" id="communityHeading">
             <span class="step-num">M</span>
-            飼い主さん限定コミュニティは今後公開予定です
+            飼い主さん限定コミュニティ
           </h2>
-          <p class="step-hint">
-            シッポミはまず、名前探しとお迎え準備の体験をしっかり育てます。その次の段階で、飼い主さんだけが入れる写真コミュニティを公開予定です。
-          </p>
+          <p class="step-hint" id="communitySummary">ログイン後、飼い主プロフィールを整えると写真投稿・いいね・コメントが使えます。</p>
         </div>
-        <div class="community-status" data-state="muted">まずは小さく始めます</div>
+        <div class="community-status" id="communityStatus" data-state="muted">ログインした飼い主さん限定</div>
       </div>
 
-      <div class="community-gate">
+      <div class="community-gate" id="communityGate">
         <div class="community-gate__card">
-          <p class="community-gate__eyebrow">Future Plan</p>
-          <h3>将来つくりたいのは、飼い主さんだけのやさしい写真SNS</h3>
+          <p class="community-gate__eyebrow">Members only</p>
+          <h3>ログインすると、うちの子との日常を安心して残せます</h3>
           <p>
-            うちの子との写真、お迎え報告、名前の相談、暮らしの悩みまで。遠慮せず投稿できるクローズドな場を、Web版から少しずつ形にしていく予定です。
+            お迎え報告、名前の相談、暮らしの悩みまで。まずは小さく、飼い主さんだけのやさしいタイムラインとして公開します。
           </p>
-          <div class="story-grid" style="margin-top: 20px;">
-            <article class="story-card">
-              <p class="story-card__eyebrow">01 Closed</p>
-              <h3>飼い主さんだけでつながれる</h3>
-              <p>知らない人の目を気にせず、うちの子との写真や暮らしの記録を共有できる場所を目指します。</p>
-            </article>
-            <article class="story-card">
-              <p class="story-card__eyebrow">02 Gentle</p>
-              <h3>自慢も悩みも出しやすい空気</h3>
-              <p>お迎え直後の不安、名前の相談、日々の小さな喜びまで、やさしい空気で話せる設計を考えています。</p>
-            </article>
-            <article class="story-card">
-              <p class="story-card__eyebrow">03 Web to App</p>
-              <h3>最初はWeb、将来はiOSへ</h3>
-              <p>まずは小さく始めて、使われ方を見ながら、あとでアプリにも広げやすい形で育てていきます。</p>
-            </article>
+          <button type="button" class="community-gate__cta" id="communityLoginCta">ログインして参加する</button>
+        </div>
+      </div>
+
+      <div class="community-shell" id="communityShell" hidden>
+        <article class="community-composer community-profile-card" id="communityProfileCard">
+          <div class="community-composer__head">
+            <div>
+              <p class="community-composer__eyebrow">Profile</p>
+              <h3>飼い主プロフィール</h3>
+            </div>
           </div>
+          <p class="community-profile-card__lead">投稿前に表示名とうちの子情報を登録してください。</p>
+          <form class="community-composer__form" id="communityProfileForm">
+            <div class="community-composer__grid community-composer__grid--owner">
+              <label class="community-field">
+                <span>表示名</span>
+                <input id="communityDisplayName" maxlength="60" autocomplete="nickname" required>
+              </label>
+              <label class="community-field">
+                <span>ユーザー名</span>
+                <input id="communityUsername" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" autocomplete="username" required>
+              </label>
+              <label class="community-field">
+                <span>うちの子の名前</span>
+                <input id="communityProfilePetName" maxlength="60" required>
+              </label>
+              <label class="community-field">
+                <span>種類</span>
+                <select id="communityProfilePetSpecies" required>
+                  <option value="">選択してください</option>
+                  <option value="犬">犬</option>
+                  <option value="猫">猫</option>
+                  <option value="うさぎ">うさぎ</option>
+                  <option value="ハムスター">ハムスター</option>
+                  <option value="鳥">鳥</option>
+                  <option value="その他">その他</option>
+                </select>
+              </label>
+              <label class="community-field community-field--checkbox">
+                <span class="community-field__checkbox">
+                  <input id="communityOwnerCheck" type="checkbox" required>
+                  <span>飼い主として参加します</span>
+                </span>
+              </label>
+              <label class="community-field">
+                <span>ひとこと</span>
+                <input id="communityBio" maxlength="240">
+              </label>
+            </div>
+            <div class="community-composer__actions">
+              <button type="submit" class="community-composer__submit" id="communityProfileSubmit">プロフィールを保存</button>
+              <p class="community-message" id="communityProfileMessage" data-state="muted"></p>
+            </div>
+          </form>
+        </article>
+
+        <div class="community-feed-stack">
+          <article class="community-composer" id="communityComposerCard" hidden>
+            <div class="community-composer__head">
+              <div>
+                <p class="community-composer__eyebrow">Post</p>
+                <h3>うちの子の近況を投稿</h3>
+              </div>
+              <button type="button" class="community-composer__reload" id="communityReload">更新</button>
+            </div>
+            <form class="community-composer__form" id="communityComposer">
+              <div class="community-composer__grid">
+                <label class="community-field">
+                  <span>テーマ</span>
+                  <select id="communityTopic">
+                    <option>お迎え報告</option>
+                    <option>名前の相談</option>
+                    <option>暮らしの悩み</option>
+                    <option>うちの子自慢</option>
+                    <option>買ってよかったもの</option>
+                  </select>
+                </label>
+                <label class="community-field">
+                  <span>写真</span>
+                  <input id="communityImage" type="file" accept="image/jpeg,image/png,image/webp">
+                </label>
+              </div>
+              <label class="community-field">
+                <span>本文</span>
+                <textarea id="communityBody" maxlength="800" rows="4" required></textarea>
+              </label>
+              <div class="community-image-preview" id="communityImagePreviewWrap" hidden>
+                <img id="communityImagePreview" alt="投稿写真プレビュー">
+                <button type="button" class="community-image-preview__clear" id="communityImageClear">写真を外す</button>
+              </div>
+              <div class="community-composer__actions">
+                <button type="submit" class="community-composer__submit" id="communitySubmit">投稿する</button>
+                <p class="community-message" id="communityMessage" data-state="muted"></p>
+              </div>
+            </form>
+          </article>
+
+          <article class="community-feed">
+            <div class="community-feed__head">
+              <div>
+                <p class="community-feed__eyebrow">Timeline</p>
+                <h3>みんなの投稿</h3>
+              </div>
+            </div>
+            <div class="community-filters" id="communityFilters" aria-label="投稿フィルター"></div>
+            <div class="community-list" id="communityList"></div>
+          </article>
         </div>
       </div>
     </section>

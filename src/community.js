@@ -1,6 +1,8 @@
 import {
   getAccessToken,
+  getTurnstileTokenForAction,
   openAuthPanel,
+  resetTurnstileToken,
   saveOwnerProfile,
   subscribePlatform,
 } from './auth.js';
@@ -439,6 +441,12 @@ async function handleImageInput(event) {
     return;
   }
 
+  if (file.size > 2.5 * 1024 * 1024) {
+    setMessage('画像は2.5MB以下で選んでください。', 'warning');
+    input.value = '';
+    return;
+  }
+
   try {
     state.imageDataUrl = await readSelectedImage(file);
     renderImagePreview();
@@ -483,9 +491,14 @@ async function handleSubmit(event) {
 
   state.isSubmitting = true;
   setBusy(elements.submit, true);
-  setMessage('投稿しています...', 'muted');
+    setMessage('投稿しています...', 'muted');
 
   try {
+    const turnstileToken = await getTurnstileTokenForAction();
+    if (state.snapshot?.turnstileEnabled && !turnstileToken) {
+      setMessage('投稿前にロボット対策チェックを完了してください。', 'warning');
+      return;
+    }
     const response = await fetch('/api/community', {
       method: 'POST',
       headers: {
@@ -493,7 +506,7 @@ async function handleSubmit(event) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ post: payload }),
+      body: JSON.stringify({ post: payload, turnstileToken }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -506,6 +519,7 @@ async function handleSubmit(event) {
 
     elements.form?.reset();
     clearSelectedImage();
+    if (turnstileToken) resetTurnstileToken();
     if (elements.topic) elements.topic.value = COMMUNITY_TOPICS[0];
     setMessage('投稿できました。Owners Lounge に反映されています。', 'success');
     renderFeed();
@@ -556,6 +570,14 @@ async function handleLike(postId, likedByViewer) {
   }
 
   try {
+    let turnstileToken = null;
+    if (!likedByViewer) {
+      turnstileToken = await getTurnstileTokenForAction();
+      if (state.snapshot?.turnstileEnabled && !turnstileToken) {
+        setMessage('いいね前にロボット対策チェックを完了してください。', 'warning');
+        return;
+      }
+    }
     const response = await fetch('/api/community-like', {
       method: likedByViewer ? 'DELETE' : 'POST',
       headers: {
@@ -563,7 +585,7 @@ async function handleLike(postId, likedByViewer) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ postId }),
+      body: JSON.stringify({ postId, turnstileToken }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -577,6 +599,7 @@ async function handleLike(postId, likedByViewer) {
         likedByViewer: data.like?.likedByViewer ?? post.likedByViewer,
       };
     });
+    resetTurnstileToken();
     renderFeed();
   } catch (error) {
     setMessage(error.message || 'いいねに失敗しました。', 'error');
@@ -600,6 +623,11 @@ async function handleComment(postId, body, formElement) {
   setBusy(submit, true);
 
   try {
+    const turnstileToken = await getTurnstileTokenForAction();
+    if (state.snapshot?.turnstileEnabled && !turnstileToken) {
+      setMessage('コメント前にロボット対策チェックを完了してください。', 'warning');
+      return;
+    }
     const response = await fetch('/api/community-comment', {
       method: 'POST',
       headers: {
@@ -607,7 +635,7 @@ async function handleComment(postId, body, formElement) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ postId, body }),
+      body: JSON.stringify({ postId, body, turnstileToken }),
     });
     const data = await response.json();
     if (!response.ok) {
@@ -624,6 +652,7 @@ async function handleComment(postId, body, formElement) {
       };
     });
     formElement.reset();
+    resetTurnstileToken();
     renderFeed();
   } catch (error) {
     setMessage(error.message || 'コメントに失敗しました。', 'error');

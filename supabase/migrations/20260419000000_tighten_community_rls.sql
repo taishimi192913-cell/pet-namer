@@ -97,3 +97,101 @@ with check (
       and p.is_pet_owner = true
   )
 );
+
+drop policy if exists "Users can update own owner community posts"
+  on public.owner_community_posts;
+create policy "Pet owners can update own owner community posts"
+on public.owner_community_posts
+for update
+to authenticated
+using (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+)
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+);
+
+drop policy if exists "Users can delete own owner community posts"
+  on public.owner_community_posts;
+create policy "Pet owners can delete own owner community posts"
+on public.owner_community_posts
+for delete
+to authenticated
+using (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+);
+
+drop policy if exists "Users can delete own community post likes"
+  on public.community_post_likes;
+create policy "Pet owners can delete own community post likes"
+on public.community_post_likes
+for delete
+to authenticated
+using (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+);
+
+drop policy if exists "Users can update own community post comments"
+  on public.community_post_comments;
+create policy "Pet owners can update own community post comments"
+on public.community_post_comments
+for update
+to authenticated
+using (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+)
+with check (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+);
+
+drop policy if exists "Users can delete own community post comments"
+  on public.community_post_comments;
+create policy "Pet owners can delete own community post comments"
+on public.community_post_comments
+for delete
+to authenticated
+using (
+  auth.uid() = user_id
+  and exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.is_pet_owner = true
+  )
+);

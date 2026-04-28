@@ -320,6 +320,14 @@ function resetTurnstile() {
   turnstileToken = '';
 }
 
+export async function getTurnstileTokenForAction() {
+  return ensureTurnstileToken();
+}
+
+export function resetTurnstileToken() {
+  resetTurnstile();
+}
+
 async function ensureTurnstileToken() {
   if (!publicConfig.turnstileSiteKey) return null;
   if (turnstileToken) return turnstileToken;
@@ -401,6 +409,11 @@ export async function saveOwnerProfile(profile) {
   }
 
   try {
+    const turnstileToken = await getTurnstileTokenForAction();
+    if (publicConfig.turnstileSiteKey && !turnstileToken) {
+      return { ok: false, reason: 'turnstile_required' };
+    }
+
     const response = await fetch('/api/profile', {
       method: 'POST',
       headers: {
@@ -408,7 +421,10 @@ export async function saveOwnerProfile(profile) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${currentSession.access_token}`,
       },
-      body: JSON.stringify({ profile }),
+      body: JSON.stringify({
+        profile,
+        turnstileToken,
+      }),
     });
 
     const data = await response.json();
@@ -418,6 +434,7 @@ export async function saveOwnerProfile(profile) {
 
     currentProfile = data.profile || null;
     setAuthMessage('飼い主プロフィールを保存しました。', 'success');
+    resetTurnstile();
     emit();
     return { ok: true, profile: currentProfile };
   } catch (error) {
@@ -531,14 +548,20 @@ async function handleMagicLink() {
   setAuthMessage('マジックリンクを送信しています...', 'muted');
 
   try {
+    const captchaToken = await ensureTurnstileToken();
+    if (publicConfig.turnstileSiteKey && !captchaToken) {
+      return;
+    }
     const { error } = await supabaseClient.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: getAuthRedirectURL(),
+        captchaToken,
       },
     });
     if (error) throw error;
     setAuthMessage('メールを送信しました。リンクからログインを完了してください。', 'success');
+    resetTurnstile();
   } catch (error) {
     captureError('supabase-magic-link', error);
     setAuthMessage(error.message || 'マジックリンクの送信に失敗しました。', 'error');
@@ -559,15 +582,21 @@ async function handleSignUp() {
   setAuthMessage('アカウントを作成しています...', 'muted');
 
   try {
+    const captchaToken = await ensureTurnstileToken();
+    if (publicConfig.turnstileSiteKey && !captchaToken) {
+      return;
+    }
     const { error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: getAuthRedirectURL(),
+        captchaToken,
       },
     });
     if (error) throw error;
     setAuthMessage('登録を受け付けました。必要に応じて確認メールを開いてください。', 'success');
+    resetTurnstile();
   } catch (error) {
     captureError('supabase-sign-up', error);
     setAuthMessage(error.message || '新規登録に失敗しました。', 'error');

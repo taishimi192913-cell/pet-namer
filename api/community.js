@@ -7,6 +7,7 @@ import {
 } from './_lib/community.js';
 import { readBearerToken, readJsonBody, sendJson } from './_lib/request.js';
 import { requireAuthenticatedUser } from './_lib/supabase.js';
+import { verifyWriteChallenge } from './_lib/write-protection.js';
 
 const communityPostSchema = z.object({
   topic: z.string().trim().min(1).max(40),
@@ -139,9 +140,10 @@ export default async function handler(request, response) {
       });
     }
 
-    const body = await readJsonBody(request, { maxBytes: 8 * 1024 * 1024 });
+    const body = await readJsonBody(request, { maxBytes: 4 * 1024 * 1024 });
 
     if (request.method === 'POST') {
+      await verifyWriteChallenge(request, body);
       const parsed = communityPostSchema.safeParse(body.post || {});
       if (!parsed.success) {
         return sendJson(response, 400, { ok: false, error: 'Invalid community post payload' });

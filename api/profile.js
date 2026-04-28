@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { readBearerToken, readJsonBody, sendJson } from './_lib/request.js';
 import { getOrCreateProfile, profileToClient } from './_lib/community.js';
 import { requireAuthenticatedUser } from './_lib/supabase.js';
+import { verifyWriteChallenge } from './_lib/write-protection.js';
 
 const profileSchema = z.object({
   displayName: z.string().trim().min(1).max(60),
@@ -38,6 +39,7 @@ export default async function handler(request, response) {
     }
 
     const body = await readJsonBody(request, { maxBytes: 64 * 1024 });
+    await verifyWriteChallenge(request, body);
     const parsed = profileSchema.safeParse(body.profile || {});
     if (!parsed.success) {
       return sendJson(response, 400, { ok: false, error: 'Invalid profile payload' });

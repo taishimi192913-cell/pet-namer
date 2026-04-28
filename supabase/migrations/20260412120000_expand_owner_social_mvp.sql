@@ -137,7 +137,7 @@ values (
   'community-media',
   'community-media',
   false,
-  6291456,
+  2621440,
   array['image/jpeg', 'image/png', 'image/webp']
 )
 on conflict (id) do update

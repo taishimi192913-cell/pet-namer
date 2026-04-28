@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { requireCommunityMember } from './_lib/community.js';
 import { readBearerToken, readJsonBody, sendJson } from './_lib/request.js';
 import { requireAuthenticatedUser } from './_lib/supabase.js';
+import { verifyWriteChallenge } from './_lib/write-protection.js';
 
 const createCommentSchema = z.object({
   postId: z.string().uuid(),
@@ -47,6 +48,7 @@ export default async function handler(request, response) {
     const body = await readJsonBody(request, { maxBytes: 32 * 1024 });
 
     if (request.method === 'POST') {
+      await verifyWriteChallenge(request, body);
       const parsed = createCommentSchema.safeParse(body);
       if (!parsed.success) {
         return sendJson(response, 400, { ok: false, error: 'Invalid comment payload' });

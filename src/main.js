@@ -38,6 +38,7 @@ import {
   subscribePlatform,
   toggleFavorite,
 } from './auth.js';
+import { initCommunity } from './community.js';
 
 const state = {
   species: new Set(),
@@ -1052,6 +1053,7 @@ async function bootstrap() {
   });
 
   await initPlatform();
+  initCommunity();
   bindCelebFilters();
 
   try {

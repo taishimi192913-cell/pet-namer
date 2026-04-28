@@ -12,6 +12,7 @@ export const routes = [
   { loc: '/welcome-prep', changefreq: 'weekly', priority: '0.9' },
   { loc: '/first-dog-guide', changefreq: 'weekly', priority: '0.9' },
   { loc: '/first-cat-guide', changefreq: 'weekly', priority: '0.9' },
+  { loc: '/starter-set', changefreq: 'weekly', priority: '0.8' },
   { loc: '/journal-first-pet-checklist', changefreq: 'weekly', priority: '0.8' },
   { loc: '/journal-first-pet-cost', changefreq: 'weekly', priority: '0.8' },
   { loc: '/journal-pet-vaccine-schedule', changefreq: 'weekly', priority: '0.8' },

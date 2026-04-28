@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { requireCommunityMember } from './_lib/community.js';
 import { readBearerToken, readJsonBody, sendJson } from './_lib/request.js';
 import { requireAuthenticatedUser } from './_lib/supabase.js';
+import { verifyWriteChallenge } from './_lib/write-protection.js';
 
 const payloadSchema = z.object({
   postId: z.string().uuid(),
@@ -50,6 +51,7 @@ export default async function handler(request, response) {
     }
 
     if (request.method === 'POST') {
+      await verifyWriteChallenge(request, body);
       const { error } = await supabase
         .from('community_post_likes')
         .upsert({
