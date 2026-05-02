@@ -12,3 +12,13 @@ output
 !.env.example
 !.env.sample
 !.env.template
+
+# Local credentials and keys
+credentials.json
+client_secret*.json
+service-account*.json
+token.json
+*.pem
+*.key
+*.p12
+*.mobileprovision
