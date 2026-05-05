@@ -208,6 +208,7 @@ const resultSection = document.getElementById('resultSection');
 const resultCount = document.getElementById('resultCount');
 const resultContainer = document.getElementById('resultContainer');
 const btnRetry = document.getElementById('btnRetry');
+const resultShareArea = document.getElementById('resultShareArea');
 const surnameCheckerSection = document.getElementById('surnameCheckerSection');
 const surnameInput = document.getElementById('surnameInput');
 const surnameReadingInput = document.getElementById('surnameReadingInput');
@@ -550,6 +551,10 @@ function runDiagnosis({ smoothScroll = true } = {}) {
 
   if (resultSection) {
     resultSection.hidden = false;
+  }
+
+  if (resultShareArea) {
+    resultShareArea.hidden = false;
   }
 
   if (smoothScroll && resultSection) {
@@ -1117,9 +1122,25 @@ async function bootstrap() {
   btnRetry?.addEventListener('click', () => {
     document.body.classList.remove('results-showall');
     state.overflowListPage = 0;
+    if (resultShareArea) resultShareArea.hidden = true;
     document.getElementById('diagnosisPanel')?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
+    });
+  });
+
+  document.querySelectorAll('[data-share]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const platform = btn.dataset.share;
+      const topName = state.results?.[0];
+      if (!topName) return;
+      const text = `シッポミで「${topName.name}（${topName.reading || ''}）」を見つけました🐾`;
+      const url = 'https://sippomi.com/';
+      if (platform === 'twitter') {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
+      } else if (platform === 'line') {
+        window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
+      }
     });
   });
 

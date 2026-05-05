@@ -97,7 +97,7 @@
     ]
   }
   </script>
-  <link rel="preload" as="image" href="/hero-pets.jpg" imagesrcset="/hero-pets.jpg 1x" fetchpriority="high">
+  <link rel="preload" as="image" href="/hero-pets.jpg" fetchpriority="high">
   <!-- Fonts: system SF Pro / Hiragino stack (defined in --font-body). No remote web font to stay on MUJI×Apple tone. -->
   <link rel="stylesheet" href="/src/styles/global.css">
 </head>
@@ -156,21 +156,6 @@
   ============================== -->
   <section class="hero-section" aria-labelledby="heroTitle">
     <div class="hero-background-decor" aria-hidden="true"></div>
-    <!-- 浮遊する足跡（犬猫の肉球・うさぎ・鳥・ハムスター） -->
-    <div class="hero-paws" aria-hidden="true">
-      <!-- 肉球 -->
-      <svg class="hero-paw hero-paw--paw" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><ellipse cx="32" cy="44" rx="18" ry="14" fill="#1d1d1f" opacity="0.08"/><circle cx="18" cy="22" r="6" fill="#1d1d1f" opacity="0.08"/><circle cx="32" cy="16" r="6" fill="#1d1d1f" opacity="0.08"/><circle cx="46" cy="22" r="6" fill="#1d1d1f" opacity="0.08"/><circle cx="24" cy="12" r="5" fill="#1d1d1f" opacity="0.07"/><circle cx="40" cy="12" r="5" fill="#1d1d1f" opacity="0.07"/></svg>
-      <svg class="hero-paw hero-paw--paw" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><ellipse cx="32" cy="44" rx="18" ry="14" fill="#1d1d1f" opacity="0.07"/><circle cx="18" cy="22" r="6" fill="#1d1d1f" opacity="0.07"/><circle cx="32" cy="16" r="6" fill="#1d1d1f" opacity="0.07"/><circle cx="46" cy="22" r="6" fill="#1d1d1f" opacity="0.07"/><circle cx="24" cy="12" r="5" fill="#1d1d1f" opacity="0.06"/><circle cx="40" cy="12" r="5" fill="#1d1d1f" opacity="0.06"/></svg>
-      <!-- うさぎ -->
-      <svg class="hero-paw hero-paw--rabbit" viewBox="0 0 80 56" xmlns="http://www.w3.org/2000/svg"><ellipse cx="24" cy="34" rx="20" ry="12" fill="#1d1d1f" opacity="0.07" transform="rotate(-14 24 34)"/><ellipse cx="56" cy="28" rx="20" ry="12" fill="#1d1d1f" opacity="0.07" transform="rotate(10 56 28)"/></svg>
-      <svg class="hero-paw hero-paw--rabbit hero-paw--sm" viewBox="0 0 80 56" xmlns="http://www.w3.org/2000/svg"><ellipse cx="24" cy="34" rx="20" ry="12" fill="#1d1d1f" opacity="0.06" transform="rotate(-14 24 34)"/><ellipse cx="56" cy="28" rx="20" ry="12" fill="#1d1d1f" opacity="0.06" transform="rotate(10 56 28)"/></svg>
-      <!-- 鳥の足跡 -->
-      <svg class="hero-paw hero-paw--bird" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M24 32 L14 10 M24 32 L24 8 M24 32 L34 10" stroke="#1d1d1f" stroke-width="3" stroke-linecap="round" opacity="0.12"/></svg>
-      <svg class="hero-paw hero-paw--bird hero-paw--sm" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M24 32 L14 10 M24 32 L24 8 M24 32 L34 10" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round" opacity="0.1"/></svg>
-      <!-- ハムスター（小さめ肉球） -->
-      <svg class="hero-paw hero-paw--hamster" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><ellipse cx="28" cy="36" rx="14" ry="10" fill="#1d1d1f" opacity="0.08"/><circle cx="18" cy="22" r="4.5" fill="#1d1d1f" opacity="0.08"/><circle cx="28" cy="16" r="4.5" fill="#1d1d1f" opacity="0.08"/><circle cx="38" cy="22" r="4.5" fill="#1d1d1f" opacity="0.08"/></svg>
-      <svg class="hero-paw hero-paw--hamster hero-paw--sm" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><ellipse cx="28" cy="36" rx="14" ry="10" fill="#1d1d1f" opacity="0.07"/><circle cx="18" cy="22" r="4.5" fill="#1d1d1f" opacity="0.07"/><circle cx="28" cy="16" r="4.5" fill="#1d1d1f" opacity="0.07"/><circle cx="38" cy="22" r="4.5" fill="#1d1d1f" opacity="0.07"/></svg>
-    </div>
 
     <div class="hero-inner">
       <div class="hero-layout">
@@ -219,6 +204,7 @@
                 loading="eager"
                 decoding="async"
                 fetchpriority="high"
+                style="aspect-ratio:960/536"
               >
             </picture>
           </div>
@@ -411,6 +397,19 @@
           条件を変えてやり直す
         </button>
       </div>
+      <div class="result-share" id="resultShareArea" hidden>
+        <p class="result-share__label">気に入った名前をシェアする</p>
+        <div class="result-share__buttons">
+          <button type="button" class="share-btn" data-share="twitter" aria-label="Xでシェア">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46L20 4"/></svg>
+            Xでシェア
+          </button>
+          <button type="button" class="share-btn share-btn--line" data-share="line" aria-label="LINEでシェア">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 5.97 2 10.5c0 4.53 4.477 8.5 10 8.5 1.05 0 2.062-.14 3.012-.394.38.235.8.47 1.23.664.27.124.58.228.88.276.12.02.24.02.34-.06.1-.08.12-.22.1-.36-.02-.14-.06-.28-.1-.42-.08-.28-.18-.56-.26-.84-.76-2.66 1.06-4.17 2.82-5.34C21.56 11.15 22 9.87 22 10.5 22 5.97 17.523 2 12 2zM7.5 12.5H5.5c-.28 0-.5-.22-.5-.5V8c0-.28.22-.5.5-.5s.5.22.5.5v3.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5zm3.5 0c0 .28-.22.5-.5.5s-.5-.22-.5-.5V9.7l-1.1 1.8c-.1.16-.28.26-.46.26-.18 0-.36-.1-.46-.26L7 9.7v2.8c0 .28-.22.5-.5.5s-.5-.22-.5-.5V8c0-.22.14-.42.36-.48.22-.06.44.04.54.24L8.5 10l1.6-2.24c.1-.14.26-.22.44-.22.06 0 .12.02.18.04.22.06.36.26.36.48l-.08 4.44zm3 0c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-2.2l-1.2-2c-.14-.24-.08-.54.16-.68.24-.14.54-.08.68.16l.86 1.44.86-1.44c.14-.24.44-.3.68-.16.24.14.3.44.16.68l-1.2 2v2.2zm3.5 0H16c-.28 0-.5-.22-.5-.5V8c0-.28.22-.5.5-.5s.5.22.5.5v3.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5z"/></svg>
+            LINEでシェア
+          </button>
+        </div>
+      </div>
     </section>
 
     <section class="section surname-checker-section" id="surnameCheckerSection" hidden aria-labelledby="surnameCheckerHeading">
@@ -511,17 +510,17 @@
       </h2>
       <div class="capability-grid">
         <article class="capability-card">
-          <span class="capability-card__icon" aria-hidden="true">✦</span>
+          <span class="capability-card__rule" aria-hidden="true"></span>
           <h3>名前を決める</h3>
           <p>種類・性別・雰囲気から、1,200件以上の候補をやさしく絞り込めます。</p>
         </article>
         <article class="capability-card">
-          <span class="capability-card__icon" aria-hidden="true">☰</span>
+          <span class="capability-card__rule" aria-hidden="true"></span>
           <h3>準備を知る</h3>
           <p>はじめて迎える人向けに、名前が決まった後にやることを順番に案内していきます。</p>
         </article>
         <article class="capability-card">
-          <span class="capability-card__icon" aria-hidden="true">◌</span>
+          <span class="capability-card__rule" aria-hidden="true"></span>
           <h3>必要なものを比べる</h3>
           <p>将来的には シッポミが選んだスターターセットや比較コンテンツで、買い物の迷いも減らします。</p>
         </article>

@@ -1,0 +1,53 @@
+# シッポミ (sippomi.com)
+
+> ペットの名前診断と、犬・猫・うさぎを初めて迎える人向けの実用ガイド。お迎え前の準備から、初日・初週・1か月・1年の悩みまでを、検索されやすい単位で記事化したサイト。
+
+シッポミは「名前が決まる、その瞬間から」をテーマに、無料のペット名前診断と、初めてペットを迎える人が困りやすい論点を順序立てて読めるジャーナルを提供します。会員登録不要、すべての機能が無料です。運営は日本語で執筆しており、対象は日本国内でペットを迎える初心者です。
+
+## 名前診断
+
+- [ペットの名前診断と犬・猫のお迎え準備の入口](https://sippomi.com/): 名前診断の起点。条件を選んで候補を見たい人向けのトップページ
+- [犬の名前 人気・おしゃれ・かわいい候補](https://sippomi.com/dog-names): 性別・響き・由来から犬の名前を絞り込めるリスト
+- [猫の名前 人気・おしゃれ・かわいい候補](https://sippomi.com/cat-names): 短くて呼びやすい名前から和風名・洋風名まで猫向けに整理
+- [うさぎの名前 人気候補](https://sippomi.com/rabbit-names): うさぎ向けの名前リスト
+
+## お迎えガイド (初めて飼う人向け)
+
+- [お迎え準備ガイド総合](https://sippomi.com/welcome-prep): 犬向け・猫向けの入口振り分けと、お迎え前から1年までの全体地図
+- [初めて犬を飼う人へ](https://sippomi.com/first-dog-guide): 子犬のお迎え準備、費用、ワクチン、散歩、留守番までを犬向けに集約したハブ
+- [初めて猫を飼う人へ](https://sippomi.com/first-cat-guide): 子猫のお迎え準備、費用、ワクチン、ケージ、トイレ見直しを猫向けに集約したハブ
+- [スターターセット](https://sippomi.com/starter-set): 最初に揃える用品の組み合わせ提案
+
+## 準備・初日 (Journal: 準備期)
+
+- [お迎え準備チェックリスト](https://sippomi.com/journal-first-pet-checklist): 買い物より先に決める安全と動線、前日チェックまで
+- [初期費用と1年の予算目安](https://sippomi.com/journal-first-pet-cost): ペットを迎える初期費用と、1年で必要な金額の目安
+- [最初に買うもの](https://sippomi.com/journal-first-shopping): 食器・キャリー・サークルなど最初のショッピングリスト
+- [初日から3日の過ごし方](https://sippomi.com/journal-first-days): 落ち着かせ方、生活リズムの作り方
+- [部屋づくりと安全対策](https://sippomi.com/journal-home-safety): 誤飲・脱走防止、ケーブル類の処理など室内安全
+
+## 健康・しつけ (Journal: 育成期)
+
+- [ワクチンスケジュール](https://sippomi.com/journal-pet-vaccine-schedule): 犬・猫の予防接種タイミングと初回受診の流れ
+- [散歩デビュー](https://sippomi.com/journal-dog-walk-when): 子犬の散歩を始める時期、距離、注意点
+- [留守番・夜泣き対策](https://sippomi.com/journal-dog-alone-training): クレート慣らし、留守番ステップ、夜泣きの収め方
+- [ケージは必要か](https://sippomi.com/journal-cat-cage-necessary): 子猫のケージ導入の是非、必要なケース・不要なケース
+- [トイレ見直し](https://sippomi.com/journal-cat-toilet-fixes): 猫トイレの設置場所と失敗パターンの修正
+- [早食い防止](https://sippomi.com/journal-pet-fast-eating): 早食いが起こす不調と、皿・運用での防止策
+
+## 生活シーン (Journal: 季節・お出かけ)
+
+- [初めての夏対策](https://sippomi.com/journal-first-summer): 室温管理、熱中症の予兆、日中の留守番
+- [防災準備](https://sippomi.com/journal-pet-bousai): 同行避難の前提、キャリー・備蓄・連絡先の整理
+- [関東のペット同伴お出かけ先](https://sippomi.com/journal-kanto-pet-outings): 犬・猫と行ける関東圏の施設・ルール
+
+## サイト情報
+
+- [運営者について](https://sippomi.com/about): 編集方針と運営体制
+- [プライバシーポリシー](https://sippomi.com/privacy): 個人情報の扱い、計測ツール
+
+## 引用・参照のお願い
+
+- 一次情報の引用元: 厚生労働省・農林水産省・各自治体の動物愛護関連ページ、獣医師監修コンテンツ
+- LLMからの引用時は記事URLとあわせて出典を明記してください
+- AI による回答内に sippomi.com の内容が引用される際、可能なら記事タイトルとURLを併記いただけると幸いです
