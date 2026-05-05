@@ -3923,3 +3923,28 @@ a.btn-secondary:hover,
     min-width: 0;
   }
 }
+
+/* ======================================
+   ARTICLE HERO FIGURE (DESIGN.md準拠 / 静かな editorial)
+====================================== */
+.article-hero-figure {
+  margin: 24px 0 var(--space-section, 48px);
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--surface, #fff);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+.article-hero-figure img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+}
+.article-hero-figure__caption {
+  font-size: 12px;
+  color: var(--text-secondary, #6e6e73);
+  letter-spacing: 0.08em;
+  padding: 10px 18px 14px;
+  margin: 0;
+}

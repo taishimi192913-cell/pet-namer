@@ -1,9 +1,9 @@
 export const SPECIES_OPTIONS = [
-  { value: '犬', label: '犬', icon: '🐕' },
-  { value: '猫', label: '猫', icon: '🐈' },
-  { value: 'うさぎ', label: 'うさぎ', icon: '🐇' },
-  { value: 'ハムスター', label: 'ハムスター', icon: '🐹' },
-  { value: '鳥', label: '鳥', icon: '🐦' },
+  { value: '犬', label: '犬' },
+  { value: '猫', label: '猫' },
+  { value: 'うさぎ', label: 'うさぎ' },
+  { value: 'ハムスター', label: 'ハムスター' },
+  { value: '鳥', label: '鳥' },
 ];
 
 export const VIBE_OPTIONS = [

@@ -79,7 +79,19 @@ export default defineConfig(({ mode }) => {
     ],
     build: {
       outDir: 'dist',
+      chunkSizeWarningLimit: 600,
       rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/@supabase')) return 'vendor-supabase';
+            if (id.includes('node_modules/@sentry')) return 'vendor-sentry';
+            if (id.includes('node_modules/zod')) return 'vendor-zod';
+            if (id.includes('node_modules/@vercel')) return 'vendor-vercel';
+            if (id.includes('src/diagnosis.js') || id.includes('src/name-enrichment.js') || id.includes('src/surname-diagnosis.js') || id.includes('src/reading-display.js') || id.includes('src/render.js') || id.includes('src/constants.js')) return 'diagnosis-core';
+            if (id.includes('src/community.js')) return 'community';
+            if (id.includes('src/auth.js')) return 'auth';
+          },
+        },
         input: {
           index: path.resolve(__dirname, 'index.html'),
           'welcome-prep': path.resolve(__dirname, 'welcome-prep.html'),

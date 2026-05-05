@@ -1,0 +1,33 @@
+# Cloudflare Pages redirects (vercel.json から移行)
+# www → 裸ドメイン
+https://www.sippomi.com/* https://sippomi.com/:splat 301!
+
+# 旧 Vercel ドメイン → 本番ドメイン
+https://pet-namer.pages.dev/* https://sippomi.com/:splat 301
+https://pet-namer.vercel.app/* https://sippomi.com/:splat 301
+
+# clean URL: /xxx.html → /xxx
+/index.html / 301
+/about.html /about 301
+/cat-names.html /cat-names 301
+/dog-names.html /dog-names 301
+/rabbit-names.html /rabbit-names 301
+/first-cat-guide.html /first-cat-guide 301
+/first-dog-guide.html /first-dog-guide 301
+/welcome-prep.html /welcome-prep 301
+/starter-set.html /starter-set 301
+/privacy.html /privacy 301
+/journal-cat-cage-necessary.html /journal-cat-cage-necessary 301
+/journal-cat-toilet-fixes.html /journal-cat-toilet-fixes 301
+/journal-dog-alone-training.html /journal-dog-alone-training 301
+/journal-dog-walk-when.html /journal-dog-walk-when 301
+/journal-first-days.html /journal-first-days 301
+/journal-first-pet-checklist.html /journal-first-pet-checklist 301
+/journal-first-pet-cost.html /journal-first-pet-cost 301
+/journal-first-shopping.html /journal-first-shopping 301
+/journal-first-summer.html /journal-first-summer 301
+/journal-home-safety.html /journal-home-safety 301
+/journal-kanto-pet-outings.html /journal-kanto-pet-outings 301
+/journal-pet-bousai.html /journal-pet-bousai 301
+/journal-pet-fast-eating.html /journal-pet-fast-eating 301
+/journal-pet-vaccine-schedule.html /journal-pet-vaccine-schedule 301

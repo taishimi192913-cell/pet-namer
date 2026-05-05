@@ -1,0 +1,132 @@
+{
+  "outDir": "public/images/journal",
+  "image": { "width": 1200, "quality": 82, "format": "webp" },
+  "articles": [
+    {
+      "slug": "welcome-prep",
+      "html": "welcome-prep.html",
+      "query": "puppy first day home calm",
+      "alt": "新しい家に迎えられた子犬と子猫の暮らし、お迎え準備のイメージ",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "first-dog-guide",
+      "html": "first-dog-guide.html",
+      "query": "person holding puppy gently indoor",
+      "alt": "子犬を初めて家族に迎える人の様子、初めて犬を飼うイメージ",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "first-cat-guide",
+      "html": "first-cat-guide.html",
+      "query": "kitten cozy bed home",
+      "alt": "落ち着ける場所で休む子猫、初めて猫を迎える家のイメージ",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "starter-set",
+      "html": "starter-set.html",
+      "query": "pet starter supplies flat lay",
+      "alt": "ペットのお迎えに必要なスターターセットの一式",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-first-pet-checklist",
+      "html": "journal-first-pet-checklist.html",
+      "query": "pet supplies neat checklist",
+      "alt": "お迎え準備チェックリスト、用品をそろえる様子",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-first-pet-cost",
+      "html": "journal-first-pet-cost.html",
+      "query": "calculator notebook desk planning",
+      "alt": "ペットの初期費用と1年の予算を計算する家計のイメージ",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-pet-vaccine-schedule",
+      "html": "journal-pet-vaccine-schedule.html",
+      "query": "veterinarian examining puppy clinic",
+      "alt": "獣医師が子犬を診察する動物病院の様子",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-dog-walk-when",
+      "html": "journal-dog-walk-when.html",
+      "query": "puppy walk leash street",
+      "alt": "リードをつけて散歩デビューする子犬",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-cat-cage-necessary",
+      "html": "journal-cat-cage-necessary.html",
+      "query": "kitten in pet cage safe",
+      "alt": "ケージの中で安心して過ごす子猫",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-first-days",
+      "html": "journal-first-days.html",
+      "query": "puppy sleeping calm home",
+      "alt": "落ち着いて眠る子犬、初日から数日の過ごし方のイメージ",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-home-safety",
+      "html": "journal-home-safety.html",
+      "query": "pet proof living room tidy",
+      "alt": "ペットが安全に過ごせるよう整えられた室内",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-first-shopping",
+      "html": "journal-first-shopping.html",
+      "query": "pet shop products shelf",
+      "alt": "最初に買うペット用品をそろえる買い物の様子",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-dog-alone-training",
+      "html": "journal-dog-alone-training.html",
+      "query": "puppy crate sleeping quiet",
+      "alt": "クレートで静かに休む子犬、留守番に慣らすイメージ",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-cat-toilet-fixes",
+      "html": "journal-cat-toilet-fixes.html",
+      "query": "cat litter box clean home",
+      "alt": "清潔に整えられた猫トイレの設置例",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-pet-fast-eating",
+      "html": "journal-pet-fast-eating.html",
+      "query": "dog eating slow feeder bowl",
+      "alt": "早食い防止用の食器でゆっくり食事をする犬",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-first-summer",
+      "html": "journal-first-summer.html",
+      "query": "dog cooling fan summer indoor",
+      "alt": "暑い夏に涼しい室内で休むペット",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-pet-bousai",
+      "html": "journal-pet-bousai.html",
+      "query": "pet emergency carrier kit",
+      "alt": "ペット同行避難に備えたキャリーと防災用品",
+      "insertAfter": "section.guide-hero"
+    },
+    {
+      "slug": "journal-kanto-pet-outings",
+      "html": "journal-kanto-pet-outings.html",
+      "query": "dog cafe pet friendly japan",
+      "alt": "ペット同伴で立ち寄れるカフェに犬と訪れる様子",
+      "insertAfter": "section.guide-hero"
+    }
+  ]
+}

@@ -55,13 +55,17 @@ export function createSpeciesCards(options, selectedSet, onSelect) {
     btn.className = 'species-card';
     btn.dataset.value = opt.value;
     if (selectedSet.has(opt.value)) btn.classList.add('is-active');
-    const icon = document.createElement('span');
-    icon.className = 'species-card__icon';
-    icon.textContent = opt.icon;
     const label = document.createElement('span');
     label.className = 'species-card__label';
     label.textContent = opt.label;
-    btn.append(icon, label);
+    if (opt.icon) {
+      const icon = document.createElement('span');
+      icon.className = 'species-card__icon';
+      icon.textContent = opt.icon;
+      btn.append(icon, label);
+    } else {
+      btn.append(label);
+    }
     btn.addEventListener('click', () => onSelect(opt.value));
     wrap.appendChild(btn);
   }
@@ -168,6 +172,14 @@ export function createSpotlight(item, options = {}) {
   return art;
 }
 
+function getWebShareData(name, reading) {
+  return {
+    title: `シッポミで見つけた名前「${name}」`,
+    text: `ペットの名前「${name}（${reading || ''}）」をシッポミで見つけました！`,
+    url: 'https://sippomi.com/',
+  };
+}
+
 export function createNameCard(item, options = {}) {
   const card = document.createElement('article');
   card.className = 'name-card result-card';
@@ -201,11 +213,16 @@ export function createNameCard(item, options = {}) {
   const shareBtn = document.createElement('button');
   shareBtn.type = 'button';
   shareBtn.className = 'name-card__btn name-card__btn--share';
-  shareBtn.setAttribute('aria-label', `${item.name}をXでシェア`);
-  shareBtn.title = 'Xでシェア';
+  shareBtn.setAttribute('aria-label', `${item.name}をシェア`);
+  shareBtn.title = 'シェア';
   shareBtn.textContent = '共有';
-  shareBtn.addEventListener('click', () => {
-    window.open(getXShareURL(item.name, item.reading), '_blank', 'noopener,noreferrer');
+  shareBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share(getWebShareData(item.name, item.reading)).catch(() => {});
+    } else {
+      window.open(getXShareURL(item.name, item.reading), '_blank', 'noopener,noreferrer');
+    }
   });
 
   const favoriteBtn = createFavoriteButton(item, options, 'card');
