@@ -9,6 +9,7 @@
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="format-detection" content="telephone=no,address=no,email=no">
   <meta name="theme-color" content="#f4eede">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1c1b18">
   <link rel="canonical" href="https://sippomi.com/">
   <link rel="icon" type="image/svg+xml" href="/sippomi-mark.svg">
   <meta name="google-site-verification" content="tUcM7FgC-G4-_brHoKyTFcAbUbV2seom4S8IMRIUFW4">
@@ -97,7 +98,6 @@
     ]
   }
   </script>
-  <link rel="preload" as="image" href="/hero-pets.jpg" fetchpriority="high">
   <!-- Fonts: system SF Pro / Hiragino stack (defined in --font-body). No remote web font to stay on MUJI×Apple tone. -->
   <link rel="stylesheet" href="/src/styles/global.css">
 </head>
@@ -110,7 +110,7 @@
     <div class="page-header__inner">
       <a href="/" class="page-header__logo" aria-label="シッポミ トップへ">
         <div class="page-header__logo-icon" aria-hidden="true">
-          <img src="/sippomi-mark.svg" alt="" class="page-header__logo-mark" width="38" height="38">
+          <img src="/sippomi-mark.svg" alt="" class="page-header__logo-mark" width="38" height="38" loading="lazy" decoding="async">
         </div>
         <div>
           <span class="page-header__logo-text">シッポミ</span>
@@ -119,31 +119,7 @@
       </a>
       <nav class="page-header__nav" aria-label="サイトナビゲーション">
         <a href="#stepSpecies" class="page-header__nav-link">名前を決める</a>
-        <div class="page-header__nav-group">
-          <a href="/welcome-prep" class="page-header__nav-link page-header__nav-link--parent">お迎えガイド</a>
-          <div class="page-header__dropdown">
-            <a href="/welcome-prep" class="page-header__dropdown-link">お迎えガイド トップ</a>
-            <span style="display:block;padding:8px 14px 3px;font-size:0.7rem;color:#8f8f94;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;" aria-hidden="true">Dog</span>
-            <a href="/first-dog-guide" class="page-header__dropdown-link page-header__dropdown-link--sub">初めて犬を飼う人へ</a>
-            <a href="/journal-dog-walk-when" class="page-header__dropdown-link page-header__dropdown-link--sub">子犬の散歩はいつから？</a>
-            <a href="/journal-dog-alone-training" class="page-header__dropdown-link page-header__dropdown-link--sub">子犬の留守番と夜泣き</a>
-            <span style="display:block;padding:8px 14px 3px;font-size:0.7rem;color:#8f8f94;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-top:1px solid #f3f3f3;margin-top:4px;" aria-hidden="true">Cat</span>
-            <a href="/first-cat-guide" class="page-header__dropdown-link page-header__dropdown-link--sub">初めて猫を飼う人へ</a>
-            <a href="/journal-cat-cage-necessary" class="page-header__dropdown-link page-header__dropdown-link--sub">子猫にケージは必要？</a>
-            <a href="/journal-cat-toilet-fixes" class="page-header__dropdown-link page-header__dropdown-link--sub">猫トイレの見直し</a>
-            <span style="display:block;padding:8px 14px 3px;font-size:0.7rem;color:#8f8f94;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-top:1px solid #f3f3f3;margin-top:4px;" aria-hidden="true">Dog &amp; Cat</span>
-            <a href="/journal-first-pet-checklist" class="page-header__dropdown-link page-header__dropdown-link--sub">お迎え準備チェックリスト</a>
-            <a href="/journal-first-pet-cost" class="page-header__dropdown-link page-header__dropdown-link--sub">初期費用と最初の1年</a>
-            <a href="/journal-first-days" class="page-header__dropdown-link page-header__dropdown-link--sub">初日から3日でやること</a>
-            <a href="/journal-pet-vaccine-schedule" class="page-header__dropdown-link page-header__dropdown-link--sub">ワクチンスケジュール</a>
-            <a href="/journal-first-shopping" class="page-header__dropdown-link page-header__dropdown-link--sub">最初に買うもの</a>
-            <a href="/journal-home-safety" class="page-header__dropdown-link page-header__dropdown-link--sub">部屋と安全対策</a>
-            <a href="/journal-pet-fast-eating" class="page-header__dropdown-link page-header__dropdown-link--sub">早食い防止</a>
-            <a href="/journal-first-summer" class="page-header__dropdown-link page-header__dropdown-link--sub">初めての夏対策</a>
-            <a href="/journal-pet-bousai" class="page-header__dropdown-link page-header__dropdown-link--sub">防災準備</a>
-            <a href="/journal-kanto-pet-outings" class="page-header__dropdown-link page-header__dropdown-link--sub">関東でおでかけ</a>
-          </div>
-        </div>
+        <a href="/welcome-prep" class="page-header__nav-link">お迎えガイド</a>
         <a href="#communitySection" class="page-header__nav-link">コミュニティ予定</a>
         <a href="/starter-set" class="page-header__nav-link">商品</a>
         <a href="#faqSection" class="page-header__faq-link" id="faqToggle">FAQ</a>
@@ -155,7 +131,14 @@
        HERO SECTION (petmi.jp風)
   ============================== -->
   <section class="hero-section" aria-labelledby="heroTitle">
-    <div class="hero-background-decor" aria-hidden="true"></div>
+      <div class="hero-background-decor" aria-hidden="true"></div>
+
+      <!-- Mascot silhouettes -->
+      <div class="hero-mascots" aria-hidden="true">
+        <img src="/public/images/design-assets/mascot_dog.svg" alt="" class="hero-mascot hero-mascot--dog" width="70" height="70" loading="lazy">
+        <img src="/public/images/design-assets/mascot_cat.svg" alt="" class="hero-mascot hero-mascot--cat" width="65" height="65" loading="lazy">
+        <img src="/public/images/design-assets/mascot_rabbit.svg" alt="" class="hero-mascot hero-mascot--rabbit" width="60" height="60" loading="lazy">
+      </div>
 
     <div class="hero-inner">
       <div class="hero-layout">
@@ -171,6 +154,7 @@
 
           <p class="hero-lead">
             <span class="hero-lead__kicker">ペットの名前診断と、お迎え準備の入口をひとつで。</span><br>
+            <span class="hero-lead__promise">まずは短く、あなたのペットにぴったりの名前を。</span><br>
             シッポミは、名前を決めたい人と、これから犬や猫を迎える人のためのホームです。
             まずは無料の名前診断から、そのあとに必要な準備や最初の1年のガイドまで、順番にたどれます。
           </p>
@@ -180,33 +164,49 @@
             <a href="/welcome-prep" class="btn-secondary">お迎え準備を見る</a>
           </div>
 
-          <p class="hero-search-links" aria-label="人気の入口">
-            人気の入口:
-            <a href="/dog-names">犬の名前 人気ランキング</a>
-            <a href="/cat-names">猫の名前 人気ランキング</a>
-            <a href="/first-dog-guide">初めて犬を飼う人へ</a>
-            <a href="/first-cat-guide">初めて猫を飼う人へ</a>
-            <a href="/welcome-prep">犬・猫のお迎え準備</a>
-          </p>
-
         </div>
 
-        <div class="hero-media">
-          <div class="hero-media__frame">
-            <picture>
-              <source srcset="/hero-pets.jpg" type="image/jpeg">
-              <img
-                src="/hero-pets.jpg"
-                alt="犬・猫・うさぎなど、かわいいペットたちのイメージ"
-                class="hero-media__img"
-                width="960"
-                height="536"
-                loading="eager"
-                decoding="async"
-                fetchpriority="high"
-                style="aspect-ratio:960/536"
-              >
-            </picture>
+        <div class="hero-media hero-media--interface" aria-label="シッポミの名前診断とお迎え準備の画面例">
+          <div class="hero-interface" aria-hidden="true">
+            <div class="hero-interface__topbar">
+              <span></span><span></span><span></span>
+              <p>sippomi.app / name guide</p>
+            </div>
+            <div class="hero-interface__content">
+              <section class="hero-diagnosis-card">
+                <div class="hero-interface__label">NAME DIAGNOSIS</div>
+                <h2>性格から候補をしぼる</h2>
+                <div class="hero-question-row">
+                  <span>01</span>
+                  <p>活発で、人が好き</p>
+                </div>
+                <div class="hero-option-grid">
+                  <span class="hero-option hero-option--active">短く呼びやすい</span>
+                  <span class="hero-option">やわらかい響き</span>
+                  <span class="hero-option">季節の言葉</span>
+                  <span class="hero-option">家族で決める</span>
+                </div>
+              </section>
+              <aside class="hero-result-card">
+                <div class="hero-interface__label">CANDIDATES</div>
+                <div class="hero-name-list">
+                  <span>mugi</span>
+                  <strong>むぎ</strong>
+                  <small>呼びやすさ A</small>
+                </div>
+                <div class="hero-name-list">
+                  <span>sora</span>
+                  <strong>そら</strong>
+                  <small>明るい印象</small>
+                </div>
+              </aside>
+              <div class="hero-prep-strip">
+                <span>お迎え前</span>
+                <span>初日</span>
+                <span>1週間</span>
+                <span>1か月</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -218,45 +218,40 @@
   ============================== -->
   <main class="page-main" id="mainContent">
 
-    <section class="section quick-start-section" aria-labelledby="quickStartHeading">
+    <section class="section mobile-pathway-section" aria-labelledby="mobilePathwayHeading">
+      <div class="mobile-proof-strip" aria-label="シッポミの安心材料">
+        <span><strong>1,200+</strong> 登録名前数</span>
+        <span><strong>短く</strong> まずは診断</span>
+        <span><strong>0円</strong> 登録不要</span>
+      </div>
+
       <div class="section-label">Start Here</div>
-      <div class="quick-start-shell">
-        <div class="quick-start-copy">
-          <h2 class="section-heading section-heading--left" id="quickStartHeading">
-            いまやることを、ひと目で。
+      <div class="mobile-pathway">
+        <div class="mobile-pathway__copy">
+          <h2 class="section-heading section-heading--left" id="mobilePathwayHeading">
+            いま必要な入口だけ選ぶ。
           </h2>
           <p class="section-lead section-lead--left">
-            ホームを上から全部読まなくても大丈夫です。名前を決めるのか、犬や猫のお迎え準備を進めるのかに合わせて、そのまま最短の入口へ進めます。
+            名前を決めたいのか、迎える前の準備を見たいのか、迎えた後の悩みを確認したいのか。スマホでも迷わないように、最初の入口を3つに絞りました。
           </p>
-          <div class="quick-start-steps" role="list" aria-label="シッポミの基本導線">
-            <span role="listitem">1. 名前を決める</span>
-            <span role="listitem">2. お迎え準備を確認する</span>
-            <span role="listitem">3. 最初の1年を迷わず進める</span>
-          </div>
         </div>
-
-        <div class="quick-start-grid">
-          <a href="#stepSpecies" class="quick-start-card quick-start-card--primary">
-            <span class="quick-start-card__eyebrow">30 sec</span>
-            <h3>まずは名前を決める</h3>
-            <p>種類を選んで、この子らしい候補をすぐ見つける。無料・登録不要でそのまま診断できます。</p>
-            <span class="quick-start-card__meta">最短で名前診断へ進む</span>
+        <nav class="mobile-pathway__nav" aria-label="シッポミの主要導線">
+          <a href="#stepSpecies" class="mobile-pathway__item mobile-pathway__item--primary">
+            <span>01</span>
+            <strong>まず名前を決める</strong>
+            <small>種類を選んで、短く候補を見る</small>
           </a>
-
-          <a href="/first-dog-guide" class="quick-start-card">
-            <span class="quick-start-card__eyebrow">For Dog</span>
-            <h3>初めて犬を迎える準備へ</h3>
-            <p>費用、最初に買うもの、散歩、留守番まで、子犬との暮らしを順番に確認できます。</p>
-            <span class="quick-start-card__meta">犬向けの実用ガイドを見る</span>
+          <a href="/welcome-prep" class="mobile-pathway__item">
+            <span>02</span>
+            <strong>迎える前に準備する</strong>
+            <small>買うもの、費用、初日の流れを確認</small>
           </a>
-
-          <a href="/first-cat-guide" class="quick-start-card">
-            <span class="quick-start-card__eyebrow">For Cat</span>
-            <h3>初めて猫を迎える準備へ</h3>
-            <p>ケージ、トイレ、初日、費用まで、子猫を迎える前後に必要なことをまとめて確認できます。</p>
-            <span class="quick-start-card__meta">猫向けの実用ガイドを見る</span>
+          <a href="#guideHub" class="mobile-pathway__item">
+            <span>03</span>
+            <strong>迎えた後の悩みを見る</strong>
+            <small>散歩、トイレ、留守番、防災まで探す</small>
           </a>
-        </div>
+        </nav>
       </div>
     </section>
 
@@ -276,10 +271,10 @@
       <div class="section-label">STEP 2</div>
       <h2 class="step-heading" id="diagnosisHeading">
         <span class="step-num">2</span>
-        10の質問で、この子らしさを整える
+        短い質問から、この子らしさを整える
       </h2>
       <p class="step-hint">
-        シッポミは、見た目だけでなく、呼びかけたときの響きや飼い主さんの暮らし、名前に込めたい願いまで含めて提案します。
+        まずは雰囲気と呼びやすさだけで大丈夫です。こだわりたいときは、性別や毛色、名前に込めたい願いまで追加できます。
       </p>
 
       <div class="filter-group">
@@ -294,83 +289,91 @@
       <div class="filter-group">
         <h3 class="step-heading">
           <span class="step-num">02</span>
-          性別は？
-        </h3>
-        <p class="step-hint">まだ決めきれないときは「どちらでも」で大丈夫です。</p>
-        <div class="chips" id="genderChips" role="group" aria-label="性別を選択"></div>
-      </div>
-
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">03</span>
-          見た目で印象に残る色は？ <span class="optional-badge">任意</span>
-        </h3>
-        <p class="step-hint">毛色や羽色に寄せたいときだけ選べます。</p>
-        <div class="chips" id="colorChips" role="group" aria-label="毛色を選択"></div>
-      </div>
-
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">04</span>
-          呼んだときの長さは？
-        </h3>
-        <p class="step-hint">毎日何度も呼ぶからこそ、リズムの好みを先に決めておくと絞りやすくなります。</p>
-        <div class="chips" id="lengthChips" role="group" aria-label="名前の長さを選択"></div>
-      </div>
-
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">05</span>
-          名前の世界観はどこから借りたい？
-        </h3>
-        <p class="step-hint">自然、食べ物、宝石、和風、モダン。由来の方向性を先に決める質問です。</p>
-        <div class="chips" id="themeChips" role="group" aria-label="名前の世界観を選択"></div>
-      </div>
-
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">06</span>
           口に出したとき、どんな響きが心地いい？
         </h3>
         <p class="step-hint">家の中でふと呼ぶときの音のやさしさ、キレ、余韻を選びます。</p>
         <div class="chips" id="callStyleChips" role="group" aria-label="呼び方の響きを選択"></div>
       </div>
 
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">07</span>
-          飼い主さんの暮らしや趣味に近いのは？
-        </h3>
-        <p class="step-hint">カフェ、おうち時間、自然、和の暮らし、アート、旅。あなたの空気感に寄せます。</p>
-        <div class="chips" id="ownerLifestyleChips" role="group" aria-label="飼い主の暮らしや趣味を選択"></div>
-      </div>
+      <details class="diagnosis-extra-panel">
+        <summary>
+          <span>もっとこだわって絞る</span>
+          <small>性別、毛色、世界観などを追加できます</small>
+        </summary>
+        <div class="diagnosis-extra-panel__body">
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">03</span>
+              性別は？
+            </h3>
+            <p class="step-hint">まだ決めきれないときは「どちらでも」で大丈夫です。</p>
+            <div class="chips" id="genderChips" role="group" aria-label="性別を選択"></div>
+          </div>
 
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">08</span>
-          名前に込めたい願いは？
-        </h3>
-        <p class="step-hint">健やかに、やさしく、強く、幸運に。名づけにのせたい気持ちを選びます。</p>
-        <div class="chips" id="wishChips" role="group" aria-label="名前に込めたい願いを選択"></div>
-      </div>
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">04</span>
+              見た目で印象に残る色は？ <span class="optional-badge">任意</span>
+            </h3>
+            <p class="step-hint">毛色や羽色に寄せたいときだけ選べます。</p>
+            <div class="chips" id="colorChips" role="group" aria-label="毛色を選択"></div>
+          </div>
 
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">09</span>
-          かぶりにくさはどのくらい欲しい？
-        </h3>
-        <p class="step-hint">人気の定番から、ほどよい個性、かなりユニークまで温度感を選べます。</p>
-        <div class="chips" id="uniquenessChips" role="group" aria-label="名前のかぶりにくさを選択"></div>
-      </div>
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">05</span>
+              呼んだときの長さは？
+            </h3>
+            <p class="step-hint">毎日何度も呼ぶからこそ、リズムの好みを先に決めておくと絞りやすくなります。</p>
+            <div class="chips" id="lengthChips" role="group" aria-label="名前の長さを選択"></div>
+          </div>
 
-      <div class="filter-group">
-        <h3 class="step-heading">
-          <span class="step-num">10</span>
-          最後に、この子の第一印象に近い情景は？
-        </h3>
-        <p class="step-hint">朝の光、静かな夜、季節の空気、ぬくもり、凛とした印象。直感で選べます。</p>
-        <div class="chips" id="sceneChips" role="group" aria-label="名前の情景イメージを選択"></div>
-      </div>
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">06</span>
+              名前の世界観はどこから借りたい？
+            </h3>
+            <p class="step-hint">自然、食べ物、宝石、和風、モダン。由来の方向性を先に決める質問です。</p>
+            <div class="chips" id="themeChips" role="group" aria-label="名前の世界観を選択"></div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">07</span>
+              飼い主さんの暮らしや趣味に近いのは？
+            </h3>
+            <p class="step-hint">カフェ、おうち時間、自然、和の暮らし、アート、旅。あなたの空気感に寄せます。</p>
+            <div class="chips" id="ownerLifestyleChips" role="group" aria-label="飼い主の暮らしや趣味を選択"></div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">08</span>
+              名前に込めたい願いは？
+            </h3>
+            <p class="step-hint">健やかに、やさしく、強く、幸運に。名づけにのせたい気持ちを選びます。</p>
+            <div class="chips" id="wishChips" role="group" aria-label="名前に込めたい願いを選択"></div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">09</span>
+              かぶりにくさはどのくらい欲しい？
+            </h3>
+            <p class="step-hint">人気の定番から、ほどよい個性、かなりユニークまで温度感を選べます。</p>
+            <div class="chips" id="uniquenessChips" role="group" aria-label="名前のかぶりにくさを選択"></div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="step-heading">
+              <span class="step-num">10</span>
+              最後に、この子の第一印象に近い情景は？
+            </h3>
+            <p class="step-hint">朝の光、静かな夜、季節の空気、ぬくもり、凛とした印象。直感で選べます。</p>
+            <div class="chips" id="sceneChips" role="group" aria-label="名前の情景イメージを選択"></div>
+          </div>
+        </div>
+      </details>
 
       <div class="cta-area cta-area--floating">
         <p class="selection-summary" id="selectionSummary" aria-live="polite"></p>
@@ -408,6 +411,42 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 5.97 2 10.5c0 4.53 4.477 8.5 10 8.5 1.05 0 2.062-.14 3.012-.394.38.235.8.47 1.23.664.27.124.58.228.88.276.12.02.24.02.34-.06.1-.08.12-.22.1-.36-.02-.14-.06-.28-.1-.42-.08-.28-.18-.56-.26-.84-.76-2.66 1.06-4.17 2.82-5.34C21.56 11.15 22 9.87 22 10.5 22 5.97 17.523 2 12 2zM7.5 12.5H5.5c-.28 0-.5-.22-.5-.5V8c0-.28.22-.5.5-.5s.5.22.5.5v3.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5zm3.5 0c0 .28-.22.5-.5.5s-.5-.22-.5-.5V9.7l-1.1 1.8c-.1.16-.28.26-.46.26-.18 0-.36-.1-.46-.26L7 9.7v2.8c0 .28-.22.5-.5.5s-.5-.22-.5-.5V8c0-.22.14-.42.36-.48.22-.06.44.04.54.24L8.5 10l1.6-2.24c.1-.14.26-.22.44-.22.06 0 .12.02.18.04.22.06.36.26.36.48l-.08 4.44zm3 0c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-2.2l-1.2-2c-.14-.24-.08-.54.16-.68.24-.14.54-.08.68.16l.86 1.44.86-1.44c.14-.24.44-.3.68-.16.24.14.3.44.16.68l-1.2 2v2.2zm3.5 0H16c-.28 0-.5-.22-.5-.5V8c0-.28.22-.5.5-.5s.5.22.5.5v3.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5z"/></svg>
             LINEでシェア
           </button>
+        </div>
+      </div>
+      <details class="result-method-panel">
+        <summary>この診断の仕組み</summary>
+        <div class="result-method-panel__body">
+          <p>
+            シッポミは、種類、雰囲気、呼びやすさ、名前に込めたい願いなどの条件と、名前ごとの意味・響き・印象タグを照らし合わせておすすめ度を出しています。
+          </p>
+          <p>
+            データソースは、シッポミ内で整理した名前候補、読み、意味、印象タグ、人気傾向です。診断結果は名付けの参考として使い、最後は家族で呼んだときの自然さを大切にしてください。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="app-store-banner" aria-label="アプリのご案内" hidden>
+      <div class="app-store-banner__card">
+        <div class="app-store-banner__content">
+          <h2 class="app-store-banner__title">この子との毎日を、もっと大切に</h2>
+          <p class="app-store-banner__text">
+            「うちの子日記」アプリなら、食事・健康・思い出を30秒で記録できます。
+            診断した名前をそのまま登録して、今日からペットとの暮らしを見守りませんか。
+          </p>
+          <a href="https://apps.apple.com/jp/app/[APP_ID]"
+             class="app-store-banner__button"
+             target="_blank"
+             rel="noopener"
+             onclick="if(window.gtag){gtag('event','click_app_store_banner',{event_category:'synergy',event_label:'ios_app'})}">
+            App Storeでダウンロード
+          </a>
+        </div>
+        <div class="app-store-banner__visual" aria-hidden="true">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <rect width="80" height="80" rx="18" fill="hsl(10 15% 18%)"/>
+            <path d="M40 22C32.268 22 26 28.268 26 36c0 3.866 1.567 7.366 4.1 9.9L28 54l8.8-2.2c1.006.4 2.082.6 3.2.6 7.732 0 14-6.268 14-14S47.732 22 40 22zm0 22c-1.104 0-2-.896-2-2s.896-2 2-2 2 .896 2 2-.896 2-2 2zm-6-2c-1.104 0-2-.896-2-2s.896-2 2-2 2 .896 2 2-.896 2-2 2zm12 0c-1.104 0-2-.896-2-2s.896-2 2-2 2 .896 2 2-.896 2-2 2z" fill="hsl(34 100% 96%)"/>
+          </svg>
         </div>
       </div>
     </section>
@@ -472,190 +511,168 @@
       </div>
     </section>
 
-    <section class="section story-section" id="welcomeGuide" aria-labelledby="welcomeGuideHeading">
-      <div class="section-label">シッポミ Guide</div>
-      <h2 class="section-heading section-heading--left" id="welcomeGuideHeading">
-        ちゃんと迎えられるかな。<br>何を買えばいいかわからない。<br>その不安から、はじめるブランドです。
-      </h2>
-      <p class="section-lead section-lead--left">
-        はじめてのペット暮らしは、わくわくと同じくらい迷いも多いもの。
-        シッポミは、名前探しから暮らしの準備までを一つの流れにして、最初の一歩を軽くします。
-      </p>
-      <div class="story-grid">
-        <article class="story-card">
-          <p class="story-card__eyebrow">01 Feel</p>
-          <h3>名前だけじゃなく、気持ちの準備もしたい</h3>
-          <p>名前が決まった後に「次に何をすればいいか」が見えると、不安がぐっと減ります。</p>
-        </article>
-        <article class="story-card">
-          <p class="story-card__eyebrow">02 Prepare</p>
-          <h3>必要なものを、失敗せずにそろえたい</h3>
-          <p>買いすぎも不足も避けたいから、シッポミは最初に必要なものだけをわかりやすく並べます。</p>
-        </article>
-        <article class="story-card">
-          <p class="story-card__eyebrow">03 Start</p>
-          <h3>スマホで、すぐ行動に移したい</h3>
-          <p>片手で見やすく、保存しやすく、迷わない。毎日のすきま時間でも使いやすい導線を優先しています。</p>
-        </article>
+    <section class="section guide-hub-section" id="guideHub" aria-labelledby="guideHubHeading">
+      <div class="section-label">Guide Hub</div>
+      <div class="guide-hub__head">
+        <div>
+          <h2 class="section-heading section-heading--left" id="guideHubHeading">
+            気になるところだけ、開いて読む。
+          </h2>
+          <p class="section-lead section-lead--left">
+            名前が決まった後の不安は、人によって違います。スマホで探しやすいように、記事の入口を悩みのタイミングごとに整理しました。
+          </p>
+        </div>
+        <a href="/welcome-prep" class="btn-secondary guide-hub__primary-link">お迎え準備ガイドを見る</a>
       </div>
-      <div class="section-cta-inline">
-        <a href="/welcome-prep" class="btn-secondary">お迎え準備の実ページへ</a>
-      </div>
-    </section>
 
-    <section class="section capability-section" aria-labelledby="capabilityHeading">
-      <div class="section-label">What シッポミ Does</div>
-      <h2 class="section-heading section-heading--left" id="capabilityHeading">
-        名前を決める。準備を知る。必要なものを比べる。
-      </h2>
-      <div class="capability-grid">
-        <article class="capability-card">
-          <span class="capability-card__rule" aria-hidden="true"></span>
-          <h3>名前を決める</h3>
-          <p>種類・性別・雰囲気から、1,200件以上の候補をやさしく絞り込めます。</p>
+      <div class="guide-hub__principles" aria-label="シッポミの使い方">
+        <article>
+          <span>01</span>
+          <strong>名前を決める</strong>
+          <p>種類と雰囲気から、呼びやすい候補を絞ります。</p>
         </article>
-        <article class="capability-card">
-          <span class="capability-card__rule" aria-hidden="true"></span>
-          <h3>準備を知る</h3>
-          <p>はじめて迎える人向けに、名前が決まった後にやることを順番に案内していきます。</p>
+        <article>
+          <span>02</span>
+          <strong>準備を知る</strong>
+          <p>迎える前後にやることを、順番に確認できます。</p>
         </article>
-        <article class="capability-card">
-          <span class="capability-card__rule" aria-hidden="true"></span>
-          <h3>必要なものを比べる</h3>
-          <p>将来的には シッポミが選んだスターターセットや比較コンテンツで、買い物の迷いも減らします。</p>
+        <article>
+          <span>03</span>
+          <strong>必要なものを比べる</strong>
+          <p>買いすぎず、不足しない判断に近づけます。</p>
         </article>
       </div>
-    </section>
 
-    <section class="section popular-section" aria-labelledby="popularContentHeading">
-      <div class="section-label">Popular Content</div>
-      <h2 class="section-heading section-heading--left" id="popularContentHeading">
-        人気の入口から、そのまま探す。
-      </h2>
-      <p class="section-lead section-lead--left">
-        「犬の名前」「猫の名前」「初めて犬を飼う」「初めて猫を飼う」といった検索意図ごとに、次に読むべきページへつなげています。
-      </p>
-      <div class="popular-grid">
-        <a href="/dog-names" class="popular-card">
-          <span class="popular-card__tag">Dog</span>
-          <h3>犬の名前 人気ランキングと診断</h3>
-          <p>かわいい・かっこいい・呼びやすいなど、愛犬に合う候補を絞り込む。</p>
-        </a>
-        <a href="/cat-names" class="popular-card">
-          <span class="popular-card__tag">Cat</span>
-          <h3>猫の名前 人気ランキングと診断</h3>
-          <p>やわらかい響きや世界観から、子猫に似合う名前のヒントを集める。</p>
-        </a>
-        <a href="/first-dog-guide" class="popular-card">
-          <span class="popular-card__tag">First Dog</span>
-          <h3>初めて犬を飼う人へ</h3>
-          <p>子犬のお迎え準備、費用、ワクチン、散歩、留守番まで犬向けにまとめて確認。</p>
-        </a>
-        <a href="/first-cat-guide" class="popular-card">
-          <span class="popular-card__tag">First Cat</span>
-          <h3>初めて猫を飼う人へ</h3>
-          <p>子猫のお迎え準備、費用、ワクチン、ケージ、トイレ見直しまで猫向けに確認。</p>
-        </a>
-      </div>
-    </section>
+      <div class="guide-hub">
+        <details class="guide-hub-group">
+          <summary>
+            <span>名前を決めたい</span>
+            <small>犬・猫・うさぎの名前候補</small>
+          </summary>
+          <div class="guide-hub-group__body">
+            <a href="/dog-names" class="guide-hub-link">
+              <span>Dog</span>
+              <strong>犬の名前 人気ランキングと診断</strong>
+              <small>かわいい・かっこいい・呼びやすい候補を絞り込む。</small>
+            </a>
+            <a href="/cat-names" class="guide-hub-link">
+              <span>Cat</span>
+              <strong>猫の名前 人気ランキングと診断</strong>
+              <small>やわらかい響きや世界観から、子猫に似合う名前を探す。</small>
+            </a>
+            <a href="/rabbit-names" class="guide-hub-link">
+              <span>Rabbit</span>
+              <strong>うさぎの名前 人気候補を見る</strong>
+              <small>うさぎの名前を探したい人向けの入口。</small>
+            </a>
+          </div>
+        </details>
 
-    <section class="section journal-section" id="journalSection" aria-labelledby="journalHeading">
-      <div class="section-label">Popular Searches</div>
-      <h2 class="section-heading section-heading--left" id="journalHeading">
-        犬・猫のお迎え準備、<br>子犬・子猫の初日、<br>最初に買うものから。
-      </h2>
-      <p class="section-lead section-lead--left">
-        スマホ検索では、「何を準備するか」「初日に何をするか」「何を買えばいいか」が強い悩みになります。
-        シッポミ Journal は、その検索意図に合わせて最初の一歩を読みやすく整理しています。
-      </p>
-      <div class="journal-preview-grid">
-        <a href="/journal-first-pet-checklist" class="popular-card">
-          <span class="popular-card__tag">Checklist</span>
-          <h3>子犬・子猫のお迎え準備チェックリスト</h3>
-          <p>お迎え前に必要なものと、家の中の安全確認を順番に見直せる記事。</p>
-        </a>
-        <a href="/journal-first-pet-cost" class="popular-card">
-          <span class="popular-card__tag">Budget</span>
-          <h3>初めて犬・猫を飼う費用の目安</h3>
-          <p>最初の買い物だけでなく、最初の1年で見ておきたい費用感を整理。</p>
-        </a>
-        <a href="/journal-first-days" class="popular-card">
-          <span class="popular-card__tag">First 72h</span>
-          <h3>子犬・子猫を迎えた初日から3日でやること</h3>
-          <p>構いすぎないこと、休ませること、観察すること。最初の数日に本当に大切な順番を整理。</p>
-        </a>
-        <a href="/journal-home-safety" class="popular-card">
-          <span class="popular-card__tag">Safety</span>
-          <h3>犬・猫の部屋づくりと脱走・事故対策</h3>
-          <p>犬と猫で違う安全設計を、室内の動線まで含めて見直せるガイド。</p>
-        </a>
-        <a href="/journal-first-shopping" class="popular-card">
-          <span class="popular-card__tag">Shopping</span>
-          <h3>犬・猫に最初に買うもの、後からでいいもの</h3>
-          <p>買いすぎを防ぎながら、初日から困らない優先順位をつけるための記事。</p>
-        </a>
-      </div>
-    </section>
+        <details class="guide-hub-group" open>
+          <summary>
+            <span>迎える前に準備したい</span>
+            <small>買うもの、費用、部屋づくり</small>
+          </summary>
+          <div class="guide-hub-group__body">
+            <a href="/journal-first-pet-checklist" class="guide-hub-link">
+              <span>Checklist</span>
+              <strong>子犬・子猫のお迎え準備チェックリスト</strong>
+              <small>必要なものと家の中の安全確認を順番に見直す。</small>
+            </a>
+            <a href="/journal-first-pet-cost" class="guide-hub-link">
+              <span>Budget</span>
+              <strong>初めて犬・猫を飼う費用の目安</strong>
+              <small>初期費用と最初の1年の費用感を整理。</small>
+            </a>
+            <a href="/journal-first-shopping" class="guide-hub-link">
+              <span>Shopping</span>
+              <strong>犬・猫に最初に買うもの、後からでいいもの</strong>
+              <small>買いすぎを防ぎ、初日から困らない優先順位をつける。</small>
+            </a>
+            <a href="/journal-home-safety" class="guide-hub-link">
+              <span>Safety</span>
+              <strong>犬・猫の部屋づくりと脱走・事故対策</strong>
+              <small>犬と猫で違う安全設計を、室内の動線まで見直す。</small>
+            </a>
+          </div>
+        </details>
 
-    <section class="section popular-section" aria-labelledby="painGuideHeading">
-      <div class="section-label">Problem Guides</div>
-      <h2 class="section-heading section-heading--left" id="painGuideHeading">
-        留守番、トイレ、早食い、夏対策、防災、おでかけまで。
-      </h2>
-      <p class="section-lead section-lead--left">
-        検索されやすい悩みごとに、初心者の飼い主さんが次の行動を決めやすい記事をまとめています。
-      </p>
-      <div class="popular-grid">
-        <a href="/journal-pet-vaccine-schedule" class="popular-card">
-          <span class="popular-card__tag">Vet</span>
-          <h3>子犬・子猫のワクチンスケジュール</h3>
-          <p>最初の通院の流れと、犬猫で違う見方をわかりやすく整理。</p>
-        </a>
-        <a href="/journal-dog-walk-when" class="popular-card">
-          <span class="popular-card__tag">Dog</span>
-          <h3>子犬の散歩はいつから始める？</h3>
-          <p>ワクチン後の散歩デビューと、社会化を急ぎすぎない進め方を確認。</p>
-        </a>
-        <a href="/journal-cat-cage-necessary" class="popular-card">
-          <span class="popular-card__tag">Cat</span>
-          <h3>子猫にケージは必要？</h3>
-          <p>最初の1か月で役立つ場面と、なくてもよいケースを整理。</p>
-        </a>
-        <a href="/journal-dog-alone-training" class="popular-card">
-          <span class="popular-card__tag">Dog</span>
-          <h3>子犬の留守番はいつから始める？</h3>
-          <p>夜泣きやひとり時間に慣らす順番を、迎えて1か月の流れで整理。</p>
-        </a>
-        <a href="/journal-cat-toilet-fixes" class="popular-card">
-          <span class="popular-card__tag">Cat</span>
-          <h3>子猫・猫のトイレ失敗を減らすには？</h3>
-          <p>置き場所、砂、本体の見直しポイントを順番にチェック。</p>
-        </a>
-        <a href="/journal-pet-fast-eating" class="popular-card">
-          <span class="popular-card__tag">Care</span>
-          <h3>犬・猫の早食い防止と吐き戻し対策</h3>
-          <p>受診の目安と、家でできる食べ方の工夫をわかりやすく整理。</p>
-        </a>
-        <a href="/journal-first-summer" class="popular-card">
-          <span class="popular-card__tag">Season</span>
-          <h3>犬・猫の初めての夏対策</h3>
-          <p>室温、散歩、留守番、車移動で気をつけたい暑さ対策を確認。</p>
-        </a>
-        <a href="/journal-pet-bousai" class="popular-card">
-          <span class="popular-card__tag">Safety</span>
-          <h3>犬・猫の防災準備ガイド</h3>
-          <p>同行避難に備えて、普段の暮らしから決めておきたいことを整理。</p>
-        </a>
-        <a href="/journal-kanto-pet-outings" class="popular-card">
-          <span class="popular-card__tag">Trip</span>
-          <h3>関東でペットと楽しめる観光地12選</h3>
-          <p>犬連れ・ペット連れで行きやすい公園、牧場、箱根や那須の候補を比較。</p>
-        </a>
-        <a href="/rabbit-names" class="popular-card">
-          <span class="popular-card__tag">Rabbit</span>
-          <h3>うさぎの名前 人気候補を見る</h3>
-          <p>うさぎの名前を探したい人向けの入口も引き続き用意しています。</p>
-        </a>
+        <details class="guide-hub-group">
+          <summary>
+            <span>迎えた直後に確認したい</span>
+            <small>初日、通院、散歩、ケージ</small>
+          </summary>
+          <div class="guide-hub-group__body">
+            <a href="/journal-first-days" class="guide-hub-link">
+              <span>First 72h</span>
+              <strong>子犬・子猫を迎えた初日から3日でやること</strong>
+              <small>構いすぎず、休ませて、観察する順番を整理。</small>
+            </a>
+            <a href="/journal-pet-vaccine-schedule" class="guide-hub-link">
+              <span>Vet</span>
+              <strong>子犬・子猫のワクチンスケジュール</strong>
+              <small>最初の通院の流れと、犬猫で違う見方を確認。</small>
+            </a>
+            <a href="/journal-dog-walk-when" class="guide-hub-link">
+              <span>Dog</span>
+              <strong>子犬の散歩はいつから始める？</strong>
+              <small>散歩デビューと、社会化を急ぎすぎない進め方。</small>
+            </a>
+            <a href="/journal-cat-cage-necessary" class="guide-hub-link">
+              <span>Cat</span>
+              <strong>子猫にケージは必要？</strong>
+              <small>最初の1か月で役立つ場面と、なくてもよいケース。</small>
+            </a>
+          </div>
+        </details>
+
+        <details class="guide-hub-group">
+          <summary>
+            <span>暮らしの悩みを解決したい</span>
+            <small>留守番、トイレ、早食い</small>
+          </summary>
+          <div class="guide-hub-group__body">
+            <a href="/journal-dog-alone-training" class="guide-hub-link">
+              <span>Dog</span>
+              <strong>子犬の留守番はいつから始める？</strong>
+              <small>夜泣きやひとり時間に慣らす順番を確認。</small>
+            </a>
+            <a href="/journal-cat-toilet-fixes" class="guide-hub-link">
+              <span>Cat</span>
+              <strong>子猫・猫のトイレ失敗を減らすには？</strong>
+              <small>置き場所、砂、本体の見直しポイントをチェック。</small>
+            </a>
+            <a href="/journal-pet-fast-eating" class="guide-hub-link">
+              <span>Care</span>
+              <strong>犬・猫の早食い防止と吐き戻し対策</strong>
+              <small>受診の目安と、家でできる食べ方の工夫。</small>
+            </a>
+          </div>
+        </details>
+
+        <details class="guide-hub-group">
+          <summary>
+            <span>季節・防災・おでかけ</span>
+            <small>夏、防災、関東のおでかけ</small>
+          </summary>
+          <div class="guide-hub-group__body">
+            <a href="/journal-first-summer" class="guide-hub-link">
+              <span>Season</span>
+              <strong>犬・猫の初めての夏対策</strong>
+              <small>室温、散歩、留守番、車移動で気をつけること。</small>
+            </a>
+            <a href="/journal-pet-bousai" class="guide-hub-link">
+              <span>Safety</span>
+              <strong>犬・猫の防災準備ガイド</strong>
+              <small>同行避難に備えて、普段から決めておきたいこと。</small>
+            </a>
+            <a href="/journal-kanto-pet-outings" class="guide-hub-link">
+              <span>Trip</span>
+              <strong>関東でペットと楽しめる観光地12選</strong>
+              <small>犬連れ・ペット連れで行きやすい候補を比較。</small>
+            </a>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -847,6 +864,14 @@
 
       <div class="community-gate" id="communityGate">
         <div class="community-gate__card">
+          <div class="community-gate__visual">
+            <div class="community-gate__pet">
+              <span class="community-gate__pet-head"></span>
+              <span class="community-gate__pet-body"></span>
+              <span class="community-gate__pet-tail"></span>
+            </div>
+            <p class="community-gate__bubble">みんなの名前を見てみよう</p>
+          </div>
           <p class="community-gate__eyebrow">Members only</p>
           <h3>ログインすると、うちの子との日常を安心して残せます</h3>
           <p>
@@ -940,7 +965,7 @@
                 <textarea id="communityBody" maxlength="800" rows="4" required></textarea>
               </label>
               <div class="community-image-preview" id="communityImagePreviewWrap" hidden>
-                <img id="communityImagePreview" alt="投稿写真プレビュー">
+                <img id="communityImagePreview" alt="投稿写真プレビュー" loading="lazy" decoding="async">
                 <button type="button" class="community-image-preview__clear" id="communityImageClear">写真を外す</button>
               </div>
               <div class="community-composer__actions">
@@ -1006,7 +1031,7 @@
     <div class="page-footer__inner">
       <a href="/" class="footer-logo" aria-label="シッポミ トップへ">
         <div class="footer-logo-icon" aria-hidden="true">
-          <img src="/sippomi-mark.svg" alt="" class="footer-logo-mark" width="32" height="32">
+          <img src="/sippomi-mark.svg" alt="" class="footer-logo-mark" width="32" height="32" loading="lazy" decoding="async">
         </div>
         <span class="footer-logo-text">シッポミ</span>
       </a>
@@ -1025,6 +1050,7 @@
     </div>
   </footer>
 
+  <script type="module" src="/src/site-visuals.js"></script>
   <script type="module" src="/src/main-loader.js"></script>
   <script type="module" src="/src/analytics.js"></script>
 </body>
