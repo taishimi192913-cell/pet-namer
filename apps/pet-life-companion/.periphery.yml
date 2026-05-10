@@ -1,0 +1,5 @@
+project: PetLifeCompanion.xcodeproj
+schemes:
+  - PetLifeCompanion
+retain_files:
+  - PetLifeCompanion/PetLifeCompanionApp.swift

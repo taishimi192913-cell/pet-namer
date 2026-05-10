@@ -1,0 +1,32 @@
+# Sippomi 名前診断アプリ（name-matcher）進捗
+
+## 2026-05-10 プロジェクト統合整備
+- 完了したタスク:
+  - [x] apps/ios/ → apps/name-matcher/ にリネーム（パス統一）
+  - [x] #FFFFFF → #FDF8F4 / theme.colors.iconOnPrimary に変更（AGENTS.md 純白禁止対応）
+  - [x] シェア文言 "Sippomi iOS" → "しっぽみ" に日本語化
+  - [x] ルート AGENTS.md を全エージェント向け単一真実源として適用
+  - [x] old sippomi-ios を archive/ に移動
+- 参照: /sippomi/AGENTS.md §A.3（iOS 暖色パレット）
+
+## 2026-05-09 品質磨き込み (OpenHands by shimizutaiga)
+- コード位置: /Users/shimizutaiga/Projects/sippomi/apps/name-matcher/
+- 6 Task 実装:
+  - [x] Task 1: カラーパレット刷新（女性向け暖色系）
+  - [x] Task 2: ペットシルエット高精細化
+  - [x] Task 3: FormScreen アコーディオン化
+  - [x] Task 4: PASS/HOLD/LIKE ボタン視認性向上
+  - [x] Task 5: 結果を見る（Like数表示）ピル型ナビ
+  - [x] Task 6: IntroScreen 日本語化 + 4種シルエット
+- GPT Image 2 背景生成: splash_bg.png, results_bg_gradient.png, card_bg_texture.png
+- 型チェック: npx tsc --noEmit ✅
+- 変更ファイル: src/styles.ts, src/theme.ts, App.tsx, src/components/PetSilhouette.tsx, src/screens/FormScreen.tsx, src/screens/IntroScreen.tsx, src/screens/ResultsScreen.tsx
+
+=== 2026-05-10 品質改善 v2 完了 ===
+全25タスク完了
+- tsc --noEmit: エラー0
+- expo start --clear: Metro bundler起動成功
+- 画面遷移: 全パス維持
+- ダークモード: 機能維持
+- 変更8ファイル (新規3 + 修正5)
+- 所要時間: 約60分

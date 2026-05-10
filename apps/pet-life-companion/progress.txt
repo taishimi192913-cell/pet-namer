@@ -1,0 +1,45 @@
+[ios-brand-unify-hermes] 2026-05-09 12:00
+Phase 1 (画像生成):      完了 — 5/5枚 (DALL-E 3 HD 1024x1792, 計13.9MB)
+Phase 2 (SwiftUI統一):   完了 — AppThemeをSippomiパレットに置換 / 画像組込み / シナジー導線追加
+Phase 3 (QA検証):        完了 — 禁止事項全0件 / 画像アセット5/5 / シナジー導線2箇所確認
+Phase 4 (相互リンク):    完了 — HPにApp Storeバナー追加 / npm run lint ✅ / npm run build ✅
+
+変更ファイル一覧:
+- PetLifeCompanion/AppTheme.swift (DeepSage/Coral → BrandOrange/BrandTerracotta/BrandDarkBrown に全面置換)
+- PetLifeCompanion/Assets.xcassets/Canvas.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/Surface.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/SoftSurface.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/BrandOrange.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/BrandTerracotta.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/BrandDarkBrown.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/BrandCTA.colorset/Contents.json [新規]
+- PetLifeCompanion/Assets.xcassets/Generated/heroAsset.imageset/ [新規 2272KB]
+- PetLifeCompanion/Assets.xcassets/Generated/cardBg.imageset/ [新規 2544KB]
+- PetLifeCompanion/Assets.xcassets/Generated/onboarding1.imageset/ [新規 2641KB]
+- PetLifeCompanion/Assets.xcassets/Generated/onboarding2.imageset/ [新規 2316KB]
+- PetLifeCompanion/Assets.xcassets/Generated/calendarReminder.imageset/ [新規 2866KB]
+- PetLifeCompanion/Views/OnboardingView.swift (heroAsset追加 + 第4ステップSippomi導線)
+- PetLifeCompanion/Views/RootTabView.swift (tint変更)
+- PetLifeCompanion/Views/Screens/HomeView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Screens/DiaryView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Screens/HealthView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Screens/TalkView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Screens/ShareView.swift (Sippomiバナー追加)
+- PetLifeCompanion/Views/Components/SectionHeaderView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Components/PetSwitcherView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Components/PetAvatarView.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Components/DiaryEntryRow.swift (ブランドカラー置換)
+- PetLifeCompanion/Views/Components/CareTaskRow.swift (ブランドカラー置換)
+
+総合判定: 合格
+
+注記:
+- gpt-image-2 (Responses API / gpt-5.5 モデル) はタイムアウトしたため、DALL-E 3 HD (Images API) で代替生成
+- XcodeビルドはHermesのクラウド環境にXcodeがないため未実行（macOS実機で要確認）
+- App Store ID はプレースホルダ [APP_ID] のまま（審査提出後に確定）
+
+[project-unify] 2026-05-10
+- iosアプリ/pet-life-companion-ios → sippomi/apps/pet-life-companion/ に移動（プロジェクト統合）
+- 独自 AGENTS.md / rules/ / prompts/ を削除（ルート AGENTS.md に一本化）
+- ルート AGENTS.md §A.8 に SwiftUI パレット定義追加
+- 共通禁止事項（#000/#fff/Material Design/絵文字）をルート AGENTS.md から継承
