@@ -1,0 +1,14 @@
+opt_in_rules:
+  - force_try
+  - force_unwrapping
+
+disabled_rules:
+  - file_length
+  - type_body_length
+
+line_length:
+  warning: 260
+  error: 300
+
+excluded:
+  - PetLifeCompanion.xcodeproj

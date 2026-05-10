@@ -1,0 +1,25 @@
+# Sippomi name-matcher 品質改善 v2 — 完了報告
+
+- 日時: 2026-05-10T16:54:55+09:00
+- 所要時間: 約60分
+- 変更ファイル一覧:
+  - 新規: babel.config.js, src/designTokens.ts, src/screens/SwipeScreen.tsx
+  - 修正: App.tsx, src/theme.ts, src/styles.ts, src/components/SwipeCard.tsx, src/components/NameDetailModal.tsx
+- 検証:
+  - tsc --noEmit: ✅ エラー0件
+  - expo start --clear: ✅ Metro bundler起動成功
+  - 画面遷移 (Intro→Form→Swipe→Results): ✅ コード上全パス維持
+  - ダークモード: ✅ theme.tsのisDark判定・darkStyles・shadowBase差し替え維持
+- 変更サマリ:
+  - Phase I: babel.config.js 作成、Reanimated/GestureHandler/BottomSheet/Moti 導入
+  - Phase II: GestureHandlerRootView ラップ、designTokens.ts 作成
+  - Phase III: theme.ts を tokens ベースにリファクタ、styles.ts の palette→tokens 移行
+  - Phase IV: SwipeScreen.tsx 新規作成（PanResponder→Reanimated Gesture API 移行 + Moti アニメーション統合）
+  - Phase V: SwipeCard の Reanimated 型対応、App.tsx クリーンアップ
+  - Phase VI: NameDetailModal → @gorhom/bottom-sheet 書換え
+  - Phase VII: borderWidth→tokens.shadow 置換、ダークモード shadowColor 切替
+- 残リスク:
+  - BottomSheet の backdrop (Modalのオーバーレイ) は @gorhom/bottom-sheet の組み込み backdropComponent に依存（手動オーバーレイ削除済）
+  - MotiView の `exit` prop は @motify/components の AnimatePresence が必要だが、現状カード切替は Reanimated の translateX アニメーションで処理しており exit は未使用
+  - 一部 borderWidth は意図的に維持（heroSilhouetteBubble, secondaryButton, iconButton, selectedSpeciesSummary）
+  - `expo@54.0.33` → `~54.0.34` へのバージョン警告あり（別途対応推奨）
