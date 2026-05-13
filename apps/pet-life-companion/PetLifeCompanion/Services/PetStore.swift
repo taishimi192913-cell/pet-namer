@@ -335,8 +335,12 @@ final class PetStore: ObservableObject {
             let didSave = await Task.detached(priority: .utility) {
                 do {
                     let data = try JSONEncoder().encode(snapshot)
-                    try FileManager.default.createDirectory(at: storageURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-                    try data.write(to: storageURL, options: .atomic)
+                    try FileManager.default.createDirectory(
+                        at: storageURL.deletingLastPathComponent(),
+                        withIntermediateDirectories: true,
+                        attributes: [.protectionKey: FileProtectionType.complete]
+                    )
+                    try data.write(to: storageURL, options: [.atomic, .completeFileProtection])
                     return true
                 } catch {
                     return false
