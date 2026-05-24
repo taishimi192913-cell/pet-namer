@@ -20,6 +20,32 @@ const devApiHandlers = new Map([
   ['/api/profile', profileHandler],
 ]);
 
+const cleanUrlToHtml = new Map([
+  ['/welcome-prep', '/welcome-prep.html'],
+  ['/first-dog-guide', '/first-dog-guide.html'],
+  ['/first-cat-guide', '/first-cat-guide.html'],
+  ['/starter-set', '/starter-set.html'],
+  ['/journal-first-pet-checklist', '/journal-first-pet-checklist.html'],
+  ['/journal-first-pet-cost', '/journal-first-pet-cost.html'],
+  ['/journal-pet-vaccine-schedule', '/journal-pet-vaccine-schedule.html'],
+  ['/journal-dog-walk-when', '/journal-dog-walk-when.html'],
+  ['/journal-cat-cage-necessary', '/journal-cat-cage-necessary.html'],
+  ['/journal-first-days', '/journal-first-days.html'],
+  ['/journal-home-safety', '/journal-home-safety.html'],
+  ['/journal-first-shopping', '/journal-first-shopping.html'],
+  ['/journal-dog-alone-training', '/journal-dog-alone-training.html'],
+  ['/journal-cat-toilet-fixes', '/journal-cat-toilet-fixes.html'],
+  ['/journal-pet-fast-eating', '/journal-pet-fast-eating.html'],
+  ['/journal-first-summer', '/journal-first-summer.html'],
+  ['/journal-pet-bousai', '/journal-pet-bousai.html'],
+  ['/journal-kanto-pet-outings', '/journal-kanto-pet-outings.html'],
+  ['/dog-names', '/dog-names.html'],
+  ['/cat-names', '/cat-names.html'],
+  ['/rabbit-names', '/rabbit-names.html'],
+  ['/privacy', '/privacy.html'],
+  ['/about', '/about.html'],
+]);
+
 function enhanceNodeResponse(response) {
   if (typeof response.status !== 'function') {
     response.status = (statusCode) => {
@@ -52,6 +78,29 @@ export default defineConfig(({ mode }) => {
       }
     },
     plugins: [
+      {
+        name: 'sippomi-clean-urls',
+        configureServer(server) {
+          server.middlewares.use((request, response, next) => {
+            const pathname = request.url ? request.url.split('?')[0] : '';
+            const htmlPath = cleanUrlToHtml.get(pathname);
+            if (htmlPath) {
+              request.url = htmlPath;
+            }
+            next();
+          });
+        },
+        configurePreviewServer(server) {
+          server.middlewares.use((request, response, next) => {
+            const pathname = request.url ? request.url.split('?')[0] : '';
+            const htmlPath = cleanUrlToHtml.get(pathname);
+            if (htmlPath) {
+              request.url = htmlPath;
+            }
+            next();
+          });
+        },
+      },
       {
         name: 'sippomi-dev-api-routes',
         configureServer(server) {
