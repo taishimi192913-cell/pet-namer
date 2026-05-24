@@ -1,18 +1,29 @@
 # Phase 0: Sippomi 構造化プロンプト（全サブエージェント共通参照）
 
 > 全サブエージェント（Design / Material / Developer / QA）が共通で参照する。
-> 動画「Claude Design × ChatGPT Image-2 でLP制作」のフローに従い、目的・ターゲット・トンマナ・デザイン要件を構造化。
+> 動画「Claude Design × ChatGPT Image-2 でLP制作」のフローに従い、
+> 目的・ターゲット・トンマナ・デザイン要件を構造化。
+> open-design 設計システム: sippomi (Apple Japan × MUJI Hybrid)
 
 ## プロジェクト概要
 
 | 項目 | 内容 |
 |------|------|
-| サービス名 | Sippomi（しっぽみ） |
+| サービス名 | Sippomi（シッポミ） |
 | URL | https://sippomi.com |
 | 目的 | ペットの名前をAIが無料で診断・提案するWebサービス |
 | 業種 | ペット / ライフスタイル / 命名支援 / コミュニティ |
 | ターゲット | 初めてペットを飼う20-40代女性・家族 |
 | 全機能無料 | IAP / サブスク / 広告 一切なし |
+| 設計システム | open-design: sippomi (Apple Japan × MUJI Hybrid) |
+
+## 使用ツール
+
+| ツール | 役割 | 代替元 |
+|--------|------|--------|
+| GPT Image 2 API | デザインモック + 素材グリッド画像生成 | ChatGPT Images 2.0 |
+| opencode | 素材分割・コード実装 | Claude Web + Claude Code |
+| open-design | 設計システム管理 + LP スケルトン生成 | Claude Design |
 
 ## トンマナ（雰囲気・世界観）
 
@@ -86,7 +97,7 @@ Output: 1024x1536 vertical layout.
 Sections from top to bottom:
 1. Hero — large headline "Find the perfect name for your new family", pet silhouettes (dog, cat, rabbit), big pill CTA
 2. Features — 3 feature cards with soft blob icons
-3. How It Works — 3-step flow with gentle connecting curves  
+3. How It Works — 3-step flow with gentle connecting curves
 4. Trust section — numbers and badges
 5. Trending names — ranking cards
 6. Community section

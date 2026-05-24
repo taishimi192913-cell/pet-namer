@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ペットの名前診断と犬・猫のお迎え準備の入口 | シッポミ</title>
-  <meta name="description" content="ペットの名前診断、犬の名前・猫の名前の人気候補、お迎え準備チェックリスト、初日・費用・ワクチンまで。シッポミは名前決めから最初の1年をつなぐ入口です。">
+  <title>【無料】ペット名前診断 | 犬・猫の名前候補とお迎え準備 | シッポミ</title>
+  <meta name="description" content="【無料】ペットの名前診断。犬の名前・猫の名前ランキング、お迎え準備リスト、初日から1年までサポートするシッポミの入口。">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="format-detection" content="telephone=no,address=no,email=no">
   <meta name="theme-color" content="#f4eede">
@@ -15,17 +15,17 @@
   <meta name="google-site-verification" content="tUcM7FgC-G4-_brHoKyTFcAbUbV2seom4S8IMRIUFW4">
   <!-- OGP -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ペットの名前診断と犬・猫のお迎え準備の入口 | シッポミ">
-  <meta property="og:description" content="ペットの名前診断から、犬の名前・猫の名前の人気候補、お迎え準備チェックリスト、初日・費用・ワクチンまで整理できるシッポミの入口。">
+  <meta property="og:title" content="【無料】ペット名前診断 | 犬・猫の名前候補とお迎え準備 | シッポミ">
+  <meta property="og:description" content="【無料】ペットの名前診断。犬の名前・猫の名前ランキング、お迎え準備リスト、初日から1年までサポートするシッポミの入口。">
   <meta property="og:url" content="https://sippomi.com/">
-  <meta property="og:image" content="https://sippomi.com/sippomi-ogp.svg">
+  <meta property="og:image" content="https://sippomi.com/ogp.png">
   <meta property="og:image:alt" content="シッポミ | 名前が決まる、その瞬間から。ペットの名前探しとお迎え準備">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:site_name" content="シッポミ">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ペットの名前診断と犬・猫のお迎え準備の入口 | シッポミ">
-  <meta name="twitter:description" content="ペットの名前診断から、犬の名前・猫の名前の人気候補、お迎え準備チェックリスト、初日・費用・ワクチンまで整理できるシッポミの入口。">
-  <meta name="twitter:image" content="https://sippomi.com/sippomi-ogp.svg">
+  <meta name="twitter:title" content="【無料】ペット名前診断 | 犬・猫の名前候補とお迎え準備 | シッポミ">
+  <meta name="twitter:description" content="【無料】ペットの名前診断。犬の名前・猫の名前ランキング、お迎え準備リスト、初日から1年までサポートするシッポミの入口。">
+  <meta name="twitter:image" content="https://sippomi.com/ogp.png">
   <!-- JSON-LD -->
   <script type="application/ld+json">
   {
@@ -117,6 +117,11 @@
           <span class="page-header__logo-sub">Sippomi</span>
         </div>
       </a>
+      <button type="button" class="page-header__hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="mobileDrawer">
+        <span class="page-header__hamburger-bar"></span>
+        <span class="page-header__hamburger-bar"></span>
+        <span class="page-header__hamburger-bar"></span>
+      </button>
       <nav class="page-header__nav" aria-label="サイトナビゲーション">
         <a href="#stepSpecies" class="page-header__nav-link">名前を決める</a>
         <a href="/welcome-prep" class="page-header__nav-link">お迎えガイド</a>
@@ -127,10 +132,27 @@
     </div>
   </header>
 
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true" role="dialog" aria-label="モバイルメニュー">
+    <div class="mobile-drawer__overlay" id="mobileDrawerOverlay"></div>
+    <nav class="mobile-drawer__panel" aria-label="モバイルナビゲーション">
+      <a href="#stepSpecies" class="mobile-drawer__link">名前を決める</a>
+      <a href="/welcome-prep" class="mobile-drawer__link">お迎えガイド</a>
+      <a href="#communitySection" class="mobile-drawer__link">コミュニティ予定</a>
+      <a href="/starter-set" class="mobile-drawer__link">商品</a>
+      <a href="#faqSection" class="mobile-drawer__link">FAQ</a>
+      <hr class="mobile-drawer__divider">
+      <a href="/dog-names" class="mobile-drawer__link mobile-drawer__link--small">犬の名前</a>
+      <a href="/cat-names" class="mobile-drawer__link mobile-drawer__link--small">猫の名前</a>
+      <a href="/rabbit-names" class="mobile-drawer__link mobile-drawer__link--small">うさぎの名前</a>
+      <a href="/welcome-prep" class="mobile-drawer__link mobile-drawer__link--small">お迎え準備ガイド</a>
+    </nav>
+  </div>
+
   <!-- ==============================
        HERO SECTION (petmi.jp風)
   ============================== -->
-  <section class="hero-section" aria-labelledby="heroTitle">
+  <section class="hero-section section-blob-hero" aria-labelledby="heroTitle">
       <div class="hero-background-decor" aria-hidden="true"></div>
 
       <!-- Mascot silhouettes -->
@@ -212,6 +234,8 @@
       </div>
     </div>
   </section>
+
+  <div class="section-divider" role="presentation" aria-hidden="true"></div>
 
   <!-- ==============================
        MAIN CONTENT
@@ -424,6 +448,36 @@
           </p>
         </div>
       </details>
+
+      <!-- 結果からの推奨アクション -->
+      <div class="result-recommendations" id="resultRecommendations" hidden aria-label="次のアクション">
+        <div class="result-recommendations__inner">
+          <p class="result-recommendations__label">さあ、次は</p>
+          <div class="result-recommendations__cards">
+            <a href="#surnameCheckerSection" class="result-rec-card" id="recSurnameCheck">
+              <span class="result-rec-card__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </span>
+              <strong>苗字との相性をチェック</strong>
+              <small>呼んだときの響きを確かめる</small>
+            </a>
+            <a href="/dog-names" class="result-rec-card">
+              <span class="result-rec-card__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </span>
+              <strong>人気ランキングを見る</strong>
+              <small>今年の傾向をまとめて確認</small>
+            </a>
+            <a href="#guideHub" class="result-rec-card">
+              <span class="result-rec-card__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </span>
+              <strong>お迎え準備を確認する</strong>
+              <small>初日に必要なものリスト</small>
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="app-store-banner" aria-label="アプリのご案内" hidden>
@@ -1029,23 +1083,56 @@
   ============================== -->
   <footer class="page-footer">
     <div class="page-footer__inner">
-      <a href="/" class="footer-logo" aria-label="シッポミ トップへ">
-        <div class="footer-logo-icon" aria-hidden="true">
-          <img src="/sippomi-mark.svg" alt="" class="footer-logo-mark" width="32" height="32" loading="lazy" decoding="async">
+      <div class="page-footer__brand">
+        <a href="/" class="footer-logo" aria-label="シッポミ トップへ">
+          <div class="footer-logo-icon" aria-hidden="true">
+            <img src="/sippomi-mark.svg" alt="" class="footer-logo-mark" width="32" height="32" loading="lazy" decoding="async">
+          </div>
+          <span class="footer-logo-text">シッポミ</span>
+        </a>
+        <p class="footer-note">名前が決まる、その瞬間から。シッポミは、はじめてのペット暮らしに寄り添います。</p>
+      </div>
+      <div class="page-footer__grid">
+        <div class="page-footer__col">
+          <h3 class="page-footer__col-title">名前を探す</h3>
+          <nav aria-label="名前を探す">
+            <a href="#stepSpecies">名前診断</a>
+            <a href="/dog-names">犬の名前</a>
+            <a href="/cat-names">猫の名前</a>
+            <a href="/rabbit-names">うさぎの名前</a>
+            <a href="/welcome-prep">苗字相性チェック</a>
+          </nav>
         </div>
-        <span class="footer-logo-text">シッポミ</span>
-      </a>
-      <p class="footer-note">名前が決まる、その瞬間から。シッポミは、はじめてのペット暮らしに寄り添います。</p>
-      <nav class="footer-links" aria-label="フッターナビゲーション">
-        <a href="#stepSpecies">名前を探す</a>
-        <a href="/welcome-prep">お迎え準備</a>
-        <a href="/journal-first-days">暮らしのヒント</a>
-        <a href="#communitySection">コミュニティ予定</a>
-        <a href="/starter-set">商品</a>
-        <a href="/dog-names">犬向け</a>
-        <a href="/cat-names">猫向け</a>
-        <a href="/rabbit-names">うさぎ向け</a>
-      </nav>
+        <div class="page-footer__col">
+          <h3 class="page-footer__col-title">お迎え準備</h3>
+          <nav aria-label="お迎え準備">
+            <a href="/welcome-prep">お迎え準備ガイド</a>
+            <a href="/journal-first-pet-checklist">チェックリスト</a>
+            <a href="/journal-first-pet-cost">費用の目安</a>
+            <a href="/journal-first-shopping">買うもの優先順位</a>
+            <a href="/starter-set">スターターセット</a>
+          </nav>
+        </div>
+        <div class="page-footer__col">
+          <h3 class="page-footer__col-title">暮らしのヒント</h3>
+          <nav aria-label="暮らしのヒント">
+            <a href="/journal-first-days">迎えた初日</a>
+            <a href="/journal-dog-walk-when">散歩デビュー</a>
+            <a href="/journal-cat-toilet-fixes">トイレ失敗対策</a>
+            <a href="/journal-home-safety">部屋づくり・安全</a>
+            <a href="/journal-pet-bousai">防災準備</a>
+          </nav>
+        </div>
+        <div class="page-footer__col">
+          <h3 class="page-footer__col-title">シッポミについて</h3>
+          <nav aria-label="シッポミについて">
+            <a href="#communitySection">コミュニティ</a>
+            <a href="#faqSection">FAQ</a>
+            <a href="/about">シッポミについて</a>
+            <a href="/privacy">プライバシーポリシー</a>
+          </nav>
+        </div>
+      </div>
       <p class="footer-copy">&copy; 2026 シッポミ</p>
     </div>
   </footer>

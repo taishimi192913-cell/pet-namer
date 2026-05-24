@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFile, writeFile, readdir, stat } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,7 +8,24 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 
-const GA_ID = process.env.GA4_MEASUREMENT_ID || process.env.VITE_GA4_MEASUREMENT_ID || '';
+function loadEnvFile(filePath) {
+  if (!existsSync(filePath)) return;
+  const content = readFileSync(filePath, 'utf-8');
+  for (const line of content.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eq = trimmed.indexOf('=');
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq);
+    if (!process.env[key]) {
+      process.env[key] = trimmed.slice(eq + 1);
+    }
+  }
+}
+
+loadEnvFile(path.join(ROOT, '.env'));
+
+const GA_ID = (process.env.GA4_MEASUREMENT_ID || process.env.VITE_GA4_MEASUREMENT_ID || '').trim();
 
 if (!GA_ID) {
   console.log('[inject-ga4] GA4_MEASUREMENT_ID not set — skipping GA4 injection. Set it as a Vercel env var (G-XXXXXXXXXX) when ready.');
