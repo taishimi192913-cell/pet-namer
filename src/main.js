@@ -391,6 +391,14 @@ function persistSurnameInputs() {
   }
 }
 
+function animateSurnameBadgeResult() {
+  const badge = surnameCheckerBadgeScore?.closest('.surname-checker__badge');
+  if (!badge) return;
+  badge.classList.remove('surname-checker__badge--pop');
+  void badge.offsetWidth;
+  badge.classList.add('surname-checker__badge--pop');
+}
+
 function renderSurnameChecker({ scroll = false } = {}) {
   if (!surnameCheckerSection) return;
 
@@ -476,6 +484,7 @@ function renderSurnameChecker({ scroll = false } = {}) {
   if (surnameCheckerSummary) surnameCheckerSummary.textContent = diagnosis.summary;
   if (surnameCheckerBadgeScore) surnameCheckerBadgeScore.textContent = `${diagnosis.totalScore}`;
   if (surnameCheckerBadgeLabel) surnameCheckerBadgeLabel.textContent = diagnosis.label;
+  animateSurnameBadgeResult();
   if (surnameCheckerNote) {
     surnameCheckerNote.textContent = diagnosis.note || '苗字のふりがながあると、呼びやすさの診断がより正確になります。';
   }
@@ -551,6 +560,14 @@ function runDiagnosis({ smoothScroll = true } = {}) {
 
   if (resultSection) {
     resultSection.hidden = false;
+  }
+
+  const recArea = document.getElementById('resultRecommendations');
+  if (recArea) recArea.hidden = false;
+
+  const appStoreBanner = document.querySelector('.app-store-banner');
+  if (appStoreBanner) {
+    appStoreBanner.hidden = false;
   }
 
   if (resultShareArea) {
@@ -651,7 +668,10 @@ function renderTrending(species) {
   trendingList.replaceChildren();
   ranked.forEach((item, i) => {
     const li = document.createElement('li');
-    li.className = 'trending-item';
+    const rank = i + 1;
+    li.className = rank <= 3
+      ? `trending-item trending-row trending-row--top trending-row--rank-${rank}`
+      : 'trending-item trending-row';
     const thumb = celebThumbByName.get(item.name);
     const thumbHtml = thumb
       ? `<span class="trending-item__thumb-wrap"><img class="trending-item__thumb" src="${escapeHtml(thumb.url)}" alt="" width="40" height="40" loading="lazy" decoding="async" /></span>`
@@ -663,7 +683,7 @@ function renderTrending(species) {
       .replace(/\s*\d{4}年[^。\n]*?(\d+位)[^。\n]*/g, '')
       .trim();
     li.innerHTML = `
-      <span class="trending-item__rank">${i + 1}</span>
+      <span class="trending-item__rank">${rank}</span>
       ${thumbHtml}
       <span class="trending-item__name">${escapeHtml(item.name)}</span>
       ${readingHtml}
@@ -691,6 +711,18 @@ function renderTrending(species) {
 }
 
 const SPECIES_ICON_MAP = { 犬: '犬', 猫: '猫', うさぎ: '兎', ハムスター: '小', 鳥: '鳥' };
+const SPECIES_PLACEHOLDER_CLASS_MAP = {
+  犬: 'dog',
+  猫: 'cat',
+  うさぎ: 'rabbit',
+  ハムスター: 'hamster',
+  鳥: 'bird',
+};
+
+function speciesPlaceholderClass(species) {
+  return SPECIES_PLACEHOLDER_CLASS_MAP[species] || 'pet';
+}
+
 function normalizeCelebRecord(raw) {
   const speciesArr = Array.isArray(raw.species) ? raw.species.filter(Boolean) : [raw.species].filter(Boolean);
   return {
@@ -791,14 +823,33 @@ function createCelebMedia(entry, speciesIcon) {
 
   const petFigure = document.createElement('figure');
   petFigure.className = 'celeb-card__figure';
-  const petImg = document.createElement('img');
-  petImg.className = 'celeb-card__img';
-  petImg.src = entry.imageUrl;
-  petImg.alt = typeof entry.imageAlt === 'string' ? entry.imageAlt : `${entry.name}の写真`;
-  petImg.loading = 'lazy';
-  petImg.decoding = 'async';
-  petFigure.appendChild(petImg);
-  if (typeof entry.imageCredit === 'string' && entry.imageCredit.trim()) {
+  if (entry.imageUrl) {
+    const petImg = document.createElement('img');
+    petImg.className = 'celeb-card__img';
+    petImg.src = entry.imageUrl;
+    petImg.alt = typeof entry.imageAlt === 'string' ? entry.imageAlt : `${entry.name}の写真`;
+    petImg.loading = 'lazy';
+    petImg.decoding = 'async';
+    petFigure.appendChild(petImg);
+  } else {
+    const placeholder = document.createElement('div');
+    placeholder.className = `celeb-card__photo-placeholder celeb-card__photo-placeholder--${speciesPlaceholderClass(entry.petSpecies)}`;
+
+    const silhouette = document.createElement('span');
+    silhouette.className = 'celeb-card__photo-silhouette';
+
+    const icon = document.createElement('span');
+    icon.className = 'celeb-card__photo-species';
+    icon.textContent = speciesIcon;
+
+    const label = document.createElement('span');
+    label.className = 'celeb-card__photo-label';
+    label.textContent = `${entry.petSpecies || 'ペット'}のイメージ`;
+
+    placeholder.append(silhouette, icon, label);
+    petFigure.appendChild(placeholder);
+  }
+  if (entry.imageUrl && typeof entry.imageCredit === 'string' && entry.imageCredit.trim()) {
     const cap = document.createElement('figcaption');
     cap.className = 'celeb-card__credit';
     cap.textContent = entry.imageCredit;
@@ -1158,5 +1209,44 @@ async function bootstrap() {
   renderSavedFavorites();
   renderSurnameChecker();
 }
+
+/* ── Hamburger menu toggle ── */
+(function initHamburger() {
+  const btn = document.getElementById('hamburgerBtn');
+  const drawer = document.getElementById('mobileDrawer');
+  const overlay = document.getElementById('mobileDrawerOverlay');
+  if (!btn || !drawer) return;
+
+  function open() {
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-label', 'メニューを閉じる');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    btn.classList.remove('is-active');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'メニューを開く');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    const isOpen = drawer.getAttribute('aria-hidden') === 'false';
+    isOpen ? close() : open();
+  });
+
+  overlay?.addEventListener('click', close);
+
+  drawer.querySelectorAll('.mobile-drawer__link').forEach((link) => {
+    link.addEventListener('click', close);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.getAttribute('aria-hidden') === 'false') close();
+  });
+})();
 
 bootstrap();

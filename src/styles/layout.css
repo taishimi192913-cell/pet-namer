@@ -121,6 +121,122 @@
   transform: translateY(-1px);
 }
 
+/* ── Hamburger button ── */
+.page-header__hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 310;
+}
+
+.page-header__hamburger-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease-smooth), opacity 0.3s var(--ease-smooth);
+}
+
+.page-header__hamburger.is-active .page-header__hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.page-header__hamburger.is-active .page-header__hamburger-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.page-header__hamburger.is-active .page-header__hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile Drawer ── */
+.mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.mobile-drawer[aria-hidden="false"] {
+  pointer-events: auto;
+}
+
+.mobile-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: hsl(0 0% 0% / 0.3);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.mobile-drawer[aria-hidden="false"] .mobile-drawer__overlay {
+  opacity: 1;
+}
+
+.mobile-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(320px, 80vw);
+  height: 100%;
+  background: var(--color-card-bg);
+  padding: 80px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transform: translateX(100%);
+  transition: transform 0.35s var(--ease-out);
+  overflow-y: auto;
+}
+
+.mobile-drawer[aria-hidden="false"] .mobile-drawer__panel {
+  transform: translateX(0);
+}
+
+.mobile-drawer__link {
+  display: block;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.mobile-drawer__link:hover {
+  background: var(--peach-light);
+}
+
+.mobile-drawer__link--small {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-sub);
+  padding: 10px 16px;
+}
+
+.mobile-drawer__divider {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 12px 16px;
+}
+
+@media (max-width: 640px) {
+  .page-header__hamburger {
+    display: flex;
+  }
+}
+
 /* スティッキーヘッダー分のアンカーずれ調整 */
 #stepSpecies,
 #diagnosisPanel,
@@ -1086,13 +1202,129 @@
 }
 
 /* ======================================
-   FOOTER
-====================================== */
+   FOOTER — Mega Footer 4カラム
+   ====================================== */
 .page-footer {
   background: var(--surface);
   border-top: 1px solid var(--border);
-  padding: 40px 24px;
+  padding: 48px 24px 24px;
+}
+
+.page-footer__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.page-footer__brand {
   text-align: center;
+  margin-bottom: 32px;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  text-decoration: none;
+}
+
+.footer-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.footer-logo-mark {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.footer-logo-text {
+  font-family: var(--font-accent);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.footer-note {
+  color: var(--text-sub);
+  font-size: 0.85rem;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.page-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-footer__col-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.page-footer__col nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page-footer__col nav a {
+  color: var(--text-sub);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.page-footer__col nav a:hover {
+  color: var(--primary);
+}
+
+.footer-copy {
+  color: var(--text-sub);
+  font-size: 0.78rem;
+  text-align: center;
+  padding-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .page-footer {
+    padding: 32px 16px 20px;
+  }
+
+  .page-footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-footer__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.footer-note,
+.footer-copy {
+  color: var(--text-sub);
 }
 
 .page-footer__inner {
@@ -1701,23 +1933,8 @@
 
 .starter-pill-list span {
   border-radius: 999px;
-  background: #f5f5f5;
+  background: var(--peach-light);
   border: 1px solid var(--border);
-  color: var(--text-sub);
-}
-
-.page-footer {
-  background: #fff;
-  border-top: 1px solid var(--border);
-}
-
-.page-footer__inner {
-  max-width: 1120px;
-  padding: 32px 20px 40px;
-}
-
-.footer-note,
-.footer-copy {
   color: var(--text-sub);
 }
 
