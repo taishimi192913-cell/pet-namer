@@ -22,3 +22,11 @@ token.json
 *.key
 *.p12
 *.mobileprovision
+
+# Agent tooling temp files
+tasks.json
+.!*
+
+# Agent-generated scripts (run locally, not part of build)
+scripts/_add-entries.mjs
+scripts/phase1_generate_images.py

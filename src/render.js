@@ -2,6 +2,57 @@ import { copyNameToClipboard, getLINEShareURL, getXShareURL } from './share.js';
 import { secondaryReadingIfAny } from './reading-display.js';
 import { OVERFLOW_LIST_PAGE_SIZE, WORDCLOUD_MAP_MAX } from './constants.js';
 
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+}
+
+function animateNumberText(element, target, formatValue = (value) => String(value)) {
+  if (!element || typeof target !== 'number') return;
+  if (prefersReducedMotion()) {
+    element.textContent = formatValue(target);
+    return;
+  }
+
+  const duration = 720;
+  const start = performance.now();
+
+  const tick = (now) => {
+    const progress = Math.min(1, (now - start) / duration);
+    const eased = 1 - ((1 - progress) ** 3);
+    element.textContent = formatValue(Math.round(target * eased));
+    if (progress < 1) window.requestAnimationFrame(tick);
+  };
+
+  element.textContent = formatValue(0);
+  window.requestAnimationFrame(tick);
+}
+
+function appendAnimatedNameLetters(target, name) {
+  target.replaceChildren();
+  Array.from(String(name)).forEach((char, index) => {
+    const span = document.createElement('span');
+    span.className = 'spotlight__letter';
+    span.style.setProperty('--letter-index', String(index));
+    span.textContent = char;
+    target.appendChild(span);
+  });
+}
+
+function createScoreLine(className, item) {
+  const score = document.createElement('p');
+  score.className = className;
+  if (item.match?.score != null) {
+    score.append(document.createTextNode('おすすめ度 '));
+    const number = document.createElement('span');
+    number.className = 'score-countup';
+    score.append(number, document.createTextNode(`%（${item.match.label}）`));
+    animateNumberText(number, item.match.score);
+  } else {
+    score.textContent = 'おすすめ度 —';
+  }
+  return score;
+}
+
 function createFavoriteButton(item, options = {}, variant = 'card') {
   if (typeof options.onToggleFavorite !== 'function') return null;
 
@@ -103,7 +154,7 @@ export function createSpotlight(item, options = {}) {
 
   const nameEl = document.createElement('h3');
   nameEl.className = 'spotlight__name';
-  nameEl.textContent = item.name;
+  appendAnimatedNameLetters(nameEl, item.name);
 
   const readingSub = secondaryReadingIfAny(item.name, item.reading);
 
@@ -111,13 +162,7 @@ export function createSpotlight(item, options = {}) {
   meaning.className = 'spotlight__meaning';
   meaning.textContent = item.meaning;
 
-  const score = document.createElement('p');
-  score.className = 'spotlight__score';
-  if (item.match?.score != null) {
-    score.textContent = `おすすめ度 ${item.match.score}%（${item.match.label}）`;
-  } else {
-    score.textContent = 'おすすめ度 —';
-  }
+  const score = createScoreLine('spotlight__score', item);
 
   const tags = document.createElement('div');
   tags.className = 'top-result__tags';
@@ -235,13 +280,7 @@ export function createNameCard(item, options = {}) {
   }
   actions.append(copyBtn, shareBtn);
 
-  const meta = document.createElement('p');
-  meta.className = 'name-card__meta';
-  if (item.match?.score != null) {
-    meta.textContent = `おすすめ度 ${item.match.score}%（${item.match.label}）`;
-  } else {
-    meta.textContent = 'おすすめ度 —';
-  }
+  const meta = createScoreLine('name-card__meta', item);
 
   const nameEl = document.createElement('h3');
   nameEl.className = 'name-card__name';
@@ -504,13 +543,7 @@ function createResultDetailStrip(item, options = {}) {
 
   const readingSub = secondaryReadingIfAny(item.name, item.reading);
 
-  const score = document.createElement('p');
-  score.className = 'result-detail__score';
-  if (item.match?.score != null) {
-    score.textContent = `おすすめ度 ${item.match.score}%（${item.match.label}）`;
-  } else {
-    score.textContent = 'おすすめ度 —';
-  }
+  const score = createScoreLine('result-detail__score', item);
 
   const guidance = document.createElement('p');
   guidance.className = 'result-detail__guidance';
@@ -530,7 +563,11 @@ function createResultDetailStrip(item, options = {}) {
 
   const scoreNumber = document.createElement('span');
   scoreNumber.className = 'result-detail__score-number';
-  scoreNumber.textContent = item.match?.score != null ? `${item.match.score}` : '—';
+  if (item.match?.score != null) {
+    animateNumberText(scoreNumber, item.match.score);
+  } else {
+    scoreNumber.textContent = '—';
+  }
 
   const scoreUnit = document.createElement('span');
   scoreUnit.className = 'result-detail__score-unit';
@@ -878,7 +915,7 @@ export function renderResults(container, results, visibleCount, onLoadMore, opti
       const metaSpan = document.createElement('span');
       metaSpan.className = 'result-overflow-row__meta';
       if (sc != null) {
-        metaSpan.textContent = `${sc}%`;
+        animateNumberText(metaSpan, sc, (value) => `${value}%`);
       } else {
         metaSpan.textContent = '—';
       }
@@ -898,6 +935,13 @@ export function renderResults(container, results, visibleCount, onLoadMore, opti
 
   setMapAndOverflowSelection(selectedIndex);
   syncDetail();
+
+  const spotlight = createSpotlight(visibleItems[0], {
+    ...options,
+    isFavorite: options.savedKeys?.has?.(options.favoriteKeyForItem?.(visibleItems[0]) || '') || false,
+  });
+
+  container.appendChild(spotlight);
 
   layout.append(cloudState.wrap, detailHost);
   if (overflowHost) layout.appendChild(overflowHost);

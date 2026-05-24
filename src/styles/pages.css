@@ -327,6 +327,123 @@
   font-weight: 800;
 }
 
+.guide-hero--prep {
+  padding: clamp(28px, 5vw, 56px) 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.guide-hero--prep .guide-hero__grid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.72fr);
+  align-items: start;
+  gap: clamp(24px, 5vw, 52px);
+}
+
+.guide-hero--prep .guide-hero__copy {
+  min-width: 0;
+}
+
+.guide-hero--prep .guide-hero__title {
+  max-width: 820px;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  line-height: 1.18;
+}
+
+.guide-hero--prep .guide-hero__lead {
+  max-width: 760px;
+  font-size: clamp(1rem, 1.7vw, 1.12rem);
+}
+
+.guide-hero__toc {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 54px rgba(29, 29, 31, 0.08);
+}
+
+.guide-hero__toc-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-hero__toc-list li {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  padding: 13px 0;
+  border-top: 1px solid rgba(29, 29, 31, 0.08);
+  color: var(--text-sub);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.guide-hero__toc-list span {
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.guide-hero__visual {
+  grid-column: 1 / -1;
+  padding: 16px 0 0;
+}
+
+.guide-route-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(29, 29, 31, 0.08);
+  border-radius: 10px;
+  background: rgba(29, 29, 31, 0.08);
+  box-shadow: 0 18px 50px rgba(29, 29, 31, 0.06);
+}
+
+.guide-route-board__row {
+  position: relative;
+  min-height: 108px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.7)),
+    radial-gradient(circle at 80% 20%, rgba(0, 113, 227, 0.08), transparent 36%);
+}
+
+.guide-route-board__row span {
+  display: block;
+  color: var(--text-sub);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.guide-route-board__row strong {
+  display: block;
+  margin-top: 18px;
+  color: var(--text);
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+}
+
+.guide-route-board__row i {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 34px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 113, 227, 0.22);
+}
+
+.guide-route-board__row--active i {
+  background: var(--primary);
+}
+
 .guide-bullet-list,
 .guide-check-list,
 .journal-reference-list,
@@ -469,73 +586,6 @@
   background: rgba(140, 92, 180, 0.1);
   border-color: rgba(140, 92, 180, 0.3);
   color: #6b3e99;
-}
-
-.affiliate-item {
-  margin: 24px 0;
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  background: var(--surface-sub, #fdf6ee);
-  border: 1.5px solid var(--border);
-}
-
-.affiliate-item__label {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-sub);
-  margin: 0 0 10px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.affiliate-item table {
-  max-width: 100%;
-}
-
-/* Rakuten picttext カードを常時レスポンシブ表示（記事本文幅は常に480px以下） */
-.affiliate-item div[style*="width:504px"] {
-  width: 100% !important;
-  box-sizing: border-box;
-}
-
-.affiliate-item td[style*="width:240px"],
-.affiliate-item td[style*="width:248px"] {
-  display: block !important;
-  width: 100% !important;
-}
-
-.affiliate-item td[style*="width:248px"] {
-  padding-top: 10px;
-}
-
-.affiliate-item a[href*="hb.afl.rakuten.co.jp"] img {
-  max-width: 140px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.affiliate-item div[style*="float:right"] {
-  width: 100% !important;
-  float: none !important;
-  margin-left: 0 !important;
-  margin-top: 8px;
-}
-
-.affiliate-item img[src*="static.affiliate.rakuten.co.jp/makelink/rl.svg"] {
-  float: none !important;
-  display: block;
-  margin: 0 auto 8px !important;
-}
-
-.affiliate-item div[style*="margin:10px;"]::after {
-  content: '';
-  display: block;
-  clear: both;
-}
-
-@media (max-width: 540px) {
-  /* 540px以下でも同様のスタイルが適用済みのため追加記述不要 */
 }
 
 .journal-callout {
@@ -730,5 +780,19 @@
 
   .coming-grid {
     align-items: stretch;
+  }
+}
+
+@media (max-width: 719px) {
+  .guide-hero--prep .guide-hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-route-board {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-route-board__row {
+    min-height: 84px;
   }
 }

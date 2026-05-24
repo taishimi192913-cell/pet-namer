@@ -19,6 +19,14 @@ export const VIBE_OPTIONS = [
   '自然',
   '神秘的',
   '話題',
+  '渋い',
+  'クール',
+  '癒し系',
+  '洗練',
+  '陽気',
+  '知的',
+  'ミステリアス',
+  '武骨',
 ];
 
 export const GENDER_OPTIONS = [
@@ -41,6 +49,13 @@ export const THEME_OPTIONS = [
   '宝石・貴金属',
   '和風・古風',
   '洋風・モダン',
+  '色・光',
+  '季節・暦',
+  '神話・伝説',
+  '音楽・芸術',
+  '文学',
+  '地理・地名',
+  '天体・宇宙',
 ];
 
 export const CALL_STYLE_OPTIONS = [

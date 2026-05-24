@@ -8,10 +8,7 @@ const ROOT = path.resolve(__dirname, '..');
 
 const SITE = 'https://sippomi.com';
 
-function buildFigure({ slug, alt, photographer, photographerUrl, pexelsUrl }) {
-  const credit = photographerUrl
-    ? `Photo by <a href="${photographerUrl}" rel="nofollow noopener" target="_blank">${photographer}</a> / <a href="${pexelsUrl}" rel="nofollow noopener" target="_blank">Pexels</a>`
-    : `Photo by ${photographer} / Pexels`;
+function buildFigure({ slug, alt }) {
   return `
     <section class="section article-hero-photo">
       <figure class="article-hero-figure">
@@ -23,7 +20,7 @@ function buildFigure({ slug, alt, photographer, photographerUrl, pexelsUrl }) {
           decoding="async"
           fetchpriority="high"
         />
-        <figcaption class="article-hero-figure__caption">${credit}</figcaption>
+        <figcaption class="article-hero-figure__caption">Sippomi original visual</figcaption>
       </figure>
     </section>
 `;
@@ -89,8 +86,6 @@ function injectImageIntoJsonLd(html, imageUrl) {
 
 async function main() {
   const spec = JSON.parse(await readFile(path.join(ROOT, 'data/journal-photo-spec.json'), 'utf-8'));
-  const credits = JSON.parse(await readFile(path.join(ROOT, 'data/journal-photo-credits.json'), 'utf-8'));
-  const creditMap = new Map(credits.map((c) => [c.slug, c]));
 
   let modified = 0;
   for (const article of spec.articles) {
@@ -100,13 +95,9 @@ async function main() {
       console.log(`skip (already has figure): ${article.html}`);
       continue;
     }
-    const credit = creditMap.get(article.slug) || {};
     const figure = buildFigure({
       slug: article.slug,
       alt: article.alt,
-      photographer: credit.photographer || 'Pexels Contributor',
-      photographerUrl: credit.photographer_url,
-      pexelsUrl: credit.pexels_url,
     });
     const inserted = insertAfterGuideHero(html, figure);
     if (!inserted) {

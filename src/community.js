@@ -264,7 +264,7 @@ function renderFeed() {
           <time class="community-card__time">${escapeHtml(formatCreatedAt(post.createdAt))}</time>
         </div>
       </div>
-      ${post.imageUrl ? `<img class="community-card__image" src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.petName || 'うちの子')}の投稿写真" loading="lazy">` : ''}
+      ${post.imageUrl ? `<img class="community-card__image" src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.petName || 'うちの子')}の投稿写真" loading="lazy" decoding="async">` : ''}
       <p class="community-card__body">${escapeHtml(post.body).replaceAll('\n', '<br>')}</p>
       <div class="community-card__social-row">
         <button type="button" class="community-card__social-button ${post.likedByViewer ? 'is-active' : ''}" data-action="like" data-post-id="${escapeHtml(post.id)}">

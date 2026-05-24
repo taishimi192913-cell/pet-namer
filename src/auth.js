@@ -71,15 +71,8 @@ function setAuthControlsDisabled(disabled) {
   });
 }
 
-function setOpen(open) {
-  const toggle = document.getElementById('authPanelToggle');
-  const body = document.getElementById('authPanelBody');
+function updateAuthPanelHint(open) {
   const hint = document.getElementById('authPanelToggleHint');
-  if (!toggle || !body) return;
-
-  toggle.setAttribute('aria-expanded', String(open));
-  body.hidden = !open;
-
   if (!hint) return;
   if (!open) {
     hint.textContent = 'タップで開きます';
@@ -92,6 +85,76 @@ function setOpen(open) {
   hint.textContent = currentSession?.user
     ? 'ログイン済みです'
     : 'ログインしてお気に入りを保存できます';
+}
+
+function animateAuthPanelBody(body, open) {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  body.getAnimations().forEach((animation) => animation.cancel());
+
+  if (reduceMotion) {
+    body.hidden = !open;
+    body.style.height = '';
+    body.style.opacity = '';
+    body.style.overflow = '';
+    return;
+  }
+
+  if (open) {
+    body.hidden = false;
+    const targetHeight = body.scrollHeight;
+    body.style.height = '0px';
+    body.style.opacity = '0';
+    body.style.overflow = 'hidden';
+    const animation = body.animate(
+      [
+        { height: '0px', opacity: 0 },
+        { height: `${targetHeight}px`, opacity: 1 },
+      ],
+      { duration: 320, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+    );
+    animation.onfinish = () => {
+      body.style.height = '';
+      body.style.opacity = '';
+      body.style.overflow = '';
+    };
+    return;
+  }
+
+  const startHeight = body.scrollHeight;
+  body.style.height = `${startHeight}px`;
+  body.style.opacity = '1';
+  body.style.overflow = 'hidden';
+  const animation = body.animate(
+    [
+      { height: `${startHeight}px`, opacity: 1 },
+      { height: '0px', opacity: 0 },
+    ],
+    { duration: 240, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+  );
+  animation.onfinish = () => {
+    body.hidden = true;
+    body.style.height = '';
+    body.style.opacity = '';
+    body.style.overflow = '';
+  };
+}
+
+function setOpen(open, { animate = true } = {}) {
+  const toggle = document.getElementById('authPanelToggle');
+  const body = document.getElementById('authPanelBody');
+  if (!toggle || !body) return;
+
+  const alreadyOpen = !body.hidden;
+  toggle.setAttribute('aria-expanded', String(open));
+  updateAuthPanelHint(open);
+  if (alreadyOpen === open) return;
+
+  if (animate) {
+    animateAuthPanelBody(body, open);
+    return;
+  }
+
+  body.hidden = !open;
 }
 
 export function openAuthPanel() {
@@ -139,7 +202,7 @@ function updateAuthUI() {
     }
   }
 
-  setOpen(document.getElementById('authPanelToggle')?.getAttribute('aria-expanded') === 'true');
+  setOpen(document.getElementById('authPanelToggle')?.getAttribute('aria-expanded') === 'true', { animate: false });
 }
 
 function getAuthFields() {
