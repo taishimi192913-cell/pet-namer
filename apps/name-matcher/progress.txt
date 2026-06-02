@@ -30,3 +30,30 @@
 - ダークモード: 機能維持
 - 変更8ファイル (新規3 + 修正5)
 - 所要時間: 約60分
+
+=== 2026-05-29 App Store 提出準備 (OpenHands) ===
+- [x] app.json 最適化: Display name日本語化, bundleIdentifier維持, buildNumber追加, infoPlist設定, privacyManifests追加
+- [x] プライバシーマニフェスト完備 (NSPrivacyAccessedAPITypes: UserDefaults, FileTimestamp, SystemBootTime, DiskSpace)
+- [x] 型定義拡張: UndoSnapshot, SWIPE_RESULTS_THRESHOLD定数
+- [x] SwipeScreen UX改善: 進捗バー, UNDO, 初回ヒント
+- [x] ResultsScreen改善: 共有テキスト強化
+- [x] ダークモード対応 (新規UI要素のdarkStyles追加)
+- [x] コンパイル: npx tsc --noEmit エラー0
+- [x] APP_STORE_GUIDE.md: ASO戦略・ペルソナ分析・審査対策・KPI目標
+- [x] PRIVACY_POLICY.md: プライバシーポリシー文書
+- [ ] App Store 1024pxアイコン作成（assets/icon.png 1024x1024 確認済み。Xcode側のAppIconアセットにも設定済み）
+- [ ] sippomi.com/privacy にプライバシーポリシー掲載
+- [ ] EAS_PROJECT_ID / APP_ID の実値設定
+
+=== 2026-06-01 App Store 提出整備 (Hermes Agent) ===
+- [x] TypeScript コンパイル確認 (npx tsc --noEmit: エラー0)
+- [x] テスト全件パス (swipe-gesture-layout ✅, session-lazy-load ✅)
+- [x] eas.json 作成 (production / preview / development プロファイル)
+- [x] .env.example 作成 (Supabase環境変数テンプレート)
+- [x] app.json プレースホルダー整理 ([APP_ID]→YOUR_APP_STORE_ID, [EAS_PROJECT_ID]→YOUR_EAS_PROJECT_ID)
+- [x] scripts/build-ios.sh 作成 (ビルド自動化スクリプト)
+- [x] アイコン確認: assets/icon.png 1024x1024 ✅, ios AppIcon アセット設定済み ✅
+- [x] プライバシーマニフェスト: PrivacyInfo.xcprivacy 完備 ✅
+- [x] ダークモード: 全画面対応 ✅
+- [x] 非暗号化申告: ITSAppUsesNonExemptEncryption=false ✅
+- [ ] 未対応: あなたに設定してもらう必要がある項目（下記参照）

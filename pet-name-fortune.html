@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【無料】ペット姓名判断 | 犬・猫の名前の画数・運勢チェック | シッポミ</title>
+  <meta name="description" content="ペットの名前の姓名判断を無料で。犬・猫・うさぎの名前の総画数・五行・運勢をチェック。むぎ・ココ・ソラ・レオなど人気名前の画数も掲載。シッポミの名前診断と一緒に使えます。">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <meta name="theme-color" content="#f4eede">
+  <link rel="canonical" href="https://sippomi.com/pet-name-fortune">
+  <link rel="icon" type="image/svg+xml" href="/sippomi-mark.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="【無料】ペット姓名判断 | 犬・猫の名前の画数・運勢チェック | シッポミ">
+  <meta property="og:description" content="ペットの名前の姓名判断を無料で。犬・猫・うさぎの名前の総画数・五行・運勢をチェック。">
+  <meta property="og:url" content="https://sippomi.com/pet-name-fortune">
+  <meta property="og:image" content="https://sippomi.com/ogp.webp">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:site_name" content="シッポミ">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "シッポミ ペット姓名判断",
+        "url": "https://sippomi.com/pet-name-fortune",
+        "description": "ペットの名前の画数・五行・運勢をチェックできる無料ツール",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+        "inLanguage": "ja"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "ペットの名前も姓名判断できるの？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい。シッポミでは犬・猫・うさぎなどのペットの名前の総画数や五行を計算し、大吉・吉などの運勢を表示します。人の姓名判断と同じ考え方をペット向けにアレンジしたものです。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "画数はどうやって計算するの？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "名前の各文字の画数を合計して総画数を出します。漢字の場合は一般的な画数、ひらがなの場合は簡易換算で計算しています。結果は参考程度にお使いください。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "無料で使えるの？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい、すべて無料です。会員登録も不要で、ブラウザを開けばすぐに診断できます。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <style>
+    .fortune-hero { text-align: center; padding: 80px 16px 48px; }
+    .fortune-hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .fortune-hero p { max-width: 600px; margin: 0 auto 24px; color: var(--color-text-secondary); }
+    .fortune-tool { max-width: 680px; margin: 0 auto 64px; background: var(--color-card-bg); border-radius: var(--radius-md); padding: 32px; }
+    .fortune-tool h2 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: 600; margin-bottom: 24px; text-align: center; }
+    .fortune-tool__row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .fortune-tool__row label { font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); }
+    .fortune-tool__row input,
+    .fortune-tool__row select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--color-bg-base); font-size: 1rem; font-family: inherit; }
+    .fortune-tool__row input:focus,
+    .fortune-tool__row select:focus { outline: none; border-color: var(--color-cta); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .fortune-actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+    .fortune-result { display: none; margin-top: 32px; padding: 24px; background: var(--color-bg-base); border-radius: var(--radius-sm); }
+    .fortune-result--visible { display: block; }
+    .fortune-result__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .fortune-result__item { text-align: center; padding: 12px; background: var(--color-card-bg); border-radius: var(--radius-sm); }
+    .fortune-result__item-value { font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; }
+    .fortune-result__item-label { font-size: 0.75rem; color: var(--color-text-secondary); }
+    .fortune-result__desc { font-size: 0.875rem; line-height: 1.6; color: var(--color-text-secondary); max-width: 500px; margin: 0 auto; }
+    .fortune-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .fortune-table th, .fortune-table td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--border); }
+    .fortune-table th { background: var(--color-card-bg); font-weight: 600; }
+    .fortune-table tr:hover { background: var(--color-card-bg); }
+    .luck-dai { color: hsl(0 0% 20%); font-weight: 700; }
+    .luck-ki { color: hsl(211 40% 35%); font-weight: 600; }
+    .luck-chu { color: hsl(40 30% 40%); }
+    .luck-sho { color: var(--color-text-secondary); }
+    .luck-kyo { color: hsl(0 50% 45%); }
+    .fortune-link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
+    .fortune-link-card { display: block; padding: 20px; background: var(--color-card-bg); border-radius: var(--radius-sm); text-decoration: none; color: inherit; }
+    .fortune-link-card strong { display: block; margin-bottom: 4px; }
+    .fortune-link-card small { color: var(--color-text-secondary); font-size: 0.8rem; }
+    .fortune-link-card:hover { box-shadow: var(--shadow-md); }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="page-header__inner">
+      <a href="/" class="page-header__logo">シッポミ</a>
+      <a href="/#faqSection" class="page-header__faq-link">よくある質問</a>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <nav aria-label="パンくずリスト">
+      <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a itemprop="item" href="/"><span itemprop="name">シッポミ</span></a>
+          <meta itemprop="position" content="1">
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span itemprop="name">ペット姓名判断</span>
+          <meta itemprop="position" content="2">
+        </li>
+      </ol>
+    </nav>
+
+    <section class="fortune-hero">
+      <h1>ペットの姓名判断 &mdash; 名前の画数で運勢をチェック</h1>
+      <p>犬・猫・うさぎの名前の総画数と五行を計算。気になる名前を入れて、運勢を確かめてみましょう。名前診断とあわせて使うと、ぴったりの名前が見つかりやすくなります。</p>
+    </section>
+
+    <section class="fortune-tool" id="fortuneTool" aria-label="姓名判断ツール">
+      <h2>名前を入力して診断</h2>
+      <div class="fortune-tool__row">
+        <label for="fortuneName">名前（漢字・ひらがな）</label>
+        <input id="fortuneName" type="text" placeholder="例: むぎ / ソラ / モカ" maxlength="20">
+      </div>
+      <div class="fortune-tool__row">
+        <label for="fortuneSpecies">ペットの種類</label>
+        <select id="fortuneSpecies">
+          <option value="犬">犬</option>
+          <option value="猫">猫</option>
+          <option value="うさぎ">うさぎ</option>
+        </select>
+      </div>
+      <div class="fortune-actions">
+        <button type="button" class="btn-primary" id="fortuneBtn">姓名判断する</button>
+      </div>
+      <div class="fortune-result" id="fortuneResult" role="region" aria-live="polite">
+        <div class="fortune-result__grid">
+          <div class="fortune-result__item">
+            <div class="fortune-result__item-value" id="frStrokes">--</div>
+            <div class="fortune-result__item-label">総画数</div>
+          </div>
+          <div class="fortune-result__item">
+            <div class="fortune-result__item-value" id="frElement">--</div>
+            <div class="fortune-result__item-label">五行</div>
+          </div>
+          <div class="fortune-result__item">
+            <div class="fortune-result__item-value" id="frLuck">--</div>
+            <div class="fortune-result__item-label">運勢</div>
+          </div>
+        </div>
+        <p class="fortune-result__desc" id="frDesc"></p>
+        <div class="fortune-share" id="fortuneShareArea" style="display:none;margin-top:16px;text-align:center">
+          <p style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:8px">結果をシェアする</p>
+          <div style="display:flex;gap:12px;justify-content:center">
+            <button type="button" class="share-btn" id="fortuneShareX" aria-label="Xでシェア">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46L20 4"/></svg>
+              Xでシェア
+            </button>
+            <button type="button" class="share-btn share-btn--line" id="fortuneShareLine" aria-label="LINEでシェア">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12 2C6.477 2 2 5.97 2 10.5c0 4.53 4.477 8.5 10 8.5 1.05 0 2.062-.14 3.012-.394.38.235.8.47 1.23.664.27.124.58.228.88.276.12.02.24.02.34-.06.1-.08.12-.22.1-.36-.02-.14-.06-.28-.1-.42-.08-.28-.18-.56-.26-.84-.76-2.66 1.06-4.17 2.82-5.34C21.56 11.15 22 9.87 22 10.5 22 5.97 17.523 2 12 2zM7.5 12.5H5.5c-.28 0-.5-.22-.5-.5V8c0-.28.22-.5.5-.5s.5.22.5.5v3.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5zm3.5 0c0 .28-.22.5-.5.5s-.5-.22-.5-.5V9.7l-1.1 1.8c-.1.16-.28.26-.46.26-.18 0-.36-.1-.46-.26L7 9.7v2.8c0 .28-.22.5-.5.5s-.5-.22-.5-.5V8c0-.22.14-.42.36-.48.22-.06.44.04.54.24L8.5 10l1.6-2.24c.1-.14.26-.22.44-.22.06 0 .12.02.18.04.22.06.36.26.36.48l-.08 4.44zm3 0c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-2.2l-1.2-2c-.14-.24-.08-.54.16-.68.24-.14.54-.08.68.16l.86 1.44.86-1.44c.14-.24.44-.3.68-.16.24.14.3.44.16.68l-1.2 2v2.2zm3.5 0H16c-.28 0-.5-.22-.5-.5V8c0-.28.22-.5.5-.5s.5.22.5.5v3.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5z"/></svg>
+              LINEでシェア
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-label">SAMPLE</div>
+      <h2 class="section-heading section-heading--left">人気のペット名前の画数と運勢</h2>
+      <p class="section-lead section-lead--left">2026年のペット名前ランキング上位を、姓名判断の観点から見てみましょう。</p>
+      <div style="overflow-x:auto">
+        <table class="fortune-table">
+          <thead>
+            <tr>
+              <th>名前</th>
+              <th>種類</th>
+              <th>総画数</th>
+              <th>五行</th>
+              <th>運勢</th>
+            </tr>
+          </thead>
+          <tbody id="fortuneTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-heading section-heading--left">動物ごとの名前診断を見る</h2>
+      <p class="section-lead section-lead--left">犬種・猫種・性別・サイズ別の名前をまとめて探したい方は、それぞれのページをご覧ください。</p>
+      <div class="fortune-link-grid">
+        <a href="/dog-names" class="fortune-link-card">
+          <strong>犬の名前 人気ランキング</strong>
+          <small>犬種別・性別・サイズ別に人気TOP10と呼びやすい名前のコツ</small>
+        </a>
+        <a href="/cat-names" class="fortune-link-card">
+          <strong>猫の名前 人気ランキング</strong>
+          <small>猫種別・性別・テーマ別に人気TOP10と覚えやすい名前</small>
+        </a>
+        <a href="/rabbit-names" class="fortune-link-card">
+          <strong>うさぎの名前</strong>
+          <small>うさぎにぴったりの名前候補と名付け方のアイデア</small>
+        </a>
+        <a href="/dog-names-male" class="fortune-link-card">
+          <strong>犬の名前 オス</strong>
+          <small>男の子の犬にぴったりな名前50選</small>
+        </a>
+        <a href="/dog-names-female" class="fortune-link-card">
+          <strong>犬の名前 メス</strong>
+          <small>女の子の犬にぴったりな名前50選</small>
+        </a>
+        <a href="/dog-names-small" class="fortune-link-card">
+          <strong>小型犬の名前</strong>
+          <small>トイプードル・チワワなどに合う名前30選</small>
+        </a>
+        <a href="/cat-names-cute" class="fortune-link-card">
+          <strong>かわいい猫の名前</strong>
+          <small>性別問わず使えるかわいい名前50選</small>
+        </a>
+        <a href="/dog-names-japanese-style" class="fortune-link-card">
+          <strong>和風の名前</strong>
+          <small>和の趣がある古風で落ち着いた名前</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="section section--subtle seo-cross">
+      <div class="section-label">NAME GUIDE</div>
+      <h2 class="section-heading section-heading--left">名前をもっと知りたい方へ</h2>
+      <p class="section-lead section-lead--left">シッポミの名前診断ツールでは、雰囲気・呼びやすさ・名前に込めたい願いからおすすめを提案します。姓名判断の結果とあわせて、ぴったりの名前を見つけてください。</p>
+      <div style="text-align:center;margin-top:24px">
+        <a href="/#stepSpecies" class="btn-primary">無料で名前診断を始める</a>
+      </div>
+    </section>
+
+    <section class="section" id="faqSection" aria-labelledby="faqHeading">
+      <h2 class="section-heading" id="faqHeading">ペットの姓名判断、よくある質問</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>ペットの名前も姓名判断できるの？</summary>
+          <p>はい。シッポミでは犬・猫・うさぎなどのペットの名前の総画数や五行を計算し、大吉・吉などの運勢を表示します。人の姓名判断と同じ考え方をペット向けにアレンジしたもので、参考としてお使いください。</p>
+        </details>
+        <details class="faq-item">
+          <summary>画数はどうやって計算するの？</summary>
+          <p>名前の各文字の画数を合計して総画数を出しています。漢字の場合は一般的な画数、ひらがなの場合は簡易換算（1文字3画）で計算。結果は参考程度にお使いください。</p>
+        </details>
+        <details class="faq-item">
+          <summary>「犬の名前」「猫の名前」との違いは？</summary>
+          <p>犬の名前ページでは、種類・性別・サイズなどの条件から名前を探せます。姓名判断ページは、名前の画数や運勢を知りたい方向けです。両方を使うと、より納得できる名前が見つかります。</p>
+        </details>
+        <details class="faq-item">
+          <summary>無料で使える？登録は必要？</summary>
+          <p>はい、すべて無料です。会員登録も不要で、ブラウザを開けばすぐに姓名判断が使えます。</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <section class="related-articles" aria-labelledby="related-heading">
+    <h2 class="related-articles__heading" id="related-heading">あわせて読みたい &mdash; ペットの名前・お迎え準備ガイド</h2>
+    <div class="related-articles__grid">
+      <a href="/dog-names" class="related-articles__card">
+        <span class="related-articles__card-tag">名前</span>
+        <span class="related-articles__card-title">犬の名前ランキング 2026</span>
+        <span class="related-articles__card-desc">人気の犬の名前TOP10と呼びやすい名前の選び方のコツ</span>
+      </a>
+      <a href="/cat-names" class="related-articles__card">
+        <span class="related-articles__card-tag">名前</span>
+        <span class="related-articles__card-title">猫の名前ランキング 2026</span>
+        <span class="related-articles__card-desc">人気の猫の名前TOP10と覚えやすい名前のコツ</span>
+      </a>
+      <a href="/rabbit-names" class="related-articles__card">
+        <span class="related-articles__card-tag">名前</span>
+        <span class="related-articles__card-title">うさぎの名前ランキング</span>
+        <span class="related-articles__card-desc">うさぎにぴったりの名前候補と名付けのコツ</span>
+      </a>
+      <a href="/dog-names-mix" class="related-articles__card">
+        <span class="related-articles__card-tag">名前</span>
+        <span class="related-articles__card-title">ミックス犬の名前</span>
+        <span class="related-articles__card-desc">MIX犬に人気の名前と呼びやすい名前選びのポイント</span>
+      </a>
+      <a href="/welcome-prep" class="related-articles__card">
+        <span class="related-articles__card-tag">準備</span>
+        <span class="related-articles__card-title">お迎え準備ガイド（犬・猫）</span>
+        <span class="related-articles__card-desc">犬も猫も共通で使えるお迎え前の準備リストと手順</span>
+      </a>
+      <a href="/journal-name-ranking-2026" class="related-articles__card">
+        <span class="related-articles__card-tag">ランキング</span>
+        <span class="related-articles__card-title">【2026年最新】犬の名前ランキングTOP20</span>
+        <span class="related-articles__card-desc">今年最も選ばれた犬の名前をランキングで紹介</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <div class="page-footer__inner">
+      <div class="page-footer__brand">
+        <a href="/" class="footer-logo">
+          <div class="footer-logo-icon" aria-hidden="true">
+            <img src="/sippomi-mark.svg" alt="" class="footer-logo-mark" width="32" height="32" loading="lazy" decoding="async">
+          </div>
+          <span class="footer-logo-text">シッポミ</span>
+        </a>
+        <p class="footer-note">名前が決まる、その瞬間から。シッポミは、はじめてのペット暮らしに寄り添います。</p>
+      </div>
+      <div class="page-footer__grid">
+        <div class="page-footer__col">
+          <h3 class="page-footer__col-title">名前を探す</h3>
+          <nav aria-label="名前を探す">
+            <a href="/pet-name-fortune">ペット姓名判断</a>
+            <a href="/#stepSpecies">名前診断（無料）</a>
+            <a href="/dog-names">犬の名前ランキング</a>
+            <a href="/dog-names-male">犬の名前 オス</a>
+            <a href="/dog-names-female">犬の名前 メス</a>
+            <a href="/cat-names">猫の名前ランキング</a>
+            <a href="/rabbit-names">うさぎの名前</a>
+          </nav>
+        </div>
+        <div class="page-footer__col">
+          <h3 class="page-footer__col-title">お迎え準備</h3>
+          <nav aria-label="お迎え準備">
+            <a href="/welcome-prep">お迎え準備ガイド</a>
+            <a href="/journal-first-pet-checklist">チェックリスト</a>
+            <a href="/journal-first-pet-cost">年間費用の目安</a>
+          </nav>
+        </div>
+      </div>
+      <p class="footer-copy">&copy; 2026 シッポミ</p>
+    </div>
+  </footer>
+
+  <script>
+    // 簡易姓名判断エンジン（クライアントサイド）
+    const STROKE_TABLE = {
+      '一':1,'二':2,'三':3,'四':5,'五':4,'六':4,'七':2,'八':2,'九':2,'十':2,
+      '小':3,'大':3,'太':4,'中':4,'天':4,'日':4,'月':4,'火':4,'水':4,'木':4,
+      '金':8,'土':3,'花':7,'空':8,'海':9,'光':6,'星':9,'音':9,'風':9,'雪':11,
+      '桜':10,'桃':10,'梅':10,'菊':11,'春':9,'夏':10,'秋':9,'冬':5,
+      '心':4,'愛':13,'幸':8,'福':13,'和':8,'美':9,'晴':12,
+      '子':3,'之':3,'丸':3,'助':7,'郎':8,'菜':11,'実':8,'夢':13,'希':7,
+      '凛':14,'姫':9,'舞':13,'叶':5,'蓮':13,'葵':12,'杏':7,'楓':13,'陽':12,
+      '鈴':13,'琉':10,'斗':4,'翔':12,'悠':10,'樹':16,'虎':8
+    };
+    function calcStrokes(name) {
+      let total = 0;
+      for (const c of name) {
+        if (STROKE_TABLE[c]) total += STROKE_TABLE[c];
+        else if (/[ぁ-ん]/.test(c)) total += 3;
+        else if (/[一-龯]/.test(c)) total += 8;
+        else if (/[a-zA-Z]/.test(c)) total += 2;
+        else total += 1;
+      }
+      return total;
+    }
+    function getGogyo(s) {
+      const d = s % 10;
+      if (d <= 2) return { element: '木', keyword: '成長' };
+      if (d <= 4) return { element: '火', keyword: '情熱' };
+      if (d <= 6) return { element: '土', keyword: '安定' };
+      if (d <= 8) return { element: '金', keyword: '輝き' };
+      return { element: '水', keyword: '柔軟' };
+    }
+    function getLuck(s) {
+      if ([15,24,31,32,52,21,35,41].includes(s)) return { level: '大吉', cls: 'luck-dai' };
+      if ([5,7,11,13,17,23,25,29,33,37,39,45,47].includes(s)) return { level: '吉', cls: 'luck-ki' };
+      if ([6,8,10,12,14,16,18,20,22,26,28,30,34,36,38,40,42,44,46,48].includes(s)) return { level: '中吉', cls: 'luck-chu' };
+      if (s % 2 === 1) return { level: '小吉', cls: 'luck-sho' };
+      return { level: '凶', cls: 'luck-kyo' };
+    }
+    function getDesc(level, element) {
+      const map = {
+        '大吉': '\u3068\u3066\u3082\u3088\u3044\u904b\u52e2\u3067\u3059\u3002\u300c' + element + '\u300d\u306e\u8981\u7d20\u304c\u540d\u524d\u3068\u8abf\u548c\u3057\u3001\u30da\u30c3\u30c8\u3068\u306e\u66ae\u3089\u3057\u306b\u660e\u308b\u3044\u30a8\u30cd\u30eb\u30ae\u30fc\u3092\u3082\u305f\u3089\u3059\u3067\u3057\u3087\u3046\u3002\u5bb6\u65cf\u306e\u4e00\u54e1\u3068\u3057\u3066\u547c\u3076\u305f\u3073\u306b\u3001\u5e78\u305b\u306a\u6c17\u6301\u3061\u304c\u5e83\u304c\u308a\u307e\u3059\u3002',
+        '吉': '\u7a4f\u3084\u304b\u306a\u904b\u52e2\u3067\u3059\u3002\u300c' + element + '\u300d\u306e\u8981\u7d20\u304c\u540d\u524d\u306e\u97ff\u304d\u3068\u5408\u308f\u3055\u308a\u3001\u7a4f\u3084\u304b\u3067\u5065\u3084\u304b\u306a\u6bce\u65e5\u3092\u652f\u3048\u3066\u304f\u308c\u305d\u3046\u3067\u3059\u3002',
+        '中吉': '\u307e\u305a\u307e\u305a\u306e\u904b\u52e2\u3067\u3059\u3002\u547c\u3073\u3084\u3059\u3055\u3084\u97ff\u304d\u306e\u3088\u3055\u3092\u5927\u5207\u306b\u3059\u308c\u3070\u3001\u540d\u524d\u306e\u6301\u3064\u529b\u3092\u5341\u5206\u306b\u5f15\u304d\u51fa\u305b\u308b\u3067\u3057\u3087\u3046\u3002',
+        '小吉': '\u5c0f\u3055\u306a\u5e78\u904b\u3092\u904b\u3076\u540d\u524d\u3067\u3059\u3002\u6bce\u65e5\u547c\u3093\u3067\u3044\u304f\u3046\u3061\u306b\u3001\u611b\u7740\u3068\u3068\u3082\u306b\u904b\u6c17\u3082\u80b2\u3063\u3066\u3044\u304f\u3067\u3057\u3087\u3046\u3002',
+        '凶': '\u3042\u307e\u308a\u3088\u3044\u6570\u5b57\u306e\u7d44\u307f\u5408\u308f\u305b\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u305f\u3060\u3057\u3001\u540d\u524d\u306f\u547c\u3073\u7d9a\u3051\u308b\u3053\u3068\u3067\u610f\u5473\u304c\u80b2\u3064\u3082\u306e\u3002\u97ff\u304d\u306e\u3088\u3055\u3084\u60f3\u3044\u3092\u5927\u5207\u306b\u3057\u3066\u304f\u3060\u3055\u3044\u3002'
+      };
+      return map[level] || '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // 人気名前一覧を生成
+      const samples = [
+        {n:'\u3080\u304e',r:'\u3080\u304e',s:5,p:'\u72ac'},{n:'\u30b3\u30b3',r:'\u3053\u3053',s:8,p:'\u72ac'},
+        {n:'\u30bd\u30e9',r:'\u305d\u3089',s:8,p:'\u72ac'},{n:'\u30ec\u30aa',r:'\u308c\u304a',s:5,p:'\u72ac'},
+        {n:'\u30e2\u30ab',r:'\u3082\u304b',s:8,p:'\u732b'},{n:'\u30e9\u30c6',r:'\u3089\u3066',s:8,p:'\u732b'},
+        {n:'\u30eb\u30ca',r:'\u308b\u306a',s:5,p:'\u732b'},{n:'\u304d\u306a\u3053',r:'\u304d\u306a\u3053',s:12,p:'\u732b'},
+        {n:'\u30cf\u30af',r:'\u306f\u304f',s:7,p:'\u72ac'},{n:'\u30e2\u30e2',r:'\u3082\u3082',s:8,p:'\u3046\u3055\u304e'},
+        {n:'\u30cf\u30ca',r:'\u306f\u306a',s:7,p:'\u72ac'},{n:'\u30ea\u30af',r:'\u308a\u304f',s:11,p:'\u72ac'},
+      ];
+      const tbody = document.getElementById('fortuneTableBody');
+      samples.forEach(function(d) {
+        var g = getGogyo(d.s);
+        var l = getLuck(d.s);
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + d.n + '</td><td>' + d.p + '</td><td>' + d.s + '</td><td>' + g.element + '</td><td class="' + l.cls + '">' + l.level + '</td>';
+        tbody.appendChild(tr);
+      });
+
+      // 診断ボタン
+      document.getElementById('fortuneBtn').addEventListener('click', function() {
+        var name = document.getElementById('fortuneName').value.trim();
+        if (!name) { alert('\u540d\u524d\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044'); return; }
+        var strokes = calcStrokes(name);
+        var gogyo = getGogyo(strokes);
+        var luck = getLuck(strokes);
+        document.getElementById('frStrokes').textContent = strokes;
+        document.getElementById('frElement').textContent = gogyo.element;
+        document.getElementById('frLuck').textContent = luck.level;
+        document.getElementById('frDesc').textContent = getDesc(luck.level, gogyo.element);
+        document.getElementById('fortuneResult').classList.add('fortune-result--visible');
+
+        // Show share buttons
+        var shareArea = document.getElementById('fortuneShareArea');
+        shareArea.style.display = 'block';
+        var shareText = encodeURIComponent('\u3010\u30da\u30c3\u30c8\u59d3\u540d\u5224\u65ad\u3011' + name + '\u306e\u7dcf\u753b\u6570:' + strokes + '\u3001\u904b\u52e2:' + luck.level + ' \u30b7\u30c3\u30dd\u30df\u3067\u8a3a\u65ad');
+        var shareUrl = encodeURIComponent('https://sippomi.com/pet-name-fortune');
+        document.getElementById('fortuneShareX').onclick = function() {
+          window.open('https://twitter.com/intent/tweet?text=' + shareText + '&url=' + shareUrl, '_blank', 'width=600,height=400');
+        };
+        document.getElementById('fortuneShareLine').onclick = function() {
+          window.open('https://social-plugins.line.me/lineit/share?text=' + shareText + '&url=' + shareUrl, '_blank', 'width=600,height=500');
+        };
+      });
+
+      // Enter キーでも診断
+      document.getElementById('fortuneName').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('fortuneBtn').click();
+      });
+    });
+  </script>
+  <script type="module" src="/src/analytics.js"></script>
+</body>
+</html>

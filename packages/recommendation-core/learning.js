@@ -43,6 +43,7 @@ export function createEmptyPreferenceProfile() {
       gender: {},
       length: {},
       theme: {},
+      tone: {},
     },
   };
 }
@@ -59,6 +60,7 @@ export function applySwipeFeedback(profile, item, action) {
       gender: cloneBucket(profile.categories.gender),
       length: cloneBucket(profile.categories.length),
       theme: cloneBucket(profile.categories.theme),
+      tone: cloneBucket(profile.categories.tone),
     },
   };
 
@@ -67,6 +69,7 @@ export function applySwipeFeedback(profile, item, action) {
   addValues(next.categories.vibe, (item.vibe || []).map(canonicalVibe), delta);
   addValues(next.categories.color, (item.color || []).filter((value) => value !== 'なし'), delta);
   addValues(next.categories.theme, item.theme || [], delta * 0.9);
+  addValues(next.categories.tone, item.tone || [], delta * 0.8);
   addValues(next.categories.length, item.length ? [item.length] : [], delta * 0.7);
 
   if (item.gender && item.gender !== 'どちらでも') {
@@ -83,6 +86,7 @@ export function scorePreferenceMatch(item, profile) {
     .filter((value) => value !== 'なし')
     .map((value) => scoreValue(profile.categories.color, value));
   const themeScores = (item.theme || []).map((value) => scoreValue(profile.categories.theme, value));
+  const toneScores = (item.tone || []).map((value) => scoreValue(profile.categories.tone, value));
   const lengthScores = item.length ? [scoreValue(profile.categories.length, item.length)] : [];
   const genderScores = item.gender && item.gender !== 'どちらでも'
     ? [scoreValue(profile.categories.gender, item.gender)]
@@ -92,6 +96,7 @@ export function scorePreferenceMatch(item, profile) {
     vibeScores,
     colorScores,
     themeScores,
+    toneScores,
     lengthScores,
     genderScores,
   ].filter((group) => group.length > 0);
@@ -111,11 +116,13 @@ export function summarizePreferenceProfile(profile) {
   const length = topEntries(profile.categories.length, 1);
   const gender = topEntries(profile.categories.gender, 1);
   const theme = topEntries(profile.categories.theme, 2);
+  const tone = topEntries(profile.categories.tone, 2);
 
   const traits = [];
   if (vibe[0]) traits.push(vibe[0][0]);
   if (length[0]) traits.push(length[0][0] === '4+' ? '4文字以上' : `${length[0][0]}文字`);
   if (color[0]) traits.push(`${color[0][0]}系`);
+  if (tone[0]) traits.push(tone[0][0]);
   if (theme[0]) traits.push(theme[0][0]);
   if (gender[0]) traits.push(`${gender[0][0]}寄り`);
 
@@ -127,6 +134,7 @@ export function summarizePreferenceProfile(profile) {
   if (vibe.length) bullets.push(`雰囲気: ${vibe.map(([label]) => label).join(' / ')}`);
   if (theme.length) bullets.push(`テーマ: ${theme.map(([label]) => label).join(' / ')}`);
   if (color.length) bullets.push(`色イメージ: ${color.map(([label]) => label).join(' / ')}`);
+  if (tone.length) bullets.push(`響き: ${tone.map(([label]) => label).join(' / ')}`);
   if (length.length) bullets.push(`文字数: ${length.map(([label]) => (label === '4+' ? '4文字以上' : `${label}文字`)).join(' / ')}`);
   if (gender.length) bullets.push(`性別傾向: ${gender.map(([label]) => label).join(' / ')}`);
 

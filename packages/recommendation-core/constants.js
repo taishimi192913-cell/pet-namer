@@ -4,6 +4,9 @@ export const SPECIES_OPTIONS = [
   { value: 'うさぎ', label: 'うさぎ' },
   { value: 'ハムスター', label: 'ハムスター' },
   { value: '鳥', label: '鳥' },
+  { value: '爬虫類', label: '爬虫類' },
+  { value: '魚', label: '魚' },
+  { value: '小動物', label: '小動物' },
 ];
 
 export const VIBE_OPTIONS = [
@@ -42,6 +45,14 @@ export const THEME_OPTIONS = [
   '洋風・モダン',
 ];
 
+export const TONE_OPTIONS = [
+  'やわらかい',
+  'かたい',
+  'さわやか',
+  'あたたかい',
+  'ほのぼの',
+];
+
 export const SCORE_LABELS = [
   { min: 80, label: 'ぴったり' },
   { min: 55, label: 'よく合う' },
@@ -62,8 +73,8 @@ export const VIBE_URL_ALIASES = {
   レトロ: '和風',
 };
 
-export const SWIPE_QUEUE_DEFAULT = 24;
-export const SWIPE_REPLENISH_THRESHOLD = 6;
+export const SWIPE_QUEUE_DEFAULT = 36;
+export const SWIPE_REPLENISH_THRESHOLD = 10;
 
 export function canonicalVibe(v) {
   return VIBE_LEGACY_TO_CANONICAL[v] || v;

@@ -560,6 +560,7 @@ function runDiagnosis({ smoothScroll = true } = {}) {
 
   if (resultSection) {
     resultSection.hidden = false;
+    if (window.gtag) window.gtag('event', 'diagnosis_complete', { event_category: 'diagnosis', result_count: state.results?.total || 0 });
   }
 
   const recArea = document.getElementById('resultRecommendations');
@@ -573,6 +574,9 @@ function runDiagnosis({ smoothScroll = true } = {}) {
   if (resultShareArea) {
     resultShareArea.hidden = false;
   }
+
+  // 種別に応じた推奨カードの動的切り替え
+  updateRecommendationsForSpecies(activeFilters.species);
 
   if (smoothScroll && resultSection) {
     resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -612,6 +616,75 @@ async function handleFavoriteToggle(item) {
   }
   renderSavedFavorites();
   renderSurnameChecker();
+}
+
+// 選択した種別に応じて診断結果下の推奨カード（CTA）を動的に切り替える
+function updateRecommendationsForSpecies(speciesSet) {
+  const cards = document.querySelectorAll('.result-recommendations__cards .result-rec-card');
+  if (!cards || cards.length < 3) return;
+
+  const speciesArr = [...(speciesSet || [])];
+  let primary = speciesArr[0] || '';
+  // 「小動物」など汎用選択の場合、種別特化ページがないので空のまま汎用表示
+  if (!['犬', '猫', 'うさぎ'].includes(primary)) primary = '';
+
+  // 1枚目: 苗字相性（常に表示、変更不要）→ skip (cards[0])
+
+  // 2枚目: 人気ランキング → 種別に合わせる
+  const rankingCard = cards[1];
+  let rankingHref, rankingTitle, rankingDesc;
+  if (primary === '犬') {
+    rankingHref = '/dog-names';
+    rankingTitle = '犬の名前ランキングを見る';
+    rankingDesc = '2026年 人気の犬の名前TOP10';
+  } else if (primary === '猫') {
+    rankingHref = '/cat-names';
+    rankingTitle = '猫の名前ランキングを見る';
+    rankingDesc = '2026年 人気の猫の名前TOP10';
+  } else if (primary === 'うさぎ') {
+    rankingHref = '/rabbit-names';
+    rankingTitle = 'うさぎの名前ランキングを見る';
+    rankingDesc = 'うさぎにぴったりの名前候補';
+  } else {
+    rankingHref = '/dog-names';
+    rankingTitle = '人気ランキングを見る';
+    rankingDesc = '今年の傾向をまとめて確認';
+  }
+  if (rankingCard) {
+    rankingCard.setAttribute('href', rankingHref);
+    const strong = rankingCard.querySelector('strong');
+    if (strong) strong.textContent = rankingTitle;
+    const small = rankingCard.querySelector('small');
+    if (small) small.textContent = rankingDesc;
+  }
+
+  // 3枚目: お迎え準備 → 種別に合わせたガイド
+  const guideCard = cards[2];
+  let guideHref, guideTitle, guideDesc;
+  if (primary === '犬') {
+    guideHref = '/first-dog-guide';
+    guideTitle = '初めて犬を飼うガイドを読む';
+    guideDesc = '子犬のお迎え準備と最初の1年';
+  } else if (primary === '猫') {
+    guideHref = '/first-cat-guide';
+    guideTitle = '初めて猫を飼うガイドを読む';
+    guideDesc = '子猫のお迎え準備と最初の1年';
+  } else if (primary === 'うさぎ') {
+    guideHref = '/welcome-prep';
+    guideTitle = 'お迎え準備を確認する';
+    guideDesc = 'うさぎをお迎えする前の準備ガイド';
+  } else {
+    guideHref = '#guideHub';
+    guideTitle = 'お迎え準備を確認する';
+    guideDesc = '初日に必要なものリスト';
+  }
+  if (guideCard) {
+    guideCard.setAttribute('href', guideHref);
+    const strong = guideCard.querySelector('strong');
+    if (strong) strong.textContent = guideTitle;
+    const small = guideCard.querySelector('small');
+    if (small) small.textContent = guideDesc;
+  }
 }
 
 function renderSavedFavorites() {
@@ -1167,6 +1240,7 @@ async function bootstrap() {
   if (selectionSummary) selectionSummary.textContent = getSelectionSummary();
 
   btnDiagnose?.addEventListener('click', () => {
+    if (window.gtag) window.gtag('event', 'diagnosis_start', { event_category: 'diagnosis' });
     runDiagnosis();
   });
 
@@ -1188,8 +1262,10 @@ async function bootstrap() {
       const text = `シッポミで「${topName.name}（${topName.reading || ''}）」を見つけました🐾`;
       const url = 'https://sippomi.com/';
       if (platform === 'twitter') {
+        if (window.gtag) window.gtag('event', 'share', { event_category: 'engagement', method: 'twitter' });
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
       } else if (platform === 'line') {
+        if (window.gtag) window.gtag('event', 'share', { event_category: 'engagement', method: 'line' });
         window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
       }
     });

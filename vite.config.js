@@ -20,31 +20,9 @@ const devApiHandlers = new Map([
   ['/api/profile', profileHandler],
 ]);
 
-const cleanUrlToHtml = new Map([
-  ['/welcome-prep', '/welcome-prep.html'],
-  ['/first-dog-guide', '/first-dog-guide.html'],
-  ['/first-cat-guide', '/first-cat-guide.html'],
-  ['/starter-set', '/starter-set.html'],
-  ['/journal-first-pet-checklist', '/journal-first-pet-checklist.html'],
-  ['/journal-first-pet-cost', '/journal-first-pet-cost.html'],
-  ['/journal-pet-vaccine-schedule', '/journal-pet-vaccine-schedule.html'],
-  ['/journal-dog-walk-when', '/journal-dog-walk-when.html'],
-  ['/journal-cat-cage-necessary', '/journal-cat-cage-necessary.html'],
-  ['/journal-first-days', '/journal-first-days.html'],
-  ['/journal-home-safety', '/journal-home-safety.html'],
-  ['/journal-first-shopping', '/journal-first-shopping.html'],
-  ['/journal-dog-alone-training', '/journal-dog-alone-training.html'],
-  ['/journal-cat-toilet-fixes', '/journal-cat-toilet-fixes.html'],
-  ['/journal-pet-fast-eating', '/journal-pet-fast-eating.html'],
-  ['/journal-first-summer', '/journal-first-summer.html'],
-  ['/journal-pet-bousai', '/journal-pet-bousai.html'],
-  ['/journal-kanto-pet-outings', '/journal-kanto-pet-outings.html'],
-  ['/dog-names', '/dog-names.html'],
-  ['/cat-names', '/cat-names.html'],
-  ['/rabbit-names', '/rabbit-names.html'],
-  ['/privacy', '/privacy.html'],
-  ['/about', '/about.html'],
-]);
+const { discoverPages, generateCleanUrlMap, generateViteInputs } = await import('./scripts/discover-pages.mjs');
+const discoveredPages = discoverPages();
+const cleanUrlToHtml = new Map(Object.entries(generateCleanUrlMap(discoveredPages)));
 
 function enhanceNodeResponse(response) {
   if (typeof response.status !== 'function') {
@@ -141,32 +119,7 @@ export default defineConfig(({ mode }) => {
             if (id.includes('src/auth.js')) return 'auth';
           },
         },
-        input: {
-          index: path.resolve(__dirname, 'index.html'),
-          'welcome-prep': path.resolve(__dirname, 'welcome-prep.html'),
-          'first-dog-guide': path.resolve(__dirname, 'first-dog-guide.html'),
-          'first-cat-guide': path.resolve(__dirname, 'first-cat-guide.html'),
-          'starter-set': path.resolve(__dirname, 'starter-set.html'),
-          'journal-first-pet-checklist': path.resolve(__dirname, 'journal-first-pet-checklist.html'),
-          'journal-first-pet-cost': path.resolve(__dirname, 'journal-first-pet-cost.html'),
-          'journal-pet-vaccine-schedule': path.resolve(__dirname, 'journal-pet-vaccine-schedule.html'),
-          'journal-dog-walk-when': path.resolve(__dirname, 'journal-dog-walk-when.html'),
-          'journal-cat-cage-necessary': path.resolve(__dirname, 'journal-cat-cage-necessary.html'),
-          'journal-first-days': path.resolve(__dirname, 'journal-first-days.html'),
-          'journal-home-safety': path.resolve(__dirname, 'journal-home-safety.html'),
-          'journal-first-shopping': path.resolve(__dirname, 'journal-first-shopping.html'),
-          'journal-dog-alone-training': path.resolve(__dirname, 'journal-dog-alone-training.html'),
-          'journal-cat-toilet-fixes': path.resolve(__dirname, 'journal-cat-toilet-fixes.html'),
-          'journal-pet-fast-eating': path.resolve(__dirname, 'journal-pet-fast-eating.html'),
-          'journal-first-summer': path.resolve(__dirname, 'journal-first-summer.html'),
-          'journal-pet-bousai': path.resolve(__dirname, 'journal-pet-bousai.html'),
-          'journal-kanto-pet-outings': path.resolve(__dirname, 'journal-kanto-pet-outings.html'),
-          'dog-names': path.resolve(__dirname, 'dog-names.html'),
-          'cat-names': path.resolve(__dirname, 'cat-names.html'),
-          'rabbit-names': path.resolve(__dirname, 'rabbit-names.html'),
-          'privacy': path.resolve(__dirname, 'privacy.html'),
-          'about': path.resolve(__dirname, 'about.html'),
-        },
+        input: generateViteInputs(discoveredPages),
       },
     },
   };

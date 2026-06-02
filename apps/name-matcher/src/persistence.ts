@@ -74,7 +74,21 @@ export async function loadPersistedSession() {
     if (!raw) return null;
 
     try {
-      return JSON.parse(raw) as PersistedSession;
+      const parsed = JSON.parse(raw) as PersistedSession;
+
+      // Migration: fill missing filters fields (for sessions saved before new keys were added)
+      const defaults: FiltersState = {
+        species: [],
+        gender: ['どちらでも'],
+        color: [],
+        vibe: [],
+        length: [],
+        theme: [],
+        tone: [],
+      };
+      parsed.filters = { ...defaults, ...parsed.filters };
+
+      return parsed;
     } catch (error) {
       console.error('Failed to parse persisted session', error);
       await storage.removeItem(SESSION_KEY);

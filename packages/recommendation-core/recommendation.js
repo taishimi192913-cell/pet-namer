@@ -24,6 +24,7 @@ export function createActiveFilters(answers = {}) {
     color: new Set(normalizeSelectionArray(answers.color)),
     length: new Set(normalizeSelectionArray(answers.length)),
     theme: new Set(normalizeSelectionArray(answers.theme)),
+    tone: new Set(normalizeSelectionArray(answers.tone)),
   };
 }
 
@@ -60,6 +61,11 @@ export function matchesFilters(item, activeFilters) {
 
     if (category === 'theme') {
       if (!item.theme.some((v) => selected.has(v))) return false;
+      continue;
+    }
+
+    if (category === 'tone') {
+      if (!item.tone?.some((v) => selected.has(v))) return false;
       continue;
     }
 
@@ -125,6 +131,12 @@ export function scoreMatch(item, activeFilters) {
   if (activeFilters.theme?.size > 0) {
     activeCategories += 1;
     const matchedCount = item.theme.filter((t) => activeFilters.theme.has(t)).length;
+    parts.push(matchedCount > 0 ? 1 : 0);
+  }
+
+  if (activeFilters.tone?.size > 0) {
+    activeCategories += 1;
+    const matchedCount = item.tone?.filter((t) => activeFilters.tone.has(t)).length ?? 0;
     parts.push(matchedCount > 0 ? 1 : 0);
   }
 
@@ -203,6 +215,11 @@ function scoreInitialFit(item, filters) {
     if (item.theme.some((value) => filters.theme.has(value))) score += 0.07;
   }
 
+  if (filters.tone.size > 0) {
+    max += 0.07;
+    if (item.tone?.some((value) => filters.tone.has(value))) score += 0.07;
+  }
+
   return Math.max(0.05, Math.min(1, score / max));
 }
 
@@ -213,6 +230,7 @@ function scoreDiversityBoost(item, recentKeys = []) {
     ...(item.vibe || []).map(canonicalVibe),
     ...(item.theme || []),
     ...(item.color || []).filter((value) => value !== 'なし'),
+    ...(item.tone || []),
   ].filter((value) => !recentSet.has(value)).length;
   return Math.min(1, 0.45 + novelty * 0.12);
 }
@@ -235,6 +253,11 @@ function buildReasonParts(item, filters, preference) {
 
   if (filters.length.size > 0 && filters.length.has(item.length)) {
     parts.push(item.length === '4+' ? '4文字以上の長さ' : `${item.length}文字の短さ`);
+  }
+
+  if (filters.tone.size > 0 && item.tone?.some((value) => filters.tone.has(value))) {
+    const matched = item.tone.filter((value) => filters.tone.has(value));
+    parts.push(`${matched.join('・')}の響き`);
   }
 
   if (preference.total > 0) {

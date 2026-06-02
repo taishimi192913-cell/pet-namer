@@ -24,20 +24,6 @@ export const darkStyles = StyleSheet.create({
   safeArea: {
     backgroundColor: darkPalette.background,
   },
-  heroCard: {
-    backgroundColor: darkPalette.card,
-    borderColor: '#4B3B40',
-    shadowColor: '#1A1115',
-  },
-  heroTitle: {
-    color: darkPalette.text,
-  },
-  heroBody: {
-    color: darkPalette.muted,
-  },
-  heroBullet: {
-    color: darkPalette.text,
-  },
   formTitle: {
     color: darkPalette.text,
   },
@@ -153,6 +139,10 @@ export const darkStyles = StyleSheet.create({
     backgroundColor: darkPalette.accentSoft,
     borderColor: darkPalette.line,
   },
+  toneChip: {
+    backgroundColor: darkPalette.accentSoft,
+    borderColor: darkPalette.line,
+  },
   scorePill: {
     backgroundColor: darkPalette.chip,
     borderColor: darkPalette.line,
@@ -244,11 +234,41 @@ export const darkStyles = StyleSheet.create({
   resultRowActionPill: {
     backgroundColor: darkPalette.accentSoft,
   },
+  swipeProgressTrack: {
+    backgroundColor: darkPalette.accentSoft,
+  },
+  swipeProgressText: {
+    color: darkPalette.muted,
+  },
+  undoButton: {
+    backgroundColor: darkPalette.accentSoft,
+  },
+  undoButtonText: {
+    color: darkPalette.muted,
+  },
+  firstSwipeHintBubble: {
+    backgroundColor: '#7DB8E8',
+  },
+  quickFormTitle: {
+    color: darkPalette.text,
+  },
+  quickFormHint: {
+    color: darkPalette.muted,
+  },
+  quickFormBody: {
+    color: darkPalette.muted,
+  },
+  filterBarButton: {
+    backgroundColor: darkPalette.accentSoft,
+    borderColor: darkPalette.line,
+  },
+  filterBarButtonText: {
+    color: darkPalette.text,
+  },
 });
 
 type ViewDarkStyleKey =
   | 'safeArea'
-  | 'heroCard'
   | 'section'
   | 'chip'
   | 'secondaryButton'
@@ -262,6 +282,7 @@ type ViewDarkStyleKey =
   | 'card'
   | 'cardGhost'
   | 'metaChip'
+  | 'toneChip'
   | 'scorePill'
   | 'summaryCard'
   | 'resultRowRanked'
@@ -269,12 +290,14 @@ type ViewDarkStyleKey =
   | 'nameModalReasonCard'
   | 'preferenceChart'
   | 'nameModalTag'
-  | 'resultRowActionPill';
+  | 'resultRowActionPill'
+  | 'swipeProgressTrack'
+  | 'undoButton'
+  | 'firstSwipeHintBubble'
+  | 'quickFormBody'
+  | 'filterBarButton';
 
 type TextDarkStyleKey =
-  | 'heroTitle'
-  | 'heroBody'
-  | 'heroBullet'
   | 'formTitle'
   | 'formBody'
   | 'sectionTitle'
@@ -317,7 +340,12 @@ type TextDarkStyleKey =
   | 'preferenceChartTitle'
   | 'preferenceChartLabel'
   | 'preferenceChartTrait'
-  | 'resultRowAction';
+  | 'resultRowAction'
+  | 'swipeProgressText'
+  | 'undoButtonText'
+  | 'quickFormTitle'
+  | 'quickFormHint';
+type TextDarkStyles = Record<TextDarkStyleKey, TextStyle>;
 
 export function useThemeMode() {
   const scheme = useColorScheme();

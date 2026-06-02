@@ -360,38 +360,20 @@
 .btn-primary,
 a.btn-primary {
   width: 100%;
-  padding: 18px 28px;
+  padding: 14px 28px;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md, 12px);
   background: var(--primary);
-  color: #fff;
+  color: var(--color-card-bg, #faf9f5);
   font-weight: 600;
-  font-size: 1.02rem;
+  font-size: 1rem;
   cursor: pointer;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
   box-shadow: none;
   transition:
-    transform 0.2s var(--ease-smooth),
+    transform 0.2s var(--ease-bounce),
+    box-shadow 0.2s ease,
     background 0.18s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-primary::before,
-a.btn-primary::before,
-.decision-box__button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
-}
-
-.btn-primary:hover::before,
-a.btn-primary:hover::before,
-.decision-box__button:hover::before {
-  transform: translateX(100%);
 }
 
 a.btn-primary {
@@ -404,8 +386,9 @@ a.btn-primary {
 .btn-primary:hover:not(:disabled),
 a.btn-primary:hover,
 .decision-box__button:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   background: var(--primary-hover);
+  box-shadow: 0 8px 32px rgba(192,81,47,0.2);
 }
 
 .btn-primary:active:not(:disabled),
@@ -421,18 +404,17 @@ a.btn-secondary {
   justify-content: center;
   gap: 6px;
   padding: 13px 28px;
-  border-radius: var(--radius-pill);
-  border: 1.5px solid var(--border-strong);
-  background: var(--surface);
-  color: var(--text);
-  font-weight: 700;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid var(--color-ink-blue, #2D5A8A);
+  background: transparent;
+  color: var(--color-ink-blue, #2D5A8A);
+  font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
   transition:
-    border-color 0.2s,
+    background 0.2s,
     color 0.2s,
-    transform 0.22s var(--ease-bounce),
-    box-shadow 0.2s;
+    transform 0.22s var(--ease-bounce);
 }
 
 a.btn-secondary {
@@ -442,10 +424,9 @@ a.btn-secondary {
 
 .btn-secondary:hover,
 a.btn-secondary:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  background: var(--color-ink-blue, #2D5A8A);
+  color: var(--color-card-bg, #faf9f5);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
 }
 
 /* ======================================
@@ -500,9 +481,9 @@ a.seo-link-card:hover {
   border-color: var(--peach);
 }
 
-a.seo-link-card:nth-child(1) { background: linear-gradient(160deg, #f7f2e4 0%, #fff 62%); }
-a.seo-link-card:nth-child(2) { background: linear-gradient(160deg, #f4eede 0%, #fff 62%); }
-a.seo-link-card:nth-child(3) { background: linear-gradient(160deg, #ebe3cf 0%, #fff 62%); }
+a.seo-link-card:nth-child(1) { background: linear-gradient(160deg, var(--bg) 0%, var(--surface-card) 62%); }
+a.seo-link-card:nth-child(2) { background: linear-gradient(160deg, var(--color-bg-base) 0%, var(--surface) 62%); }
+a.seo-link-card:nth-child(3) { background: linear-gradient(160deg, var(--oat-light) 0%, var(--color-card-bg) 62%); }
 
 .seo-link-card__icon {
   font-size: 2.6rem;
@@ -792,6 +773,38 @@ a.seo-link-card:hover .seo-link-card__icon {
   border-color: rgba(0, 113, 227, 0.35);
   background: rgba(0, 113, 227, 0.1);
   color: var(--primary-hover);
+}
+
+.name-card__btn--surname-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 8px;
+  background: var(--color-soft-orange, #E8A87C);
+  color: #fafafa;
+  border: none;
+  border-radius: var(--radius-pill, 9999px);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.name-card__btn--surname-detail:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.name-card__btn--surname-detail:active {
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .name-card__btn--surname-detail {
+    transition: none;
+  }
+  .name-card__btn--surname-detail:hover {
+    transform: none;
+  }
 }
 
 .result-empty {
@@ -4251,12 +4264,12 @@ a.btn-primary,
   width: auto;
   min-width: 188px;
   padding: 12px 24px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #0a84ff 0%, #0071e3 100%);
-  color: #fff;
+  border-radius: var(--radius-md, 12px);
+  background: var(--color-terracotta, #C0512F);
+  color: var(--color-card-bg, #faf9f5);
   font-size: 1rem;
   font-weight: 500;
-  box-shadow: 0 10px 30px rgba(0, 113, 227, 0.22);
+  box-shadow: 0 10px 30px rgba(192, 81, 47, 0.22);
 }
 
 .btn-primary:hover:not(:disabled),
@@ -4809,10 +4822,73 @@ a.btn-secondary:hover,
   flex-shrink: 0;
 }
 
+.app-store-banner__features {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.app-store-banner__features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(0.8125rem, 0.75rem + 0.2vw, 0.9375rem);
+  line-height: 1.5;
+  color: var(--text-sub, #6e6e73);
+}
+
+.app-store-banner__features li svg {
+  flex-shrink: 0;
+  color: var(--color-cta, #0071e3);
+}
+
 @media (max-width: 600px) {
   .app-store-banner__card {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+/* ======================================
+   HERO TRUST SIGNALS
+   ====================================== */
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.hero-trust__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hero-trust__num {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-emphasis);
+  letter-spacing: -0.02em;
+}
+
+.hero-trust__label {
+  font-size: 0.78rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .hero-trust {
+    gap: 8px 16px;
+  }
+  .hero-trust__num {
+    font-size: 1rem;
   }
 }
 
@@ -4836,6 +4912,8 @@ a.btn-secondary:hover,
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  min-height: 120px;
+  contain: layout style;
 }
 
 .related-articles__card {
@@ -4880,6 +4958,30 @@ a.btn-secondary:hover,
   color: var(--text-sub);
   margin: 0;
   line-height: 1.55;
+}
+
+.related-articles__card--cta {
+  background: var(--bg-wave, var(--peach-light));
+  border-color: var(--primary);
+  border-style: dashed;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 160px;
+}
+
+.related-articles__card--cta::after {
+  content: '→ 今すぐ診断する';
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.related-articles__card--cta:hover {
+  background: var(--peach-light);
+  border-style: solid;
 }
 
 @media (max-width: 900px) {

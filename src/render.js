@@ -85,10 +85,15 @@ function createSurnameCheckButton(item, options = {}, variant = 'card') {
 
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = variant === 'spotlight'
-    ? 'share-btn share-btn--surname'
-    : 'name-card__btn name-card__btn--surname';
-  button.textContent = '苗字と診断';
+  if (variant === 'detail') {
+    button.className = 'name-card__btn name-card__btn--surname name-card__btn--surname-detail';
+    button.textContent = 'この名前で苗字との相性をみる';
+  } else {
+    button.className = variant === 'spotlight'
+      ? 'share-btn share-btn--surname'
+      : 'name-card__btn name-card__btn--surname';
+    button.textContent = '苗字と診断';
+  }
   button.setAttribute('aria-label', `${item.name}を苗字との相性で確認`);
   button.title = '苗字との相性を見る';
   button.addEventListener('click', () => {
@@ -627,7 +632,7 @@ function createResultDetailStrip(item, options = {}) {
   if (favoriteBtn) {
     favoriteBtn.classList.add('result-detail__fav-btn');
   }
-  const surnameBtn = createSurnameCheckButton(item, options, 'spotlight');
+  const surnameBtn = createSurnameCheckButton(item, options, 'detail');
   if (surnameBtn) {
     surnameBtn.classList.add('result-detail__surname-btn');
   }
@@ -675,8 +680,8 @@ function createResultDetailStrip(item, options = {}) {
   const actions = document.createElement('div');
   actions.className = 'result-detail__actions';
 
-  if (favoriteBtn) actions.appendChild(favoriteBtn);
   if (surnameBtn) actions.appendChild(surnameBtn);
+  if (favoriteBtn) actions.appendChild(favoriteBtn);
 
   const utility = document.createElement('div');
   utility.className = 'result-detail__utility';

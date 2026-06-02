@@ -15,6 +15,7 @@ function tagList(candidate: SwipeCandidate) {
     ...(item.vibe || []),
     ...(item.color || []).filter((value) => value !== 'なし'),
     ...(item.theme || []),
+    ...(item.tone || []),
     item.length ? `${item.length === '4+' ? '4文字以上' : `${item.length}文字`}` : null,
   ].filter(Boolean) as string[];
 }

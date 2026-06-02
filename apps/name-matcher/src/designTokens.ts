@@ -31,8 +31,18 @@ export const tokens = {
     silver:          '#B8B8B8' as const,
     bronze:          '#B87845' as const,
     modalHandle:     '#E5CDD3' as const,
-    // --- 旧 palette との互換用（既存コードとの整合） ---
+    // --- 旧 palette との互換用 ---
     softBlush:       '#F8DFE5' as const,
+    // --- 種別カラー ---
+    speciesDog:      '#E8A87C' as const,    // 犬: テラコッタオレンジ
+    speciesCat:      '#F0A1B5' as const,    // 猫: ソフトピンク
+    speciesRabbit:   '#B8DFCA' as const,    // うさぎ: ミントグリーン
+    speciesHamster:  '#F5CED8' as const,    // ハムスター: ピンク
+    speciesBird:     '#A8D8EA' as const,    // 鳥: スカイブルー
+    speciesReptile:  '#A4C639' as const,    // 爬虫類: ライム
+    speciesFish:     '#5B9BD5' as const,    // 魚: コーンフラワーブルー
+    speciesSmall:    '#E8D5C4' as const,    // 小動物: ベージュ
+
     // --- ダークモード ---
     dark: {
       background: '#2D1F24' as const,       // AGENTS.md §A.3 末尾

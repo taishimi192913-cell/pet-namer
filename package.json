@@ -6,7 +6,9 @@
   "packageManager": "npm@11.9.0",
   "scripts": {
     "prebuild": "node scripts/generate-sitemap.mjs && node scripts/build-llms.mjs",
-    "postbuild": "node scripts/prepare-clean-routes.mjs && node scripts/inject-ga4.mjs",
+    "postbuild": "node scripts/prepare-clean-routes.mjs && node scripts/inject-ga4.mjs && node scripts/seo-validate.mjs",
+    "build:sitemap": "node scripts/generate-sitemap.mjs",
+    "seo:check": "node scripts/seo-validate.mjs",
     "build:surnames": "node scripts/build-surnames.mjs",
     "dev": "vite",
     "lint": "eslint .",
@@ -29,6 +31,7 @@
     "@supabase/supabase-js": "^2.50.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/functions": "^3.4.3",
+    "sitemap": "^9.0.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {

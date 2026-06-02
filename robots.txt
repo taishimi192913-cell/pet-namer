@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://sippomi.com/sitemap.xml

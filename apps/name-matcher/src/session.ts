@@ -1,4 +1,3 @@
-import namesData from './data/names.json';
 import type { FiltersState, PetName, PreferenceProfile, SwipeCandidate, SwipeRecord } from './types';
 import {
   SWIPE_QUEUE_DEFAULT,
@@ -7,9 +6,29 @@ import {
   createEmptyPreferenceProfile,
 } from '../../../packages/recommendation-core/index.js';
 
-export const ALL_NAMES = namesData as PetName[];
-export const SWIPE_TRIGGER = 110;
-export const CARD_OUT_DISTANCE = 440;
+export const SWIPE_TRIGGER = 80;
+export const CARD_OUT_DISTANCE = 500;
+
+let allNamesCache: PetName[] | null = null;
+let allNamesPromise: Promise<PetName[]> | null = null;
+
+export async function loadAllNames() {
+  if (allNamesCache) {
+    return allNamesCache;
+  }
+
+  allNamesPromise ??= import('./data/names.json')
+    .then((module) => {
+      allNamesCache = module.default as PetName[];
+      return allNamesCache;
+    })
+    .catch((error) => {
+      allNamesPromise = null;
+      throw error;
+    });
+
+  return allNamesPromise;
+}
 
 export const DEFAULT_FILTERS: FiltersState = {
   species: [],
@@ -18,6 +37,7 @@ export const DEFAULT_FILTERS: FiltersState = {
   vibe: [],
   length: [],
   theme: [],
+  tone: [],
 };
 
 export function toggleValue(values: string[], value: string, single = false) {
@@ -30,9 +50,21 @@ export function toggleValue(values: string[], value: string, single = false) {
     : [...values, value];
 }
 
-export function createSession(filters: FiltersState) {
+export function createEmptySession(filters: FiltersState) {
+  return {
+    filters,
+    preference: createEmptyPreferenceProfile(),
+    queue: [] as SwipeCandidate[],
+    swipes: [] as SwipeRecord[],
+    saved: [] as SwipeCandidate[],
+    seenKeys: new Set<string>(),
+  };
+}
+
+export async function createSession(filters: FiltersState) {
   const preference = createEmptyPreferenceProfile();
-  const queue = buildSwipeQueue(ALL_NAMES, filters, preference, new Set(), {
+  const allNames = await loadAllNames();
+  const queue = buildSwipeQueue(allNames, filters, preference, new Set(), {
     limit: SWIPE_QUEUE_DEFAULT,
   }) as SwipeCandidate[];
 
@@ -46,7 +78,7 @@ export function createSession(filters: FiltersState) {
   };
 }
 
-export function hydrateQueue(
+export async function hydrateQueue(
   filters: FiltersState,
   preference: PreferenceProfile,
   existingQueue: SwipeCandidate[],
@@ -57,6 +89,8 @@ export function hydrateQueue(
     return existingQueue;
   }
 
+  const allNames = await loadAllNames();
+
   const recentTraits = swipes
     .slice(-5)
     .flatMap((record) => [
@@ -65,7 +99,7 @@ export function hydrateQueue(
       ...(record.candidate.item.color || []),
     ]);
 
-  const refill = buildSwipeQueue(ALL_NAMES, filters, preference, seenKeys, {
+  const refill = buildSwipeQueue(allNames, filters, preference, seenKeys, {
     limit: SWIPE_QUEUE_DEFAULT,
     recentTraits,
   }) as SwipeCandidate[];

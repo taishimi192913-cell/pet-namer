@@ -1,7 +1,10 @@
 node_modules
 dist
 output
+outputs
 .playwright-cli
+.wrangler
+ui-research
 .claude
 
 .vercel

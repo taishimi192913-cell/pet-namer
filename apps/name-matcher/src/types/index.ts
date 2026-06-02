@@ -19,6 +19,7 @@ export type PetName = {
   color: string[];
   length?: string;
   theme?: string[];
+  tone?: string[];
 };
 
 export type FiltersState = {
@@ -28,6 +29,7 @@ export type FiltersState = {
   vibe: string[];
   length: string[];
   theme: string[];
+  tone: string[];
 };
 
 export type SwipeCandidate = {
@@ -48,6 +50,16 @@ export type SwipeRecord = {
   candidate: SwipeCandidate;
 };
 
+/** Snapshot of swipes + preference before a swipe, enabling undo */
+export type UndoSnapshot = {
+  candidate: SwipeCandidate;
+  previousPreference: PreferenceProfile;
+  previousSwipesLength: number;
+};
+
 export type PreferenceProfile = ReturnType<typeof createEmptyPreferenceProfile>;
 export type SafeAreaEdge = 'top' | 'right' | 'bottom' | 'left';
 export type AnimatedCardStyle = StyleProp<ViewStyle>;
+
+/** Number of swipes before auto-navigating to Results */
+export const SWIPE_RESULTS_THRESHOLD = 40;

@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
+  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -21,7 +23,9 @@ import { ResultsScreen } from './src/screens/ResultsScreen';
 import { SwipeScreen, type SessionState } from './src/screens/SwipeScreen';
 import {
   DEFAULT_FILTERS,
+  createEmptySession,
   createSession,
+  hydrateQueue,
 } from './src/session';
 import {
   loadFavoriteCandidates,
@@ -31,7 +35,7 @@ import {
 import { styles } from './src/styles';
 import { useThemeMode } from './src/theme';
 import { canRenderNativeStack } from './src/nativeCapabilities';
-import type { RootStackParamList, SwipeCandidate } from './src/types';
+import type { FiltersState, RootStackParamList, SwipeCandidate } from './src/types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type AppRouteName = keyof RootStackParamList;
@@ -42,9 +46,10 @@ type AppNavigation = {
 
 function AppContent() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [session, setSession] = useState(() => createSession(DEFAULT_FILTERS));
+  const [session, setSession] = useState<SessionState>(() => createEmptySession(DEFAULT_FILTERS));
   const [detailCandidate, setDetailCandidate] = useState<SwipeCandidate | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isPreparingSession, setIsPreparingSession] = useState(false);
   const [hydrationError, setHydrationError] = useState<string | null>(null);
   const [hydrationAttempt, setHydrationAttempt] = useState(0);
   const [fallbackRoute, setFallbackRoute] = useState<AppRouteName>('Intro');
@@ -64,11 +69,22 @@ function AppContent() {
         if (!mounted) return;
 
         if (persisted) {
+          const seenKeys = new Set(persisted.seenKeys);
+          const queue = await hydrateQueue(
+            persisted.filters,
+            persisted.preference,
+            persisted.queue,
+            seenKeys,
+            persisted.swipes,
+          );
+
+          if (!mounted) return;
+
           setFilters(persisted.filters);
           setSession({
             filters: persisted.filters,
             preference: persisted.preference,
-            queue: persisted.queue,
+            queue,
             swipes: persisted.swipes,
             saved: [
               ...persisted.saved,
@@ -76,7 +92,7 @@ function AppContent() {
                 !persisted.saved.some((entry) => entry.key === candidate.key)
               )),
             ],
-            seenKeys: new Set(persisted.seenKeys),
+            seenKeys,
           });
         } else if (localFavorites.length) {
           setSession((current) => ({
@@ -113,6 +129,33 @@ function AppContent() {
     });
   }, [filters, isHydrated, session]);
 
+  // Rebuild queue when filters change (e.g. from SwipeScreen FilterSheet)
+  const prevFiltersRef = useRef<FiltersState>(filters);
+  useEffect(() => {
+    if (!isHydrated || session.swipes.length === 0) return;
+    const prev = prevFiltersRef.current;
+    prevFiltersRef.current = filters;
+    // Only rebuild if species or significant filters changed
+    const speciesChanged =
+      prev.species.join() !== filters.species.join();
+    const vibeChanged = prev.vibe.length !== filters.vibe.length ||
+      prev.vibe.some((v, i) => v !== filters.vibe[i]);
+    if (!speciesChanged && !vibeChanged) return;
+
+    setSession((current) => {
+      void hydrateQueue(
+        filters,
+        current.preference,
+        current.queue.slice(0, Math.min(current.queue.length, 3)),
+        current.seenKeys,
+        current.swipes,
+      ).then((queue) => {
+        setSession((prev) => ({ ...prev, queue }));
+      });
+      return current;
+    });
+  }, [filters, isHydrated, session.swipes]);
+
   const detailModal = (
     <NameDetailModal
       candidate={detailCandidate}
@@ -130,6 +173,21 @@ function AppContent() {
     );
   }
 
+  async function prepareSwipeSession(nextFilters: typeof DEFAULT_FILTERS, navigate: () => void) {
+    setIsPreparingSession(true);
+    setHydrationError(null);
+    try {
+      const nextSession = await createSession(nextFilters);
+      setSession(nextSession);
+      navigate();
+    } catch (error) {
+      console.error('Failed to prepare swipe session', error);
+      Alert.alert('名前データを読み込めませんでした', '少し時間をおいて、もう一度お試しください。');
+    } finally {
+      setIsPreparingSession(false);
+    }
+  }
+
   function FormRoute({ navigation }: { navigation: AppNavigation }) {
     return (
       <>
@@ -137,11 +195,7 @@ function AppContent() {
           filters={filters}
           onFiltersChange={setFilters}
           onBack={() => navigation.goBack()}
-          onStart={() => {
-            const nextSession = createSession(filters);
-            setSession(nextSession);
-            navigation.navigate('Swipe');
-          }}
+          onStart={() => void prepareSwipeSession(filters, () => navigation.navigate('Swipe'))}
         />
         {detailModal}
       </>
@@ -161,7 +215,7 @@ function AppContent() {
           onResume={() => navigation.navigate('Swipe')}
           onRestart={() => {
             setFilters(DEFAULT_FILTERS);
-            setSession(createSession(DEFAULT_FILTERS));
+            setSession(createEmptySession(DEFAULT_FILTERS));
             navigation.navigate('Form');
           }}
         />
@@ -206,7 +260,9 @@ function AppContent() {
           ) : (
             <>
               <ActivityIndicator color={theme.colors.iconAccent} />
-              <Text style={theme.apply(styles.loadingText, 'loadingText')}>読み込み中...</Text>
+              <Text style={theme.apply(styles.loadingText, 'loadingText')}>
+                読み込み中...
+              </Text>
             </>
           )}
         </View>
@@ -216,46 +272,68 @@ function AppContent() {
 
   if (!canRenderNativeStack()) {
     if (fallbackRoute === 'Form') return <FormRoute navigation={fallbackNavigation} />;
-    if (fallbackRoute === 'Swipe') return <SwipeScreen filters={filters} session={session} onSessionChange={setSession} detailCandidate={detailCandidate} onOpenDetails={setDetailCandidate} navigation={fallbackNavigation as unknown as { navigate: (screen: string) => void; goBack: () => void }} />;
+    if (fallbackRoute === 'Swipe') return <SwipeScreen filters={filters} onFiltersChange={setFilters} session={session} onSessionChange={setSession} detailCandidate={detailCandidate} onOpenDetails={setDetailCandidate} navigation={fallbackNavigation as unknown as { navigate: (screen: string) => void; goBack: () => void }} />;
     if (fallbackRoute === 'Results') return <ResultsRoute navigation={fallbackNavigation} />;
     return <IntroRoute navigation={fallbackNavigation} />;
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Intro"
-        screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
-      >
-        <Stack.Screen name="Intro">
-          {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Intro'>) => (
-            <IntroRoute navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }} />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Form">
-          {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Form'>) => (
-            <FormRoute navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }} />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Swipe">
-          {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Swipe'>) => (
-            <SwipeScreen
-              filters={filters}
-              session={session}
-              onSessionChange={setSession}
-              detailCandidate={detailCandidate}
-              onOpenDetails={setDetailCandidate}
-              navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }}
-            />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Results">
-          {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Results'>) => (
-            <ResultsRoute navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }} />
-          )}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Intro"
+          screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
+        >
+          <Stack.Screen name="Intro" options={{ animation: 'fade' }}>
+            {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Intro'>) => (
+              <IntroRoute navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }} />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Form" options={{
+            animation: 'slide_from_right',
+            animationDuration: 280,
+          }}>
+            {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Form'>) => (
+              <FormRoute navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }} />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Swipe" options={{
+            animation: 'fade_from_bottom',
+            animationDuration: 350,
+          }}>
+            {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Swipe'>) => (
+              <SwipeScreen
+                filters={filters}
+                onFiltersChange={setFilters}
+                session={session}
+                onSessionChange={setSession}
+                detailCandidate={detailCandidate}
+                onOpenDetails={setDetailCandidate}
+                navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Results" options={{
+            animation: 'slide_from_bottom',
+            animationDuration: 350,
+          }}>
+            {({ navigation }: NativeStackScreenProps<RootStackParamList, 'Results'>) => (
+              <ResultsRoute navigation={{ navigate: navigation.navigate, goBack: navigation.goBack }} />
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+      {isPreparingSession && (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: '#2D1F24', borderRadius: 16, padding: 24, alignItems: 'center' }}>
+              <ActivityIndicator color="#F0A1B5" size="large" />
+              <Text style={{ color: '#F5EDF0', marginTop: 12, fontSize: 14 }}>名前データを準備中...</Text>
+            </View>
+          </View>
+        </View>
+      )}
+    </View>
   );
 }
 

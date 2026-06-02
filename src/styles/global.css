@@ -9,95 +9,109 @@
 }
 
 /* ======================================
-   DESIGN TOKENS — Apple Japan × MUJI Hybrid
+   DESIGN TOKENS — Warm Japanese Pet Editorial (Kami × Clay × Warm Editorial)
    HSL palette. No hex hardcodes.
+   Apple×MUJI → Warm Japanese Pet Editorial に移行
 ====================================== */
 :root {
   /* ── Core palette ── */
-  --color-bg-base: hsl(42 46% 94%);          /* #f4eede MUJI 生成り */
-  --color-text-primary: hsl(240 2% 12%);      /* #1d1d1f */
-  --color-text-secondary: hsl(240 2% 45%);    /* #6e6e73 */
-  --color-cta: hsl(211 100% 45%);             /* #0071e3 */
-  --color-accent-1: hsl(29 84% 70%);          /* #F9A66C */
-  --color-accent-2: hsl(14 66% 62%);          /* #E07A5F */
-  --color-text-emphasis: hsl(10 15% 18%);     /* #3D2C2A */
-  --color-card-bg: hsl(34 100% 96%);          /* #FFF8F0 */
+  --color-bg-base: #f5f4ed;               /* warm parchment */
+  --color-text-primary: #1C1A17;           /* near-black, warm */
+  --color-text-secondary: #3D3D3A;         /* dark warm */
+  --color-cta: #C0512F;                    /* terracotta — Apple Blue から変更 */
+  --color-accent-1: #84C7A0;               /* Matcha */
+  --color-accent-2: #2D5A8A;               /* Ink Blue */
+  --color-text-emphasis: #3D7A6E;          /* forest */
+  --color-card-bg: #faf9f5;                /* ivory */
+
+  /* ── New named colors ── */
+  --color-terracotta: #C0512F;
+  --color-ink-blue: #2D5A8A;
+  --color-forest: #3D7A6E;
+  --color-matcha: #84C7A0;
+  --color-momo: #F5A0A0;
+  --color-lemon: #F0D060;
+  --color-ube: #B8A0D8;
+  --color-kinako: #D4B888;
+  --oat-border: #dad4c8;
+  --oat-light: #e8e3d8;
 
   /* ── Aliases for existing code compatibility ── */
   --bg: var(--color-bg-base);
   --bg-wave: var(--color-bg-base);
-  --surface: hsl(34 100% 98%);
+  --surface: var(--color-card-bg);
   --surface-sub: var(--color-bg-base);
   --surface-card: var(--color-card-bg);
   --kinari: var(--color-bg-base);
-  --beige: hsl(40 30% 78%);
-  --sand: hsl(40 30% 78%);
+  --beige: var(--oat-border);
+  --sand: var(--oat-border);
   --teal: var(--color-text-secondary);
   --teal-light: var(--color-card-bg);
   --teal-dark: var(--color-text-primary);
-  --peach: var(--color-accent-1);
-  --peach-light: hsl(29 84% 92%);
-  --gold: hsl(40 30% 78%);
-  --gold-light: hsl(40 30% 92%);
-  --rose: var(--color-accent-2);
-  --rose-light: hsl(14 66% 90%);
-  --lilac: var(--color-text-secondary);
-  --lilac-light: hsl(240 2% 92%);
-  --primary: var(--color-cta);
-  --primary-hover: hsl(211 100% 50%);
-  --primary-light: hsl(211 100% 92%);
-  --primary-glow: hsl(211 100% 45% / 0.18);
-  --brand-red: hsl(350 80% 25%);
-  --accent: var(--color-cta);
-  --accent-light: hsl(211 100% 96%);
-  --accent-hover: hsl(211 100% 35%);
+  --peach: var(--color-terracotta);
+  --peach-light: hsl(12 80% 92%);
+  --gold: var(--color-lemon);
+  --gold-light: hsl(44 80% 92%);
+  --rose: var(--color-momo);
+  --rose-light: hsl(0 80% 92%);
+  --lilac: var(--color-ube);
+  --lilac-light: hsl(270 40% 92%);
+  --primary: var(--color-terracotta);
+  --primary-hover: hsl(12 70% 45%);
+  --primary-light: hsl(12 80% 92%);
+  --primary-glow: hsl(12 70% 45% / 0.18);
+  --brand-red: var(--color-terracotta);
+  --accent: var(--color-ink-blue);
+  --accent-light: hsl(215 55% 92%);
+  --accent-hover: hsl(215 55% 35%);
   --text: var(--color-text-primary);
   --text-sub: var(--color-text-secondary);
-  --text-muted: hsl(240 2% 60%);
-  --border: hsl(240 2% 88%);
-  --border-strong: hsl(240 2% 78%);
-  --color-soft-orange: var(--color-accent-1);
-  --color-terracotta: var(--color-accent-2);
-  --color-warm-brown: var(--color-text-emphasis);
+  --text-muted: #6B6A64;
+  --border: var(--oat-border);
+  --border-strong: var(--oat-light);
+  --color-soft-orange: var(--color-terracotta);
+  --color-terracotta: var(--color-terracotta);
+  --color-warm-brown: var(--color-text-primary);
   --color-cream-white: var(--color-card-bg);
-  --color-warm-bg: hsl(42 46% 96%);
+  --color-warm-bg: var(--color-bg-base);
   --color-glass-border: hsl(0 0% 100% / 0.4);
   --color-glass-bg: hsl(0 0% 100% / 0.7);
 
-  /* ── Radii ── */
-  --radius-xs: 8px;
-  --radius-sm: 16px;
-  --radius-md: 24px;
-  --radius-lg: 28px;
-  --radius-xl: 36px;
+  /* ── Radii (Warm Editorial scale) ── */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-xxl: 40px;
   --radius-pill: 999px;
-  --radius-card: 20px;
-  --radius-large: 28px;
+  --radius-card: var(--radius-lg);
+  --radius-large: var(--radius-xl);
 
-  /* ── Shadows (warm tint, never #000) ── */
-  --shadow-soft: 0 2px 12px hsl(10 15% 18% / 0.06);
-  --shadow-sm: 0 6px 18px hsl(10 15% 18% / 0.05);
-  --shadow-md: 0 10px 30px hsl(10 15% 18% / 0.06);
-  --shadow-lg: 0 20px 50px hsl(10 15% 18% / 0.08);
-  --shadow-xl: 0 28px 72px hsl(10 15% 18% / 0.12);
-  --shadow-glow: 0 8px 32px var(--primary-glow);
-  --shadow-card: var(--shadow-md);
+  /* ── Shadows (Kami whisper shadow, warm tint) ── */
+  --shadow-soft: 0 4px 24px rgba(0,0,0,0.05);
+  --shadow-sm: 0 4px 24px rgba(0,0,0,0.05);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-xl: 0 12px 40px rgba(0,0,0,0.10);
+  --shadow-glow: 0 8px 32px rgba(192,81,47,0.18);  /* terracotta glow */
+  --shadow-card: var(--shadow-soft);
 
   /* ── Type scale (clamp-based, 5 tiers) ── */
-  --text-hero: clamp(3rem, 8vw, 5rem);
-  --text-section: clamp(1.8rem, 4vw, 3rem);
+  --text-hero: clamp(3rem, 8vw, 6rem);
+  --text-section: clamp(1.8rem, 4vw, 2.5rem);
   --text-card-title: 1.25rem;
   --text-body: 1.0625rem;
-  --text-small: 0.875rem;
+  --text-small: 0.8125rem;
 
-  /* ── Gradients ── */
-  --gradient-warm: linear-gradient(135deg, hsl(42 46% 94%) 0%, hsl(40 30% 88% / 0.27) 50%, var(--color-card-bg) 100%);
-  --gradient-cool: linear-gradient(135deg, hsl(211 100% 45% / 0.13) 0%, transparent 60%);
-  --gradient-aurora-1: hsl(350 80% 70% / 0.07);
-  --gradient-aurora-2: hsl(211 100% 65% / 0.07);
-  --gradient-aurora-3: hsl(150 60% 60% / 0.07);
-  --gradient-aurora-4: hsl(29 84% 70% / 0.07);
-  --decor-dot: hsl(40 30% 78% / 0.09);
+  /* ── Gradients (minimal) ── */
+  --gradient-fortune: linear-gradient(135deg, rgba(184,160,216,0.15), transparent 70%);
+  --gradient-cool: linear-gradient(135deg, rgba(45,90,138,0.10) 0%, transparent 60%);
+  --gradient-aurora-1: rgba(132,199,160,0.07);
+  --gradient-aurora-2: rgba(45,90,138,0.07);
+  --gradient-aurora-3: rgba(61,122,110,0.07);
+  --gradient-aurora-4: rgba(192,81,47,0.07);
+  --decor-dot: rgba(218,212,200,0.15);
 
   /* ── Transitions ── */
   --transition-hover: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -107,9 +121,9 @@
   --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
 
   /* ── Fonts ── */
+  --font-display: "YuMincho", "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif CJK JP", Georgia, "Times New Roman", serif;
   --font-body: -apple-system, BlinkMacSystemFont, "SF Pro JP", "SF Pro Text", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
   --font-accent: -apple-system, BlinkMacSystemFont, "SF Pro JP", "SF Pro Text", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro JP", "SF Pro Display", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
   --font-num: -apple-system, BlinkMacSystemFont, "SF Pro Text", Meiryo, sans-serif;
 
   /* ── Design asset paths ── */
@@ -138,43 +152,43 @@
     --teal: hsl(240 2% 65%);
     --teal-light: hsl(42 8% 16%);
     --teal-dark: hsl(240 2% 90%);
-    --peach: hsl(29 40% 45%);
+    --peach: hsl(12 40% 45%);
     --peach-light: hsl(42 8% 16%);
-    --gold: hsl(42 14% 32%);
+    --gold: hsl(44 14% 32%);
     --gold-light: hsl(42 8% 16%);
-    --rose: hsl(14 35% 55%);
-    --rose-light: hsl(14 35% 18%);
-    --lilac: hsl(240 2% 65%);
+    --rose: hsl(0 35% 55%);
+    --rose-light: hsl(0 35% 18%);
+    --lilac: hsl(270 25% 65%);
     --lilac-light: hsl(42 8% 16%);
-    --primary: hsl(211 100% 60%);
-    --primary-hover: hsl(211 100% 65%);
-    --primary-light: hsl(211 100% 18%);
-    --primary-glow: hsl(211 100% 60% / 0.22);
-    --brand-red: hsl(350 40% 60%);
-    --accent: hsl(211 100% 60%);
+    --primary: hsl(12 70% 55%);
+    --primary-hover: hsl(12 70% 60%);
+    --primary-light: hsl(12 80% 18%);
+    --primary-glow: hsl(12 70% 55% / 0.22);
+    --brand-red: hsl(12 40% 60%);
+    --accent: hsl(215 55% 60%);
     --accent-light: hsl(42 8% 16%);
-    --accent-hover: hsl(211 100% 70%);
+    --accent-hover: hsl(215 55% 70%);
     --text: hsl(240 2% 90%);
     --text-sub: hsl(240 2% 65%);
     --text-muted: hsl(240 2% 48%);
     --border: hsl(42 8% 22%);
     --border-strong: hsl(42 8% 32%);
-    --shadow-soft: 0 2px 12px hsl(0 0% 0% / 0.18);
-    --shadow-sm: 0 6px 18px hsl(0 0% 0% / 0.18);
-    --shadow-md: 0 10px 30px hsl(0 0% 0% / 0.24);
-    --shadow-lg: 0 20px 50px hsl(0 0% 0% / 0.30);
-    --shadow-xl: 0 28px 72px hsl(0 0% 0% / 0.36);
-    --shadow-card: var(--shadow-md);
-    --color-soft-orange: hsl(29 40% 50%);
-    --color-terracotta: hsl(14 35% 55%);
+    --shadow-soft: 0 4px 24px rgba(0,0,0,0.18);
+    --shadow-sm: 0 4px 24px rgba(0,0,0,0.18);
+    --shadow-md: 0 8px 32px rgba(0,0,0,0.24);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.24);
+    --shadow-xl: 0 12px 40px rgba(0,0,0,0.30);
+    --shadow-card: var(--shadow-soft);
+    --color-soft-orange: hsl(12 40% 50%);
+    --color-terracotta: hsl(12 40% 50%);
     --color-warm-brown: hsl(240 2% 90%);
     --color-cream-white: hsl(42 8% 16%);
     --color-warm-bg: hsl(42 8% 11%);
     --color-glass-border: hsl(0 0% 100% / 0.08);
     --color-glass-bg: hsl(42 8% 16% / 0.85);
-    --gradient-warm: linear-gradient(135deg, hsl(42 8% 11%) 0%, hsl(42 12% 30% / 0.27) 50%, hsl(42 8% 16%) 100%);
-    --gradient-cool: linear-gradient(135deg, hsl(211 100% 60% / 0.13) 0%, transparent 60%);
-    --decor-dot: hsl(42 12% 30% / 0.09);
+    --gradient-fortune: linear-gradient(135deg, rgba(184,160,216,0.10), transparent 60%);
+    --gradient-cool: linear-gradient(135deg, rgba(45,90,138,0.13) 0%, transparent 60%);
+    --decor-dot: rgba(218,212,200,0.06);
   }
 
   body {

@@ -5,3 +5,36 @@ dist
 coverage
 docs
 apps
+archive
+output
+outputs
+ui-research
+.playwright-cli
+
+# Build outputs & test artifacts
+output
+outputs
+ui-research
+.playwright-cli
+
+# Agent/local scripts (not needed for build)
+progress.txt
+tasks.json
+codex_audit_prompt.md
+
+# CI/CD workflows
+.github
+
+# Local packages (not published, not needed)
+packages
+tests
+
+# Temp & log files
+*.log
+.DS_Store
+.!*
+
+# Dev rules & configs
+rules
+AGENTS.md
+.cursorrules
