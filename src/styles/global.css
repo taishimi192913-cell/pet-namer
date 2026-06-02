@@ -890,3 +890,6 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+/* DIAG-1748860128-UNIQUE-MARKER */
+.diag-test-rule-8860128 { color: rgb(255, 0, 128); background: #FF0080; }

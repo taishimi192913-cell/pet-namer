@@ -19,6 +19,7 @@ export function ScreenSafeArea({
   const theme = useThemeMode();
   const useNativeSafeArea = edges.includes('top') || edges.includes('bottom');
   const containerStyle = [
+    { flex: 1 },
     style,
     theme.isDark ? { backgroundColor: '#1E1A22' } : null,
   ];
