@@ -359,7 +359,7 @@ button {
   height: 4px;
   border-radius: 50%;
   opacity: 0.3;
-  background: radial-gradient(circle, var(--particle-color, #0071e3) 0%, transparent 72%);
+  background: radial-gradient(circle, var(--particle-color, var(--primary)) 0%, transparent 72%);
   animation: cursorParticleFade 800ms ease-out forwards;
 }
 
