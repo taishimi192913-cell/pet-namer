@@ -12,13 +12,12 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 32,
     paddingTop: 60,
+    paddingBottom: 40,
+    justifyContent: 'space-between',
+    flexDirection: 'column',
   },
   welcomeBrandArea: {
     alignItems: 'center',
-    position: 'absolute',
-    left: 32,
-    right: 32,
-    top: '40%',
   },
   welcomeLogoRow: {
     marginBottom: 20,
@@ -45,10 +44,6 @@ export const styles = StyleSheet.create({
     fontWeight: '400',
   },
   welcomeActions: {
-    position: 'absolute',
-    bottom: 40,
-    left: 32,
-    right: 32,
     alignItems: 'center',
   },
   welcomeCta: {

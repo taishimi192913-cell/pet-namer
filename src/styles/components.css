@@ -1,501 +1,506 @@
-     1|/* ======================================
-     2|   DETAILS ANIMATION
-     3|   ====================================== */
-     4|.diagnosis-extra-panel,
-     5|.result-method-panel,
-     6|.guide-hub-group,
-     7|.faq-item {
-     8|  &[open] {
-     9|    animation: detailsSlideDown 0.35s var(--ease-out);
-    10|  }
-    11|}
-    12|
-    13|@keyframes detailsSlideDown {
-    14|  from {
-    15|    opacity: 0.6;
-    16|    transform: translateY(-6px);
-    17|  }
-    18|  to {
-    19|    opacity: 1;
-    20|    transform: translateY(0);
-    21|  }
-    22|}
-    23|
-    24|@media (prefers-reduced-motion: reduce) {
-    25|  .diagnosis-extra-panel[open],
-    26|  .result-method-panel[open],
-    27|  .guide-hub-group[open],
-    28|  .faq-item[open] {
-    29|    animation: none;
-    30|  }
-    31|}
-    32|
-    33|/* ======================================
-    34|   SKELETON LOADING
-    35|   ====================================== */
-    36|.skeleton {
-    37|  background: linear-gradient(
-    38|    90deg,
-    39|    var(--border) 25%,
-    40|    var(--peach-light) 50%,
-    41|    var(--border) 75%
-    42|  );
-    43|  background-size: 200% 100%;
-    44|  animation: skeletonShimmer 1.5s ease-in-out infinite;
-    45|  border-radius: var(--radius-md);
-    46|}
-    47|
-    48|.skeleton--text {
-    49|  height: 1em;
-    50|  width: 100%;
-    51|  margin-bottom: 8px;
-    52|}
-    53|
-    54|.skeleton--heading {
-    55|  height: 1.8em;
-    56|  width: 60%;
-    57|  margin-bottom: 12px;
-    58|}
-    59|
-    60|.skeleton--card {
-    61|  height: 120px;
-    62|  width: 100%;
-    63|  margin-bottom: 16px;
-    64|}
-    65|
-    66|.skeleton--badge {
-    67|  height: 48px;
-    68|  width: 80px;
-    69|  border-radius: var(--radius-pill);
-    70|}
-    71|
-    72|.skeleton--chip {
-    73|  height: 38px;
-    74|  width: 70px;
-    75|  border-radius: var(--radius-pill);
-    76|  display: inline-block;
-    77|  margin-right: 8px;
-    78|}
-    79|
-    80|@keyframes skeletonShimmer {
-    81|  0% { background-position: -200% center; }
-    82|  100% { background-position: 200% center; }
-    83|}
-    84|
-    85|@media (prefers-reduced-motion: reduce) {
-    86|  .skeleton {
-    87|    animation: none;
-    88|    background: var(--border);
-    89|  }
-    90|}
-    91|
-    92|/* ======================================
-    93|   RESULT RECOMMENDATIONS
-    94|   ====================================== */
-    95|.result-recommendations {
-    96|  margin-top: 24px;
-    97|  padding: 0;
-    98|}
-    99|
-   100|.result-recommendations__inner {
-   101|  background: var(--surface);
-   102|  border-radius: var(--radius-xl);
-   103|  padding: 24px;
-   104|  border: 1.5px solid var(--border);
-   105|}
-   106|
-   107|.result-recommendations__label {
-   108|  font-size: var(--text-small);
-   109|  font-weight: 700;
-   110|  color: var(--text-sub);
-   111|  text-transform: uppercase;
-   112|  letter-spacing: 0.08em;
-   113|  margin-bottom: 16px;
-   114|}
-   115|
-   116|.result-recommendations__cards {
-   117|  display: grid;
-   118|  grid-template-columns: repeat(3, 1fr);
-   119|  gap: 12px;
-   120|}
-   121|
-   122|.result-rec-card {
-   123|  display: flex;
-   124|  flex-direction: column;
-   125|  gap: 6px;
-   126|  padding: 20px;
-   127|  border-radius: var(--radius-md);
-   128|  background: var(--color-card-bg);
-   129|  text-decoration: none;
-   130|  transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s;
-   131|}
-   132|
-   133|.result-rec-card:hover {
-   134|  transform: translateY(-3px);
-   135|  box-shadow: var(--shadow-md);
-   136|}
-   137|
-   138|.result-rec-card__icon {
-   139|  width: 40px;
-   140|  height: 40px;
-   141|  display: flex;
-   142|  align-items: center;
-   143|  justify-content: center;
-   144|  border-radius: var(--radius-sm);
-   145|  background: var(--primary-light);
-   146|  color: var(--primary);
-   147|  margin-bottom: 4px;
-   148|}
-   149|
-   150|.result-rec-card strong {
-   151|  font-size: 0.95rem;
-   152|  font-weight: 700;
-   153|  color: var(--text);
-   154|}
-   155|
-   156|.result-rec-card small {
-   157|  font-size: 0.8rem;
-   158|  color: var(--text-sub);
-   159|  line-height: 1.4;
-   160|}
-   161|
-   162|@media (max-width: 640px) {
-   163|  .result-recommendations__cards {
-   164|    grid-template-columns: 1fr;
-   165|  }
-   166|}
-   167|
-   168|@media (min-width: 641px) and (max-width: 900px) {
-   169|  .result-recommendations__cards {
-   170|    grid-template-columns: repeat(2, 1fr);
-   171|  }
-   172|}
-   173|
-   174|@media (prefers-reduced-motion: reduce) {
-   175|  .result-rec-card:hover {
-   176|    transform: none;
-   177|  }
-   178|}
-   179|
-   180|/* ======================================
-   181|    PANELS (solid surfaces) - existing
-   182|   ====================================== */
-   183|.intro-panel,
-   184|.auth-panel,
-   185|.seo-links-panel,
-   186|.seo-copy-panel,
-   187|.diagnosis-panel,
-   188|.faq-panel,
-   189|.result-panel {
-   190|  padding: 32px;
-   191|  border-radius: var(--radius-xl);
-   192|  background: var(--surface);
-   193|  border: 1.5px solid var(--border);
-   194|  box-shadow: var(--shadow-sm);
-   195|  transition: box-shadow 0.3s ease;
-   196|}
-   197|
-   198|.diagnosis-panel {
-   199|  background: linear-gradient(140deg, var(--surface) 0%, var(--peach-light) 120%);
-   200|}
-   201|
-   202|#diagnosisPanel {
-   203|  scroll-margin-top: 88px;
-   204|}
-   205|
-   206|/* ======================================
-   207|   SPECIES CARDS — petmi.jp カテゴリグリッド
-   208|====================================== */
-   209|.species-grid {
-   210|  display: grid;
-   211|  grid-template-columns: repeat(5, 1fr);
-   212|  gap: 14px;
-   213|  margin-top: 4px;
-   214|}
-   215|
-   216|.species-card {
-   217|  position: relative;
-   218|  padding: 22px 12px;
-   219|  border-radius: var(--radius-lg);
-   220|  border: 2px solid var(--border);
-   221|  background: var(--surface);
-   222|  text-align: center;
-   223|  cursor: pointer;
-   224|  transition:
-   225|    border-color 0.22s var(--ease-bounce),
-   226|    transform 0.22s var(--ease-bounce),
-   227|    box-shadow 0.22s;
-   228|  user-select: none;
-   229|  overflow: hidden;
-   230|}
-   231|
-   232|.species-card::before {
-   233|  content: '';
-   234|  position: absolute;
-   235|  inset: 0;
-   236|  background: linear-gradient(160deg, var(--peach-light) 0%, transparent 60%);
-   237|  opacity: 0;
-   238|  transition: opacity 0.25s;
-   239|  border-radius: inherit;
-   240|}
-   241|
-   242|.species-card:hover {
-   243|  border-color: var(--peach);
-   244|  transform: translateY(-4px) scale(1.02);
-   245|  box-shadow: var(--shadow-md);
-   246|}
-   247|
-   248|.species-card:hover::before {
-   249|  opacity: 1;
-   250|}
-   251|
-   252|.species-card.is-active {
-   253|  border-color: var(--primary);
-   254|  background: var(--peach-light);
-   255|  box-shadow: 0 0 0 3px var(--primary-light), var(--shadow-md);
-   256|  transform: translateY(-4px) scale(1.02);
-   257|}
-   258|
-   259|.species-card.is-active::before {
-   260|  opacity: 1;
-   261|}
-   262|
-   263|.species-card__icon {
-   264|  font-size: 2.4rem;
-   265|  display: block;
-   266|  margin-bottom: 10px;
-   267|  position: relative;
-   268|  z-index: 1;
-   269|  transition: transform 0.25s var(--ease-bounce);
-   270|  line-height: 1;
-   271|}
-   272|
-   273|.species-card:hover .species-card__icon,
-   274|.species-card.is-active .species-card__icon {
-   275|  transform: scale(1.15) rotate(-5deg);
-   276|}
-   277|
-   278|.species-card__label {
-   279|  font-weight: 800;
-   280|  font-size: 0.875rem;
-   281|  color: var(--text);
-   282|  position: relative;
-   283|  z-index: 1;
-   284|}
-   285|
-   286|.species-card.is-active .species-card__label {
-   287|  color: var(--primary-hover);
-   288|}
-   289|
-   290|/* ── チェックマーク (is-active 時) ── */
-   291|.species-card.is-active::after {
-   292|  content: '';
-   293|  position: absolute;
-   294|  top: 8px;
-   295|  right: 10px;
-   296|  font-size: 0.75rem;
-   297|  font-weight: 800;
-   298|  color: var(--primary);
-   299|  background: var(--surface);
-   300|  width: 20px;
-   301|  height: 20px;
-   302|  border-radius: 50%;
-   303|  display: flex;
-   304|  align-items: center;
-   305|  justify-content: center;
-   306|  box-shadow: var(--shadow-sm);
-   307|  line-height: 20px;
-   308|}
-   309|
-   310|/* ======================================
-   311|   CHIPS
-   312|====================================== */
-   313|.chips {
-   314|  display: flex;
-   315|  flex-wrap: wrap;
-   316|  gap: 10px;
-   317|}
-   318|
-   319|.chip {
-   320|  padding: 9px 20px;
-   321|  border-radius: var(--radius-pill);
-   322|  border: 1.5px solid var(--border);
-   323|  background: var(--surface);
-   324|  color: var(--text);
-   325|  font-weight: 700;
-   326|  font-size: 0.875rem;
-   327|  cursor: pointer;
-   328|  user-select: none;
-   329|  transition: all 0.22s var(--ease-bounce);
-   330|  white-space: nowrap;
-   331|}
-   332|
-   333|.chip:hover:not(.active):not(.is-active) {
-   334|  border-color: var(--peach);
-   335|  background: var(--peach-light);
-   336|  color: var(--primary);
-   337|  transform: translateY(-2px);
-   338|  box-shadow: var(--shadow-sm);
-   339|}
-   340|
-   341|.chip.active,
-   342|.chip.is-active {
-   343|  background: var(--primary);
-   344|  border-color: var(--primary);
-   345|  color: #fff;
-   346|  transform: translateY(-2px);
-   347|  box-shadow: 0 4px 14px var(--primary-glow);
-   348|}
-   349|
-   350|/* ── カラーチップに色ドット ── */
-   351|.chip[data-color] {
-   352|  padding-left: 14px;
-   353|}
-   354|
-   355|/* ======================================
-   356|   BUTTONS
-   357|====================================== */
-   358|/* Primary */
-   359|.decision-box__button,
-   360|.btn-primary,
-   361|a.btn-primary {
-   362|  width: 100%;
-   363|  padding: 14px 28px;
-   364|  border: none;
-   365|  border-radius: var(--radius-md, 12px);
-   366|  background: var(--primary);
-   367|  color: var(--color-card-bg, #faf9f5);
-   368|  font-weight: 600;
-   369|  font-size: 1rem;
-   370|  cursor: pointer;
-   371|  letter-spacing: 0.02em;
-   372|  box-shadow: none;
-   373|  transition:
-   374|    transform 0.2s var(--ease-bounce),
-   375|    box-shadow 0.2s ease,
-   376|    background 0.18s ease;
-   377|}
-   378|
-   379|a.btn-primary {
-   380|  display: inline-block;
-   381|  text-align: center;
-   382|  text-decoration: none;
-   383|  box-sizing: border-box;
-   384|}
-   385|
-   386|.btn-primary:hover:not(:disabled),
-   387|a.btn-primary:hover,
-   388|.decision-box__button:hover:not(:disabled) {
-   389|  transform: translateY(-2px);
-   390|  background: var(--primary-hover);
-   391|  box-shadow: 0 8px 32px rgba(192,81,47,0.2);
-   392|}
-   393|
-   394|.btn-primary:active:not(:disabled),
-   395|.decision-box__button:active:not(:disabled) {
-   396|  transform: scale(0.98) translateY(0);
-   397|}
-   398|
-   399|/* Secondary */
-   400|.btn-secondary,
-   401|a.btn-secondary {
-   402|  display: inline-flex;
-   403|  align-items: center;
-   404|  justify-content: center;
-   405|  gap: 6px;
-   406|  padding: 13px 28px;
-   407|  border-radius: var(--radius-md, 12px);
-   408|  border: 1.5px solid var(--color-ink-blue, #2D5A8A);
-   409|  background: transparent;
-   410|  color: var(--color-ink-blue, #2D5A8A);
-   411|  font-weight: 600;
-   412|  font-size: 0.95rem;
-   413|  cursor: pointer;
-   414|  transition:
-   415|    background 0.2s,
-   416|    color 0.2s,
-   417|    transform 0.22s var(--ease-bounce);
-   418|}
-   419|
-   420|a.btn-secondary {
-   421|  text-decoration: none;
-   422|  box-sizing: border-box;
-   423|}
-   424|
-   425|.btn-secondary:hover,
-   426|a.btn-secondary:hover {
-   427|  background: var(--color-ink-blue, #2D5A8A);
-   428|  color: var(--color-card-bg, #faf9f5);
-   429|  transform: translateY(-2px);
-   430|}
-   431|
-   432|/* ======================================
-   433|   DECISION BOX
-   434|====================================== */
-   435|.decision-box {
-   436|  margin-top: 28px;
-   437|  padding-top: 24px;
-   438|  border-top: 1px dashed var(--border-strong);
-   439|  display: grid;
-   440|  gap: 14px;
-   441|}
-   442|
-   443|.decision-box__summary {
-   444|  margin: 0;
-   445|  color: var(--text-sub);
-   446|  font-size: 0.9rem;
-   447|  font-weight: 500;
-   448|}
-   449|
-   450|/* ======================================
-   451|   SEO LINKS — カードグリッド
-   452|====================================== */
-   453|.seo-link-grid {
-   454|  margin-top: 20px;
-   455|  display: grid;
-   456|  grid-template-columns: repeat(3, minmax(0, 1fr));
-   457|  gap: 14px;
-   458|}
-   459|
-   460|a.seo-link-card {
-   461|  display: flex;
-   462|  flex-direction: column;
-   463|  align-items: center;
-   464|  justify-content: center;
-   465|  text-align: center;
-   466|  padding: 24px 16px;
-   467|  border-radius: var(--radius-lg);
-   468|  background: var(--surface);
-   469|  border: 2px solid var(--border);
-   470|  text-decoration: none;
-   471|  color: inherit;
-   472|  transition:
-   473|    transform 0.25s var(--ease-bounce),
-   474|    box-shadow 0.2s,
-   475|    border-color 0.2s;
-   476|}
-   477|
-   478|a.seo-link-card:hover {
-   479|  transform: translateY(-5px);
-   480|  box-shadow: var(--shadow-md);
-   481|  border-color: var(--peach);
-   482|}
-   483|
-   484|a.seo-link-card:nth-child(1) { background: linear-gradient(160deg, var(--bg) 0%, var(--surface-card) 62%); }
-   485|a.seo-link-card:nth-child(2) { background: linear-gradient(160deg, var(--color-bg-base) 0%, var(--surface) 62%); }
-   486|a.seo-link-card:nth-child(3) { background: linear-gradient(160deg, var(--oat-light) 0%, var(--color-card-bg) 62%); }
-   487|
-   488|.seo-link-card__icon {
-   489|  font-size: 2.6rem;
-   490|  line-height: 1;
-   491|  display: block;
-   492|  margin-bottom: 12px;
-   493|  transition: transform 0.25s var(--ease-bounce);
-   494|}
-   495|
-   496|a.seo-link-card:hover .seo-link-card__icon {
-   497|  transform: scale(1.2) rotate(-5deg);
-   498|}
-   499|
-   500|.seo-link-card__label {
-   501|
+/* ======================================
+   DETAILS ANIMATION
+   ====================================== */
+.diagnosis-extra-panel,
+.result-method-panel,
+.guide-hub-group,
+.faq-item {
+  &[open] {
+    animation: detailsSlideDown 0.35s var(--ease-out);
+  }
+}
+
+@keyframes detailsSlideDown {
+  from {
+    opacity: 0.6;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnosis-extra-panel[open],
+  .result-method-panel[open],
+  .guide-hub-group[open],
+  .faq-item[open] {
+    animation: none;
+  }
+}
+
+/* ======================================
+   SKELETON LOADING
+   ====================================== */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--peach-light) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton--text {
+  height: 1em;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.skeleton--heading {
+  height: 1.8em;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.skeleton--card {
+  height: 120px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.skeleton--badge {
+  height: 48px;
+  width: 80px;
+  border-radius: var(--radius-pill);
+}
+
+.skeleton--chip {
+  height: 38px;
+  width: 70px;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--border);
+  }
+}
+
+/* ======================================
+   RESULT RECOMMENDATIONS
+   ====================================== */
+.result-recommendations {
+  margin-top: 24px;
+  padding: 0;
+}
+
+.result-recommendations__inner {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  border: 1.5px solid var(--border);
+}
+
+.result-recommendations__label {
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.result-recommendations__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.result-rec-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: var(--color-card-bg);
+  text-decoration: none;
+  transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s;
+}
+
+.result-rec-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.result-rec-card__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.result-rec-card strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.result-rec-card small {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .result-recommendations__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .result-recommendations__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result-rec-card:hover {
+    transform: none;
+  }
+}
+
+/* ======================================
+    PANELS (solid surfaces) - existing
+   ====================================== */
+.intro-panel,
+.auth-panel,
+.seo-links-panel,
+.seo-copy-panel,
+.diagnosis-panel,
+.faq-panel,
+.result-panel {
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s ease;
+}
+
+.diagnosis-panel {
+  background: linear-gradient(140deg, var(--surface) 0%, var(--peach-light) 120%);
+}
+
+#diagnosisPanel {
+  scroll-margin-top: 88px;
+}
+
+/* ======================================
+   SPECIES CARDS — petmi.jp カテゴリグリッド
+====================================== */
+.species-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.species-card {
+  position: relative;
+  padding: 22px 12px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color 0.22s var(--ease-bounce),
+    transform 0.22s var(--ease-bounce),
+    box-shadow 0.22s;
+  user-select: none;
+  overflow: hidden;
+}
+
+.species-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--peach-light) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  border-radius: inherit;
+}
+
+.species-card:hover {
+  border-color: var(--peach);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+.species-card:hover::before {
+  opacity: 1;
+}
+
+.species-card.is-active {
+  border-color: var(--primary);
+  background: var(--peach-light);
+  box-shadow: 0 0 0 3px var(--primary-light), var(--shadow-md);
+  transform: translateY(-4px) scale(1.02);
+}
+
+.species-card.is-active::before {
+  opacity: 1;
+}
+
+.species-card__icon {
+  font-size: 2.4rem;
+  display: block;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.25s var(--ease-bounce);
+  line-height: 1;
+}
+
+.species-card:hover .species-card__icon,
+.species-card.is-active .species-card__icon {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.species-card__label {
+  font-weight: 800;
+  font-size: 0.875rem;
+  color: var(--text);
+  position: relative;
+  z-index: 1;
+}
+
+.species-card.is-active .species-card__label {
+  color: var(--primary-hover);
+}
+
+/* ── チェックマーク (is-active 時) ── */
+.species-card.is-active::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--primary);
+  background: var(--surface);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  line-height: 20px;
+}
+
+/* ======================================
+   CHIPS
+====================================== */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 9px 20px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.22s var(--ease-bounce);
+  white-space: nowrap;
+}
+
+.chip:hover:not(.active):not(.is-active) {
+  border-color: var(--peach);
+  background: var(--peach-light);
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.chip.active,
+.chip.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+/* ── カラーチップに色ドット ── */
+.chip[data-color] {
+  padding-left: 14px;
+}
+
+/* ======================================
+   BUTTONS
+====================================== */
+/* Primary */
+.decision-box__button,
+.btn-primary,
+a.btn-primary {
+  width: 100%;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  background: var(--primary);
+  color: var(--color-card-bg, #faf9f5);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: none;
+  transition:
+    transform 0.2s var(--ease-bounce),
+    box-shadow 0.2s ease,
+    background 0.18s ease;
+}
+
+a.btn-primary {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-primary:hover:not(:disabled),
+a.btn-primary:hover,
+.decision-box__button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: var(--primary-hover);
+  box-shadow: 0 8px 32px rgba(192,81,47,0.2);
+}
+
+.btn-primary:active:not(:disabled),
+.decision-box__button:active:not(:disabled) {
+  transform: scale(0.98) translateY(0);
+}
+
+/* Secondary */
+.btn-secondary,
+a.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 28px;
+  border-radius: var(--radius-md, 12px);
+  border: 1.5px solid var(--color-ink-blue, #2D5A8A);
+  background: transparent;
+  color: var(--color-ink-blue, #2D5A8A);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.22s var(--ease-bounce);
+}
+
+a.btn-secondary {
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-secondary:hover,
+a.btn-secondary:hover {
+  background: var(--color-ink-blue, #2D5A8A);
+  color: var(--color-card-bg, #faf9f5);
+  transform: translateY(-2px);
+}
+
+/* ======================================
+   DECISION BOX
+====================================== */
+.decision-box {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--border-strong);
+  display: grid;
+  gap: 14px;
+}
+
+.decision-box__summary {
+  margin: 0;
+  color: var(--text-sub);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ======================================
+   SEO LINKS — カードグリッド
+====================================== */
+.seo-link-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+a.seo-link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.25s var(--ease-bounce),
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+a.seo-link-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--peach);
+}
+
+a.seo-link-card:nth-child(1) { background: linear-gradient(160deg, var(--bg) 0%, var(--surface-card) 62%); }
+a.seo-link-card:nth-child(2) { background: linear-gradient(160deg, var(--color-bg-base) 0%, var(--surface) 62%); }
+a.seo-link-card:nth-child(3) { background: linear-gradient(160deg, var(--oat-light) 0%, var(--color-card-bg) 62%); }
+
+.seo-link-card__icon {
+  font-size: 2.6rem;
+  line-height: 1;
+  display: block;
+  margin-bottom: 12px;
+  transition: transform 0.25s var(--ease-bounce);
+}
+
+a.seo-link-card:hover .seo-link-card__icon {
+  transform: scale(1.2) rotate(-5deg);
+}
+
+.seo-link-card__label {
+
+  display: block;
+  font-weight: 800;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
