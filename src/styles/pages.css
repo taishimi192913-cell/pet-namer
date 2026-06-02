@@ -411,7 +411,7 @@
   padding: 18px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.7)),
-    radial-gradient(circle at 80% 20%, rgba(0, 113, 227, 0.08), transparent 36%);
+    radial-gradient(circle at 80% 20%, rgba(192,81,47, 0.08), transparent 36%);
 }
 
 .guide-route-board__row span {
@@ -437,7 +437,7 @@
   width: 34px;
   height: 8px;
   border-radius: 999px;
-  background: rgba(0, 113, 227, 0.22);
+  background: rgba(192,81,47, 0.22);
 }
 
 .guide-route-board__row--active i {
