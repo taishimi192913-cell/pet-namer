@@ -33,3 +33,4 @@ tasks.json
 # Agent-generated scripts (run locally, not part of build)
 scripts/_add-entries.mjs
 scripts/phase1_generate_images.py
+credentials/
